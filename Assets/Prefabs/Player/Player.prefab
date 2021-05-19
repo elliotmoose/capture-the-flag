@@ -12,8 +12,9 @@ GameObject:
   - component: {fileID: 5739873990811194740}
   - component: {fileID: 5631522893284074037}
   - component: {fileID: 8109904186744566835}
-  - component: {fileID: 3606717322404090613}
+  - component: {fileID: 458748385098388890}
   - component: {fileID: 7609006731988850574}
+  - component: {fileID: 3606717322404090613}
   - component: {fileID: 7262231596660080098}
   m_Layer: 0
   m_Name: Player
@@ -99,7 +100,7 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &3606717322404090613
+--- !u!114 &458748385098388890
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -108,12 +109,45 @@ MonoBehaviour:
   m_GameObject: {fileID: 8715549257419821114}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 025f66f40915a492180c417c9e17c991, type: 3}
+  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveDir: {x: 0, y: 0, z: 0}
-  ownerClientId:
-    m_InternalValue: 0
+  FixedSendsPerSecond: 20
+  AssumeSyncedSends: 1
+  InterpolatePosition: 1
+  SnapDistance: 10
+  InterpolateServer: 1
+  MinMeters: 0.15
+  MinDegrees: 1.5
+  ExtrapolatePosition: 0
+  MaxSendsToExtrapolate: 5
+  Channel: 
+  EnableRange: 0
+  EnableNonProvokedResendChecks: 0
+  DistanceSendrate:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 20
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 500
+      value: 20
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!114 &7609006731988850574
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -131,6 +165,21 @@ MonoBehaviour:
   PrefabHashGenerator: Player
   AlwaysReplicateAsRoot: 0
   DontDestroyWithOwner: 0
+--- !u!114 &3606717322404090613
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8715549257419821114}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 025f66f40915a492180c417c9e17c991, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveDir: {x: 0, y: 0, z: 0}
+  ownerClientId:
+    m_InternalValue: 0
 --- !u!195 &7262231596660080098
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -138,7 +187,7 @@ NavMeshAgent:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8715549257419821114}
-  m_Enabled: 1
+  m_Enabled: 0
   m_AgentTypeID: 0
   m_Radius: 0.5
   m_Speed: 10

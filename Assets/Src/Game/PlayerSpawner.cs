@@ -16,7 +16,8 @@ public class PlayerSpawner : NetworkBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        //test
+        // NetworkManager.StartHost();
     }
 
     // Update is called once per frame

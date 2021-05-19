@@ -10,7 +10,7 @@ public class Player : NetworkBehaviour
 {
     // Start is called before the first frame update    
     public Vector3 moveDir = Vector3.zero;
-    float moveSpeed = 5;
+    float moveSpeed = 10;
 
     public NetworkVariableULong ownerClientId = new NetworkVariableULong(new NetworkVariableSettings{
         SendTickrate = -1,
@@ -31,13 +31,6 @@ public class Player : NetworkBehaviour
 
     //     Debug.Log("event subscribed");
     // }
-
-    public override void NetworkStart() {
-        Debug.Log(this.NetworkObjectId);
-        if(!IsServer) {
-            GetComponent<NavMeshAgent>().enabled = false;            
-        }
-    }
 
     // Update is called once per frame
     void Update()
