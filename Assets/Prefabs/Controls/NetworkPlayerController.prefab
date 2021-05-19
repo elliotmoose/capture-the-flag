@@ -46,7 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerObjNetId:
     m_InternalValue: 0
-  controlType: 1
+  controlType: 0
 --- !u!114 &-4157636912107742308
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -40,4 +40,10 @@ public class Player : NetworkBehaviour
             transform.position += moveDir * Time.deltaTime * moveSpeed;
         }
     }
+
+    void LateUpdate() {
+        if(NetworkManager.LocalClientId == ownerClientId.Value) {
+            transform.rotation = Quaternion.Euler(transform.rotation.x, Camera.main.transform.eulerAngles.y, transform.rotation.z);
+        }
+    }
 }

@@ -6,7 +6,7 @@ using MLAPI;
 using MLAPI.Messaging;
 using MLAPI.Spawning;
 using MLAPI.NetworkVariable;
-
+using Cinemachine;
 public enum ControlType {
     ThirdPerson,
     TopDown
@@ -38,9 +38,9 @@ public class PlayerController : NetworkBehaviour
     public override void NetworkStart()
     {
         base.NetworkStart();        
-        if(IsLocalPlayer) {
-            Camera.main.GetComponent<CameraFollower>().controlType = controlType;
-        }
+        // if(IsLocalPlayer) {
+        //     Camera.main.GetComponent<CameraFollower>().controlType = controlType;
+        // }
     }
 
     void Start() {
@@ -55,46 +55,30 @@ public class PlayerController : NetworkBehaviour
             Debug.Log("server spawn id:" + playerObjNetId.Value.ToString());
         }        
 
-        
+        if(IsLocalPlayer) {
+            Cursor.visible = false;
+        }        
     }
 
     // Update is called once per frame
     void Update()
     {   
         if(IsLocalPlayer) {
+            Debug.Log(controlType);
             switch (controlType)
             {
                 case ControlType.ThirdPerson:
-
-                    //move camera to follow mouse
-                    float mouseSensitivty = 100f;
-                    float mouseX = Input.GetAxis("Mouse X") * mouseSensitivty * Time.deltaTime;
-                    Quaternion lookDirection = Quaternion.Euler(Camera.main.transform.rotation.eulerAngles.x, Camera.main.transform.rotation.eulerAngles.y + mouseX, Camera.main.transform.rotation.eulerAngles.z);
-                    Camera.main.transform.rotation = lookDirection;
-
-                    Vector3 _moveDir = new Vector3(0, 0, 0);
-                    if(Input.GetKey(KeyCode.A)) {
-                        _moveDir += new Vector3(-1, 0, 0);
-                    }
+                    float horizontal = Input.GetAxisRaw("Horizontal");
+                    float vertical = Input.GetAxisRaw("Vertical");
                     
-                    if(Input.GetKey(KeyCode.D)) {
-                        _moveDir += new Vector3(1, 0, 0);
+                    Vector3 _moveDir = new Vector3(horizontal, 0, vertical).normalized;
+                    if(_moveDir.magnitude != 0) {
+                        float targetAngle = Mathf.Atan2(_moveDir.x, _moveDir.z) * Mathf.Rad2Deg + Camera.main.transform.eulerAngles.y;
+                        moveDir.Value  = Quaternion.Euler(0, targetAngle, 0) * Vector3.forward;
                     }
-                    
-                    if(Input.GetKey(KeyCode.W)) {
-                        _moveDir += new Vector3(0, 0, 1);
+                    else {
+                        moveDir.Value = Vector3.zero;
                     }
-                    
-                    if(Input.GetKey(KeyCode.S)) {
-                        _moveDir += new Vector3(0, 0, -1);
-                    }
-
-                    if(!(Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D))) {
-                        _moveDir = new Vector3(0, 0, 0);
-                    }
-
-                    moveDir.Value = _moveDir.normalized;
-                    
                     break;
                 case ControlType.TopDown:
                     if(Input.GetMouseButton(1)) {
