@@ -7,8 +7,6 @@ using MLAPI.Messaging;
 using MLAPI.Spawning;
 using MLAPI.NetworkVariable;
 using Cinemachine;
-using UnityEngine.InputSystem;
-
 public enum ControlType {
     ThirdPerson,
     TopDown
@@ -16,20 +14,11 @@ public enum ControlType {
 
 public class PlayerController : NetworkBehaviour 
 {
-    public InputControls controls;
-
-    //third person
     NetworkVariableVector3 moveDir = new NetworkVariableVector3(new NetworkVariableSettings{
         WritePermission = NetworkVariablePermission.OwnerOnly,
         SendTickrate = 20,
     });
     
-    NetworkVariableBool sprinting = new NetworkVariableBool(new NetworkVariableSettings{
-        WritePermission = NetworkVariablePermission.OwnerOnly,
-    });
-    
-
-    //third top down
     NetworkVariableVector3 navTarget = new NetworkVariableVector3(new NetworkVariableSettings{
         WritePermission = NetworkVariablePermission.OwnerOnly
     });
@@ -38,7 +27,6 @@ public class PlayerController : NetworkBehaviour
         WritePermission = NetworkVariablePermission.ServerOnly,
         SendTickrate = 0,        
     });
-
 
     public ControlType controlType = ControlType.ThirdPerson;
 
@@ -55,9 +43,6 @@ public class PlayerController : NetworkBehaviour
         // }
     }
 
-    void Awake() {
-        controls = new InputControls();
-    }
     void Start() {
         if(IsServer) {
             moveDir.OnValueChanged += (Vector3 prevMoveDir, Vector3 newMoveDir)=>{
@@ -72,13 +57,6 @@ public class PlayerController : NetworkBehaviour
 
         if(IsLocalPlayer) {
             Cursor.visible = false;
-
-            controls.Enable();
-            controls.Player.Catch.performed += ctx => {
-                Debug.Log("Catch");
-            };
-
-            
         }        
     }
 
@@ -90,9 +68,12 @@ public class PlayerController : NetworkBehaviour
             switch (controlType)
             {
                 case ControlType.ThirdPerson:
-                    Vector2 _moveDir = controls.Player.Move.ReadValue<Vector2>().normalized;
+                    float horizontal = Input.GetAxisRaw("Horizontal");
+                    float vertical = Input.GetAxisRaw("Vertical");
+                    
+                    Vector3 _moveDir = new Vector3(horizontal, 0, vertical).normalized;
                     if(_moveDir.magnitude != 0) {
-                        float targetAngle = Mathf.Atan2(_moveDir.x, _moveDir.y) * Mathf.Rad2Deg + Camera.main.transform.eulerAngles.y;
+                        float targetAngle = Mathf.Atan2(_moveDir.x, _moveDir.z) * Mathf.Rad2Deg + Camera.main.transform.eulerAngles.y;
                         moveDir.Value  = Quaternion.Euler(0, targetAngle, 0) * Vector3.forward;
                     }
                     else {
@@ -110,6 +91,7 @@ public class PlayerController : NetworkBehaviour
                     }
                     break;
             }
+
         }
 
         if(IsServer) {
