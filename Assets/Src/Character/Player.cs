@@ -11,6 +11,8 @@ public class Player : NetworkBehaviour
     // Start is called before the first frame update    
     public Vector3 moveDir = Vector3.zero;
     float moveSpeed = 10;
+    float sprintMultiplier = 2.4f;
+    public bool sprinting = false;
 
     public NetworkVariableULong ownerClientId = new NetworkVariableULong(new NetworkVariableSettings{
         SendTickrate = -1,
@@ -37,7 +39,7 @@ public class Player : NetworkBehaviour
     {
         if(IsServer) {
             // Debug.Log(NetworkManager.Singleton.LocalClientId);
-            transform.position += moveDir * Time.deltaTime * moveSpeed;
+            transform.position += moveDir * Time.deltaTime * moveSpeed * (sprinting ? sprintMultiplier : 1);
         }
     }
 
