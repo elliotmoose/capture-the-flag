@@ -41,6 +41,13 @@ public class Player : NetworkBehaviour
             // Debug.Log(NetworkManager.Singleton.LocalClientId);
             transform.position += moveDir * Time.deltaTime * moveSpeed * (sprinting ? sprintMultiplier : 1);
         }
+
+        if(moveDir.magnitude != 0) {
+            GetComponent<Animator>().SetBool("IsForward", true);
+        }
+        else {
+            GetComponent<Animator>().SetBool("IsForward", false);
+        }
     }
 
     void LateUpdate() {
