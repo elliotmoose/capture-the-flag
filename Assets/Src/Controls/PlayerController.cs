@@ -63,7 +63,6 @@ public class PlayerController : NetworkBehaviour
     void Update()
     {   
         if(IsLocalPlayer) {
-            Debug.Log(controlType);
             switch (controlType)
             {
                 case ControlType.ThirdPerson:
