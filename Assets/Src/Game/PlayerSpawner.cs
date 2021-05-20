@@ -17,7 +17,7 @@ public class PlayerSpawner : NetworkBehaviour
     void Start()
     {
         //test
-        // NetworkManager.StartHost();
+        NetworkManager.StartHost();
     }
 
     // Update is called once per frame

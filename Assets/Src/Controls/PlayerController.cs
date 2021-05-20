@@ -13,7 +13,7 @@ public enum ControlType {
 }
 
 public class PlayerController : NetworkBehaviour 
-{
+{   
     NetworkVariableVector3 moveDir = new NetworkVariableVector3(new NetworkVariableSettings{
         WritePermission = NetworkVariablePermission.OwnerOnly,
         SendTickrate = 20,
@@ -55,9 +55,8 @@ public class PlayerController : NetworkBehaviour
             Debug.Log("server spawn id:" + playerObjNetId.Value.ToString());
         }        
 
-        if(IsLocalPlayer) {
-            Cursor.visible = false;
-        }        
+        Cursor.visible = false;
+       
     }
 
     // Update is called once per frame
