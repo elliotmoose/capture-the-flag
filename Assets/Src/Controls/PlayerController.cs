@@ -13,16 +13,16 @@ public class PlayerController : NetworkBehaviour
         WritePermission = NetworkVariablePermission.OwnerOnly
     });
 
-    NetworkVariableVector3 moveDir = new NetworkVariableVector3(new NetworkVariableSettings{
-        WritePermission = NetworkVariablePermission.OwnerOnly,
-        SendTickrate = 20,
-    });
-
-    NetworkVariableQuaternion faceDir = new NetworkVariableQuaternion(new NetworkVariableSettings{
+    NetworkVariableVector2 moveDir = new NetworkVariableVector2(new NetworkVariableSettings{
         WritePermission = NetworkVariablePermission.OwnerOnly,
         SendTickrate = 20,
     });
     
+    NetworkVariableFloat faceAngle = new NetworkVariableFloat(new NetworkVariableSettings{
+        WritePermission = NetworkVariablePermission.OwnerOnly,
+        SendTickrate = 20,
+    });
+
     public NetworkVariableULong playerObjNetId = new NetworkVariableULong(new NetworkVariableSettings{
         WritePermission = NetworkVariablePermission.ServerOnly,
         SendTickrate = 0,        
@@ -46,7 +46,7 @@ public class PlayerController : NetworkBehaviour
     
     void Start() {
         if(IsServer) {
-            moveDir.OnValueChanged += (Vector3 prevMoveDir, Vector3 newMoveDir)=>{
+            moveDir.OnValueChanged += (Vector2 prevMoveDir, Vector2 newMoveDir)=>{
                 timeSinceLastCommand = 0;
             };
 
@@ -79,8 +79,8 @@ public class PlayerController : NetworkBehaviour
             if(playerObj) {
                 Player player = playerObj.GetComponent<Player>();
                 player.moveDir = moveDir.Value;
+                player.faceAngle = faceAngle.Value;
                 player.sprinting = sprinting.Value;
-                Debug.Log(sprinting.Value);
             }
         }
     }
@@ -90,16 +90,9 @@ public class PlayerController : NetworkBehaviour
         float horizontal = Input.GetAxisRaw("Horizontal");
         float vertical = Input.GetAxisRaw("Vertical");
         
-        Vector3 _moveDir = new Vector3(horizontal, 0, vertical).normalized;
-        if(_moveDir.magnitude != 0) {
-            float targetAngle = Mathf.Atan2(_moveDir.x, _moveDir.z) * Mathf.Rad2Deg + Camera.main.transform.eulerAngles.y;
-            faceDir.Value = Quaternion.Euler(0, targetAngle, 0); 
-            moveDir.Value = Quaternion.Euler(0, targetAngle, 0) * Vector3.forward;
-        }
-        else {
-            moveDir.Value = Vector3.zero;
-        }
-
+        moveDir.Value = new Vector2(horizontal, vertical);
+        faceAngle.Value = Camera.main.transform.eulerAngles.y;
+        
         if(Input.GetMouseButtonDown(0)) {
             CatchServerRpc();
         }
