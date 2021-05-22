@@ -7,30 +7,11 @@ using Cinemachine;
 public class CameraFollower : MonoBehaviour
 {
     GameObject target;
-    public ControlType controlType = ControlType.ThirdPerson;
 
     // Update is called once per frame
     void Update()
     {
         AttachToPlayerIfNeeded();
-    }
-
-    void LateUpdate() {
-        // if(target) {
-        //     switch (controlType)
-        //     {
-        //         case ControlType.ThirdPerson:
-        //             //calculate camera's position based on orientation, that was set by player controller
-        //             // float yRotationAngle = this.transform.rotation.eulerAngles.y;
-        //             // float radius = 7;
-        //             // float newX = target.transform.position.x + 
-        //             break;
-        //         case ControlType.TopDown:
-        //             this.transform.position = target.transform.position + new Vector3(0, 12, -4);
-        //             this.transform.rotation = Quaternion.LookRotation(target.transform.position - this.transform.position);
-        //             break;
-        //     }
-        // }
     }
 
     void AttachToPlayerIfNeeded() {
@@ -40,7 +21,6 @@ public class CameraFollower : MonoBehaviour
 
             if(playerController) {
                 ulong playerGameObjectNetId = playerController.playerObjNetId.Value;
-                Debug.Log(playerGameObjectNetId);
                 if(playerGameObjectNetId != 0) {
                     CinemachineFreeLook camera = GameObject.FindGameObjectWithTag("CinemachineCamera").GetComponent<CinemachineFreeLook>();
                     target = NetworkSpawnManager.SpawnedObjects[playerGameObjectNetId].gameObject;

@@ -7,33 +7,34 @@ using MLAPI.Messaging;
 using MLAPI.Spawning;
 using MLAPI.NetworkVariable;
 using Cinemachine;
-public enum ControlType {
-    ThirdPerson,
-    TopDown
-}
-
 public class PlayerController : NetworkBehaviour 
 {   
-    NetworkVariableVector3 moveDir = new NetworkVariableVector3(new NetworkVariableSettings{
+    NetworkVariableBool sprinting = new NetworkVariableBool(new NetworkVariableSettings{
+        WritePermission = NetworkVariablePermission.OwnerOnly
+    });
+
+    NetworkVariableVector2 moveDir = new NetworkVariableVector2(new NetworkVariableSettings{
         WritePermission = NetworkVariablePermission.OwnerOnly,
         SendTickrate = 20,
     });
     
-    NetworkVariableVector3 navTarget = new NetworkVariableVector3(new NetworkVariableSettings{
-        WritePermission = NetworkVariablePermission.OwnerOnly
+    NetworkVariableFloat faceAngle = new NetworkVariableFloat(new NetworkVariableSettings{
+        WritePermission = NetworkVariablePermission.OwnerOnly,
+        SendTickrate = 20,
     });
-    
+
     public NetworkVariableULong playerObjNetId = new NetworkVariableULong(new NetworkVariableSettings{
         WritePermission = NetworkVariablePermission.ServerOnly,
         SendTickrate = 0,        
     });
 
-    public ControlType controlType = ControlType.ThirdPerson;
-
     float commandDurationThreshold = 0.1f;
     float timeSinceLastCommand = 0f;
     bool isStale = false;
 
+    public KeyCode SKILL1_KEY = KeyCode.Q;
+    public KeyCode SKILL2_KEY = KeyCode.E;
+    public KeyCode SPRINT_KEY = KeyCode.Space;
     // Start is called before the first frame update
     public override void NetworkStart()
     {
@@ -42,10 +43,10 @@ public class PlayerController : NetworkBehaviour
         //     Camera.main.GetComponent<CameraFollower>().controlType = controlType;
         // }
     }
-
+    
     void Start() {
         if(IsServer) {
-            moveDir.OnValueChanged += (Vector3 prevMoveDir, Vector3 newMoveDir)=>{
+            moveDir.OnValueChanged += (Vector2 prevMoveDir, Vector2 newMoveDir)=>{
                 timeSinceLastCommand = 0;
             };
 
@@ -63,33 +64,8 @@ public class PlayerController : NetworkBehaviour
     void Update()
     {   
         if(IsLocalPlayer) {
-            switch (controlType)
-            {
-                case ControlType.ThirdPerson:
-                    float horizontal = Input.GetAxisRaw("Horizontal");
-                    float vertical = Input.GetAxisRaw("Vertical");
-                    
-                    Vector3 _moveDir = new Vector3(horizontal, 0, vertical).normalized;
-                    if(_moveDir.magnitude != 0) {
-                        float targetAngle = Mathf.Atan2(_moveDir.x, _moveDir.z) * Mathf.Rad2Deg + Camera.main.transform.eulerAngles.y;
-                        moveDir.Value  = Quaternion.Euler(0, targetAngle, 0) * Vector3.forward;
-                    }
-                    else {
-                        moveDir.Value = Vector3.zero;
-                    }
-                    break;
-                case ControlType.TopDown:
-                    if(Input.GetMouseButton(1)) {
-                        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                        RaycastHit hit;
-                        if(Physics.Raycast(ray, out hit)) {                    
-                            // GameObject go = hit.transform.gameObject;
-                            navTarget.Value = hit.point;
-                        }
-                    }
-                    break;
-            }
-
+            Debug.Log("Checking for controls");
+            ClientControls();
         }
 
         if(IsServer) {
@@ -100,29 +76,54 @@ public class PlayerController : NetworkBehaviour
             // GameObject playerObj = GameObject.Find("player"+GetComponent<NetworkObject>().OwnerClientId.ToString());
             NetworkObject playerNetworkObj = NetworkSpawnManager.SpawnedObjects[playerObjNetId.Value];
             GameObject playerObj = playerNetworkObj.gameObject;
-
-            // Debug.Log(navTarget.Value);
             if(playerObj) {
-
-                switch (controlType)
-                {
-                    case ControlType.ThirdPerson:
-                        Player player = playerObj.GetComponent<Player>();
-                        player.moveDir = GetMoveDir();
-                        break;
-                    case ControlType.TopDown:
-                        NavMeshAgent navMeshAgent = playerObj.GetComponent<NavMeshAgent>();
-                        navMeshAgent.enabled = true;
-                        navMeshAgent.SetDestination(navTarget.Value);
-                        break;
-                }
+                Player player = playerObj.GetComponent<Player>();
+                player.moveDir = moveDir.Value;
+                player.faceAngle = faceAngle.Value;
+                player.sprinting = sprinting.Value;
             }
         }
     }
 
-    public Vector3 GetMoveDir() {
-        return moveDir.Value;
-        // return isStale ? new Vector3(0,0,0) : moveDir.Value;
+    void ClientControls() {
+        //movement
+        float horizontal = Input.GetAxisRaw("Horizontal");
+        float vertical = Input.GetAxisRaw("Vertical");
+        
+        moveDir.Value = new Vector2(horizontal, vertical);
+        faceAngle.Value = Camera.main.transform.eulerAngles.y;
+        
+        if(Input.GetMouseButtonDown(0)) {
+            CatchServerRpc();
+        }
+        if(Input.GetKeyDown(SKILL1_KEY)) {
+            Skill1ServerRpc();
+        }
+        if(Input.GetKeyDown(SKILL2_KEY)) {
+            Skill2ServerRpc();
+        }
+        
+        sprinting.Value = Input.GetKey(SPRINT_KEY);
     }
 
+    [ServerRpc]
+    void CatchServerRpc() {
+        if(IsServer) {
+            Debug.Log("Catch!");
+        }
+    }
+
+    [ServerRpc]
+    void Skill1ServerRpc() {
+        if(IsServer) {
+            Debug.Log("Skill 1!");
+        }
+    }
+
+    [ServerRpc]
+    void Skill2ServerRpc() {
+        if(IsServer) {
+            Debug.Log("Skill 2!");
+        }
+    }
 }
