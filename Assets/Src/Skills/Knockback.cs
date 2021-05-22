@@ -20,22 +20,16 @@ public class Knockback : Skill
 
         foreach (Collider c in hitColliders)
         {
-            // if object is a Player
-            if (c.gameObject.CompareTag("Player"))
+            Player target = c.gameObject.GetComponent<Player>();
+
+            if (target != null && player != target)
             {
-                Player target = c.gameObject.GetComponent<Player>();
-
-                if (player != target)
-                {
-                    Vector3 vectorDistance = target.transform.position - player.transform.position;
-                    Vector3 unitVector = vectorDistance.normalized;
-                    float magnitude = vectorDistance.magnitude;
-                    Rigidbody targetBody = target.gameObject.GetComponent<Rigidbody>();
-                    // the closer the targets are to the player, the stronger the force
-                    targetBody.AddForce(unitVector * knockbackFactor / magnitude, ForceMode.Impulse);
-
-                }
-
+                Vector3 vectorDistance = target.transform.position - player.transform.position;
+                Vector3 unitVector = vectorDistance.normalized;
+                float magnitude = vectorDistance.magnitude;
+                Rigidbody targetBody = target.gameObject.GetComponent<Rigidbody>();
+                // the closer the targets are to the player, the stronger the force
+                targetBody.AddForce(unitVector * knockbackFactor / magnitude, ForceMode.Impulse);
             }
         }
 

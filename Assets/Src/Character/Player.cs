@@ -9,18 +9,24 @@ using MLAPI.Messaging;
 public class Player : NetworkBehaviour
 {
     // Start is called before the first frame update    
-    public Vector3 moveDir = Vector3.zero;
-
-    // player stats and skills
-    protected float moveSpeed = 15.0f;
     protected List<Skill> skills = new List<Skill>();
     public List<Effect> effects = new List<Effect>();
     protected float cdTimer1 = 0.0f;
     protected float cdTimer2 = 0.0f;
+    
+    //movement controls
+    public Vector2 moveDir = Vector2.zero;
+    public float faceAngle = 0;
 
-    
-    
-    
+    protected float moveSpeed = 18;
+    protected float maxStamina = 100;
+    protected float curStamina = 100;
+    protected float staminaBurnFactor = 25;
+    protected float staminaRecoveryFactor = 30;
+
+
+    float sprintMultiplier = 2.4f;
+    public bool sprinting = false;
 
     public NetworkVariableULong ownerClientId = new NetworkVariableULong(new NetworkVariableSettings{
         SendTickrate = -1,
@@ -57,11 +63,56 @@ public class Player : NetworkBehaviour
     // }
 
     // Update is called once per frame
+
+    private float _animationTransitionTime = 0.15f;
+    private float _curTransitionTime = 0f;
     void Update()
     {
         if(IsServer) {
-            // Debug.Log(NetworkManager.Singleton.LocalClientId);
-            transform.position += moveDir * Time.deltaTime * moveSpeed;
+            bool isMoving = (moveDir.magnitude > 0.01f);
+            bool canSprint = (curStamina > 0);
+            bool isSprinting = (canSprint && sprinting);
+            Debug.Log(curStamina);
+            if(isMoving) {                
+                float moveDirAngle = Mathf.Atan2(moveDir.x, moveDir.y) * Mathf.Rad2Deg + faceAngle;
+                Vector3 positionDelta = Quaternion.Euler(0, moveDirAngle, 0) * Vector3.forward;
+
+                if(isSprinting) {
+                    transform.position += positionDelta.normalized * Time.deltaTime * moveSpeed * sprintMultiplier;
+                    curStamina = Mathf.Max(0, curStamina - Time.deltaTime * staminaBurnFactor);
+                }
+                else {
+                    transform.position += positionDelta.normalized * Time.deltaTime * moveSpeed;
+                }
+            }
+            
+            //recover
+            if(!sprinting) {
+                curStamina = Mathf.Clamp(curStamina + Time.deltaTime * staminaRecoveryFactor, 0, maxStamina);
+            }
+
+            Vector2 targetMoveDir = moveDir/(isSprinting ? 1 : 2);
+            //animation smoohting
+            Animator animator = GetComponent<Animator>();
+            Vector2 curMoveDir = new Vector2(animator.GetFloat("HorMovement"), animator.GetFloat("VertMovement")); //current movedir state
+
+            if(curMoveDir != targetMoveDir) {
+                // _lastMoveDir = curMoveDir;
+                _curTransitionTime += Time.deltaTime;
+                Vector2 newSmoothMoveDir = Vector2.Lerp(curMoveDir, targetMoveDir, _curTransitionTime/_animationTransitionTime);
+                animator.SetFloat("HorMovement", newSmoothMoveDir.x);
+                animator.SetFloat("VertMovement", newSmoothMoveDir.y);            
+            }
+            else {
+                _curTransitionTime = 0;
+            }   
+            
+            animator.SetBool("IsMoving", isMoving);
+
+
+            //update cooldowns
+            cdTimer1 -= Time.deltaTime;
+            cdTimer2 -= Time.deltaTime;
         }
 
         UpdateEffects(); // update skill effects applied to player
@@ -72,43 +123,37 @@ public class Player : NetworkBehaviour
 
     }
 
-    void FixedUpdate()
-    {
-        // use first skill if F is pressed
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            if (Time.time > cdTimer1) {
-                Skill skill = skills[0];
+    public void CastSkillAtIndex(int index) {
+        if(index > skills.Count) {
+            Debug.LogWarning($"Skill index out of range: {index}");
+            return;
+        }
+
+        Skill skill = skills[index];
+
+        if(index == 0) {
+            if(cdTimer1 < 0) {
                 skill.UseSkill(this);
-                cdTimer1 = Time.time + skill.cooldown;
+                cdTimer1 = skill.cooldown;
             }
-            else
-            {
-                float timeLeft = cdTimer1 - Time.time;
-                Debug.Log("Cooldown time left: " + timeLeft.ToString() + " seconds");
+            else {
+                Debug.Log($"Skill 1 remainding cooldown: {cdTimer1}");
             }
         }
 
-        // use second skill if E is pressed
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            if (Time.time > cdTimer2)
-            {
-                Skill skill = skills[1];
+        if(index == 1) {
+            if(cdTimer2 < 0) {
                 skill.UseSkill(this);
-                cdTimer2 = Time.time + skill.cooldown;
-                
+                cdTimer2 = skill.cooldown;
             }
-            else
-            {
-                float timeLeft = cdTimer2 - Time.time;
-                Debug.Log("Cooldown time left: " + timeLeft.ToString() + " seconds");
+            else {
+                Debug.Log($"Skill 2 remainding cooldown: {cdTimer2}");
             }
         }
-
     }
 
     void LateUpdate() {
+        //TODO: face based on facedir
         if(NetworkManager.LocalClientId == ownerClientId.Value) {
             transform.rotation = Quaternion.Euler(transform.rotation.x, Camera.main.transform.eulerAngles.y, transform.rotation.z);
         }
