@@ -9,6 +9,7 @@ public class Character1 : Player
     {
         moveSpeed = 15;
         skills.Add(new Teleport());
+        skills.Add(new Slow());
     }
     
 }

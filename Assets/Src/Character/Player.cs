@@ -14,13 +14,27 @@ public class Player : NetworkBehaviour
     // player stats and skills
     protected float moveSpeed = 10;
     protected List<Skill> skills = new List<Skill>();
-    protected float cdTimer1 = Time.time;
-    protected float cdTimer2 = Time.time;
+    public List<Effect> effects = new List<Effect>();
+    protected float cdTimer1 = 0.0f;
+    protected float cdTimer2 = 0.0f;
+
+    
+    
+    
 
     public NetworkVariableULong ownerClientId = new NetworkVariableULong(new NetworkVariableSettings{
         SendTickrate = -1,
         WritePermission = NetworkVariablePermission.ServerOnly
     });
+
+    public float GetMoveSpeed()
+    {
+        return moveSpeed;
+    }
+    public void SetMoveSpeed(float newSpeed)
+    {
+        this.moveSpeed = newSpeed;
+    }
 
     void Start()
     {
@@ -50,6 +64,12 @@ public class Player : NetworkBehaviour
             transform.position += moveDir * Time.deltaTime * moveSpeed;
         }
 
+        UpdateEffects(); // update skill effects applied to player
+        if (this.ToString()=="TestSubject (TestSubject)")
+        {
+            Debug.Log(this.moveSpeed);
+        }       
+
     }
 
     void FixedUpdate()
@@ -59,7 +79,7 @@ public class Player : NetworkBehaviour
         {
             if (Time.time > cdTimer1) {
                 Skill skill = skills[0];
-                skill.useSkill(this);
+                skill.UseSkill(this);
                 cdTimer1 = Time.time + skill.cooldown;
             }
             else
@@ -67,8 +87,23 @@ public class Player : NetworkBehaviour
                 float timeLeft = cdTimer1 - Time.time;
                 Debug.Log("Cooldown time left: " + timeLeft.ToString() + " seconds");
             }
-            
+        }
 
+        // use second skill if E is pressed
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            if (Time.time > cdTimer2)
+            {
+                Skill skill = skills[1];
+                skill.UseSkill(this);
+                cdTimer2 = Time.time + skill.cooldown;
+                
+            }
+            else
+            {
+                float timeLeft = cdTimer2 - Time.time;
+                Debug.Log("Cooldown time left: " + timeLeft.ToString() + " seconds");
+            }
         }
 
     }
@@ -78,4 +113,27 @@ public class Player : NetworkBehaviour
             transform.rotation = Quaternion.Euler(transform.rotation.x, Camera.main.transform.eulerAngles.y, transform.rotation.z);
         }
     }
+
+
+    // receive effect
+    public void TakeEffect(Effect effect)
+    {   
+        effect.OnEffectApplied();
+        this.effects.Add(effect);
+        
+    }
+
+    public void UpdateEffects()
+    {
+        //Debug.Log(this.ToString()+this.effects.Count.ToString());
+        foreach (Effect effect in this.effects)
+        {
+            effect.Update();
+            if (effect.effectEnded)
+            {
+                effects.Remove(effect);
+            }
+        }
+    }
+
 }
