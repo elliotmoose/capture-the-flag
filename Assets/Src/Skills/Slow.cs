@@ -5,9 +5,9 @@ using UnityEngine;
 // AOE Slow skill
 public class Slow : Skill
 {
-    float radius = 5.0f; // radius of effect
-    float percentageDecrease = 1.3f;
-    float duration = 3.0f;
+    private float radius = 5.0f; // radius of effect
+    private float percentageDecrease = 1.3f;
+    private float duration = 3.0f;
 
     public Slow()
     {

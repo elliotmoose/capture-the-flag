@@ -12,7 +12,7 @@ public class Player : NetworkBehaviour
     public Vector3 moveDir = Vector3.zero;
 
     // player stats and skills
-    protected float moveSpeed = 10;
+    protected float moveSpeed = 15.0f;
     protected List<Skill> skills = new List<Skill>();
     public List<Effect> effects = new List<Effect>();
     protected float cdTimer1 = 0.0f;
@@ -67,7 +67,7 @@ public class Player : NetworkBehaviour
         UpdateEffects(); // update skill effects applied to player
         if (this.ToString()=="TestSubject (TestSubject)")
         {
-            Debug.Log(this.moveSpeed);
+            //Debug.Log(this.moveSpeed);
         }       
 
     }
