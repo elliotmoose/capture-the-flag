@@ -117,7 +117,19 @@ public class Player : NetworkBehaviour
 
     // receive effect
     public void TakeEffect(Effect effect)
-    {   
+    {
+        Effect existingEffect = this.effects.Find((thisEffect) =>
+        {
+            return thisEffect.name == effect.name;
+        });
+
+        // if same effect already exists on player, replace it with newer one
+        if (existingEffect != null)
+        {
+            this.effects.Remove(existingEffect);
+            this.effects.Add(effect);
+            return;
+        }
         effect.OnEffectApplied();
         this.effects.Add(effect);
         
