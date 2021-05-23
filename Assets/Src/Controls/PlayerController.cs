@@ -64,7 +64,7 @@ public class PlayerController : NetworkBehaviour
     void Update()
     {   
         if(IsLocalPlayer) {
-            Debug.Log("Checking for controls");
+            //Debug.Log("Checking for controls");
             ClientControls();
         }
 

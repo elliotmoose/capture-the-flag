@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class Knockback : Skill
 {
-    private float knockbackFactor = 10.0f;
-    private float radius = 5.0f;
+    private float finalDistance = 15.0f;
+    private float timeTaken = 1.0f;
+    private float radius = 15.0f;
 
     public Knockback()
     {
@@ -17,19 +18,19 @@ public class Knockback : Skill
     {
         Debug.Log(name + " skill is used");
         Collider[] hitColliders = Physics.OverlapSphere(player.transform.position, radius);
-
+        Debug.Log(hitColliders.Length);
         foreach (Collider c in hitColliders)
-        {
+        {   
             Player target = c.gameObject.GetComponent<Player>();
-
+            
             if (target != null && player != target)
             {
-                Vector3 vectorDistance = target.transform.position - player.transform.position;
-                Vector3 unitVector = vectorDistance.normalized;
-                float magnitude = vectorDistance.magnitude;
-                Rigidbody targetBody = target.gameObject.GetComponent<Rigidbody>();
-                // the closer the targets are to the player, the stronger the force
-                targetBody.AddForce(unitVector * knockbackFactor / magnitude, ForceMode.Impulse);
+                Debug.Log(target.ToString());
+                Vector3 direction = target.transform.position - player.transform.position;
+                float currentDistance = direction.magnitude;
+                float knockbackDistance = finalDistance - currentDistance;
+                PushEffect effect = new PushEffect(target, direction, knockbackDistance, timeTaken);
+                target.TakeEffect(effect);
             }
         }
 

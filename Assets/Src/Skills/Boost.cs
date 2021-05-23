@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class Boost : Skill
 {
-    private float boost = 2.0f;
+    private float distance = 80.0f;
+    private float timeTaken = 1.0f;
 
     public Boost()
     {
@@ -15,9 +16,9 @@ public class Boost : Skill
     public override void UseSkill(Player player)
     {
         Debug.Log(name + " skill is used");
-        Rigidbody playerBody = player.gameObject.GetComponent<Rigidbody>();
-        playerBody.AddForce(player.transform.forward * boost * player.GetMoveSpeed(), ForceMode.Impulse);
-        
+        PushEffect effect = new PushEffect(player, player.transform.forward, distance, timeTaken);
+        player.TakeEffect(effect);
+
     }
 
 }

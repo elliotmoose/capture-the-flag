@@ -23,6 +23,7 @@ public class Player : NetworkBehaviour
     protected float curStamina = 100;
     protected float staminaBurnFactor = 25;
     protected float staminaRecoveryFactor = 30;
+    protected bool isDisabled = false;
 
 
     float sprintMultiplier = 2.4f;
@@ -72,7 +73,7 @@ public class Player : NetworkBehaviour
             bool isMoving = (moveDir.magnitude > 0.01f);
             bool canSprint = (curStamina > 0);
             bool isSprinting = (canSprint && sprinting);
-            Debug.Log(curStamina);
+            //Debug.Log(curStamina);
             if(isMoving) {                
                 float moveDirAngle = Mathf.Atan2(moveDir.x, moveDir.y) * Mathf.Rad2Deg + faceAngle;
                 Vector3 positionDelta = Quaternion.Euler(0, moveDirAngle, 0) * Vector3.forward;
@@ -177,20 +178,27 @@ public class Player : NetworkBehaviour
         }
         effect.OnEffectApplied();
         this.effects.Add(effect);
+        Debug.Log(effect.name + " effect taken");
         
     }
 
     public void UpdateEffects()
     {
-        //Debug.Log(this.ToString()+this.effects.Count.ToString());
+        
         foreach (Effect effect in this.effects)
         {
             effect.Update();
+            
             if (effect.effectEnded)
             {
                 effects.Remove(effect);
             }
         }
+    }
+
+    public void SetDisabled(bool disabled)
+    {
+        this.isDisabled = disabled;
     }
 
 }
