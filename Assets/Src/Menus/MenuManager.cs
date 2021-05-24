@@ -36,7 +36,7 @@ public class MenuManager : MonoBehaviour
     public void Host()
     {
         NetworkManager.Singleton.StartHost();
-        SceneManager.LoadScene("Game", LoadSceneMode.Additive);
+        SceneManager.LoadScene("Game", LoadSceneMode.Single);
     }
 
     public void Join()
@@ -50,7 +50,7 @@ public class MenuManager : MonoBehaviour
             NetworkManager.Singleton.GetComponent<UNetTransport>().ConnectAddress = IpAddressInput.text;
         }
         NetworkManager.Singleton.StartClient();
-        SceneManager.LoadScene("Game", LoadSceneMode.Additive);
+        SceneManager.LoadScene("Game", LoadSceneMode.Single);
     }
 
     void Start()
