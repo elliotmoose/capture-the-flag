@@ -132,7 +132,7 @@ public class PlayerController : NetworkBehaviour
         }
     }
 
-    Player GetPlayer()
+    public Player GetPlayer()
     {
         NetworkObject playerNetworkObj = NetworkSpawnManager.SpawnedObjects[playerObjNetId.Value];
         GameObject playerObj = playerNetworkObj.gameObject;
