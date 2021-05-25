@@ -12,7 +12,7 @@ public class Player : NetworkBehaviour
     public Vector2 moveDir = Vector2.zero;
     public float faceAngle = 0;
 
-    float moveSpeed = 10;
+    float moveSpeed = 18;
     float sprintMultiplier = 2.4f;
     public bool sprinting = false;
 
