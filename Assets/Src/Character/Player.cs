@@ -16,12 +16,22 @@ public class Player : NetworkBehaviour
     float moveSpeed = 18;
     float sprintMultiplier = 2.4f;
     public bool sprinting = false;
-
     public int team = 1;
+
     public NetworkVariableULong ownerClientId = new NetworkVariableULong(new NetworkVariableSettings{
         SendTickrate = -1,
         WritePermission = NetworkVariablePermission.ServerOnly
     });
+
+    public NetworkVariableFloat stamina = new NetworkVariableFloat(new NetworkVariableSettings{
+        SendTickrate = 20,
+        WritePermission = NetworkVariablePermission.ServerOnly
+    }, 100);
+    
+    public NetworkVariableFloat maxStamina = new NetworkVariableFloat(new NetworkVariableSettings{
+        SendTickrate = -1,
+        WritePermission = NetworkVariablePermission.ServerOnly
+    }, 100);
 
     private float _animationTransitionTime = 0.15f;
     private float _curTransitionTime = 0f;
@@ -30,6 +40,11 @@ public class Player : NetworkBehaviour
     {
         if(IsServer) {
             this.transform.rotation = Quaternion.Euler(0, faceAngle, 0);
+
+            //test
+            if(sprinting) {
+                stamina.Value -= Time.deltaTime * 20;
+            }
             
             bool isMoving = (moveDir.magnitude > 0.01f);
             if(isMoving) {                

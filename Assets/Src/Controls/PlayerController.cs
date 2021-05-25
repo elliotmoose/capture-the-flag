@@ -127,4 +127,16 @@ public class PlayerController : NetworkBehaviour
             Debug.Log("Skill 2!");
         }
     }
+
+    public Player GetPlayer() {
+        NetworkObject playerNetworkObj = NetworkSpawnManager.SpawnedObjects[playerObjNetId.Value];
+        GameObject playerObj = playerNetworkObj.gameObject;
+        if(playerObj) {
+            Player player = playerObj.GetComponent<Player>();
+            return player;
+        }
+        else {
+            return null;
+        }
+    }
 }

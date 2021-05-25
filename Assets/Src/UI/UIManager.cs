@@ -15,9 +15,10 @@ public class UIManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(PlayerController.LocalInstance) {
-            //get player from local instance
-            //update ui stamina to player stamina
+        if(PlayerController.LocalInstance != null) {
+            Player player = PlayerController.LocalInstance.GetPlayer();
+            float stamina = player.stamina.Value/player.maxStamina.Value;
+            staminaBar.fillAmount = stamina;
         }
     }
 }
