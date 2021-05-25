@@ -156,16 +156,16 @@ public class Player : NetworkBehaviour
     }
 
     public void UpdateEffects()
-    {
-        
-        foreach (Effect effect in this.effects)
+    {        
+        for(int i=0; i< this.effects.Count; i++)
         {
+            Effect effect = this.effects[i];
             effect.Update();
             
             if (effect.effectEnded)
             {
                 effects.Remove(effect);
-            }
+            } 
         }
     }
 
