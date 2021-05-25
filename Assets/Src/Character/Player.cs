@@ -9,6 +9,7 @@ using MLAPI.Messaging;
 public class Player : NetworkBehaviour
 {
     //movement controls
+    public GameObject flagSlot;
     public Vector2 moveDir = Vector2.zero;
     public float faceAngle = 0;
 
@@ -16,34 +17,20 @@ public class Player : NetworkBehaviour
     float sprintMultiplier = 2.4f;
     public bool sprinting = false;
 
+    public int team = 1;
     public NetworkVariableULong ownerClientId = new NetworkVariableULong(new NetworkVariableSettings{
         SendTickrate = -1,
         WritePermission = NetworkVariablePermission.ServerOnly
     });
 
-    // Player() : base() {
-    //     Debug.Log("player constructed");
-    //     ownerClientId.OnValueChanged += (ulong oldId, ulong newId) => {
-    //         this.name = "player"+newId.ToString();
-    //         Debug.Log("onvaluechanged");
-            
-    //         //set camera
-    //         if(newId == NetworkManager.Singleton.LocalClientId) {
-    //             Camera.main.transform.SetParent(this.transform);
-    //         }
-    //     };
-
-    //     Debug.Log("event subscribed");
-    // }
-
-    // Update is called once per frame
-
     private float _animationTransitionTime = 0.15f;
     private float _curTransitionTime = 0f;
+
     void Update()
     {
         if(IsServer) {
-            // Debug.Log(NetworkManager.Singleton.LocalClientId);
+            this.transform.rotation = Quaternion.Euler(0, faceAngle, 0);
+            
             bool isMoving = (moveDir.magnitude > 0.01f);
             if(isMoving) {                
                 float moveDirAngle = Mathf.Atan2(moveDir.x, moveDir.y) * Mathf.Rad2Deg + faceAngle;
@@ -73,8 +60,8 @@ public class Player : NetworkBehaviour
 
     void LateUpdate() {
         //TODO: face based on facedir
-        if(NetworkManager.LocalClientId == ownerClientId.Value) {
-            transform.rotation = Quaternion.Euler(transform.rotation.x, Camera.main.transform.eulerAngles.y, transform.rotation.z);
-        }
+        // if(NetworkManager.LocalClientId == ownerClientId.Value) {
+        //     transform.rotation = Quaternion.Euler(transform.rotation.x, Camera.main.transform.eulerAngles.y, transform.rotation.z);
+        // }
     }
 }
