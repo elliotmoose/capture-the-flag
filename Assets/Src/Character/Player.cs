@@ -15,12 +15,11 @@ public class Player : NetworkBehaviour
     protected float cdTimer2 = 0.0f;
     
     //movement controls
+    public GameObject flagSlot;
     public Vector2 moveDir = Vector2.zero;
     public float faceAngle = 0;
 
     protected float moveSpeed = 18;
-    protected float maxStamina = 100;
-    protected float curStamina = 100;
     protected float staminaBurnFactor = 25;
     protected float staminaRecoveryFactor = 30;
     protected bool isDisabled = false;
@@ -28,6 +27,7 @@ public class Player : NetworkBehaviour
 
     float sprintMultiplier = 2.4f;
     public bool sprinting = false;
+    public int team = 1;
 
     public NetworkVariableULong ownerClientId = new NetworkVariableULong(new NetworkVariableSettings{
         SendTickrate = -1,
@@ -49,24 +49,37 @@ public class Player : NetworkBehaviour
     }
 
     // Update is called once per frame
+    public NetworkVariableFloat curStamina = new NetworkVariableFloat(new NetworkVariableSettings{
+        SendTickrate = 20,
+        WritePermission = NetworkVariablePermission.ServerOnly
+    }, 100);
+    
+    public NetworkVariableFloat maxStamina = new NetworkVariableFloat(new NetworkVariableSettings{
+        SendTickrate = -1,
+        WritePermission = NetworkVariablePermission.ServerOnly
+    }, 100);
 
     private float _animationTransitionTime = 0.15f;
     private float _curTransitionTime = 0f;
+
     void Update()
     {
+
         if(!IsServer) { return; }
 
         bool isMoving = (moveDir.magnitude > 0.01f && !isDisabled);
-        bool canSprint = (curStamina > 0 && isMoving);
+        bool canSprint = (curStamina.Value > 0 && isMoving);
         bool isSprinting = (canSprint && sprinting);
+        this.transform.rotation = Quaternion.Euler(0, faceAngle, 0);
         //Debug.Log(curStamina);
+
         if(isMoving) {                
             float moveDirAngle = Mathf.Atan2(moveDir.x, moveDir.y) * Mathf.Rad2Deg + faceAngle;
             Vector3 positionDelta = Quaternion.Euler(0, moveDirAngle, 0) * Vector3.forward;
 
             if(isSprinting) {
                 transform.position += positionDelta.normalized * Time.deltaTime * moveSpeed * sprintMultiplier;
-                curStamina = Mathf.Max(0, curStamina - Time.deltaTime * staminaBurnFactor);
+                curStamina.Value = Mathf.Max(0, curStamina.Value - Time.deltaTime * staminaBurnFactor);
             }
             else {
                 transform.position += positionDelta.normalized * Time.deltaTime * moveSpeed;
@@ -75,7 +88,7 @@ public class Player : NetworkBehaviour
         
         //recover
         if(!sprinting && !isDisabled) {
-            curStamina = Mathf.Clamp(curStamina + Time.deltaTime * staminaRecoveryFactor, 0, maxStamina);
+            curStamina.Value = Mathf.Clamp(curStamina.Value + Time.deltaTime * staminaRecoveryFactor, 0, maxStamina.Value);
         }
 
         SetAnimationsSmooth(isMoving, isSprinting);
@@ -115,9 +128,9 @@ public class Player : NetworkBehaviour
 
     void LateUpdate() {
         //TODO: face based on facedir
-        if(NetworkManager.LocalClientId == ownerClientId.Value) {
-            transform.rotation = Quaternion.Euler(transform.rotation.x, Camera.main.transform.eulerAngles.y, transform.rotation.z);
-        }
+        // if(NetworkManager.LocalClientId == ownerClientId.Value) {
+        //     transform.rotation = Quaternion.Euler(transform.rotation.x, Camera.main.transform.eulerAngles.y, transform.rotation.z);
+        // }
     }
 
 

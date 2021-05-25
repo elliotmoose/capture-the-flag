@@ -9,6 +9,7 @@ using MLAPI.NetworkVariable;
 using Cinemachine;
 public class PlayerController : NetworkBehaviour 
 {   
+    public static PlayerController LocalInstance;
     NetworkVariableBool sprinting = new NetworkVariableBool(new NetworkVariableSettings{
         WritePermission = NetworkVariablePermission.OwnerOnly
     });
@@ -39,9 +40,9 @@ public class PlayerController : NetworkBehaviour
     public override void NetworkStart()
     {
         base.NetworkStart();        
-        // if(IsLocalPlayer) {
-        //     Camera.main.GetComponent<CameraFollower>().controlType = controlType;
-        // }
+        if(IsLocalPlayer) {
+            LocalInstance = this;
+        }
     }
     
     void Start() {
