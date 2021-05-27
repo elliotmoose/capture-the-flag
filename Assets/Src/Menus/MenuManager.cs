@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using MLAPI;
 using MLAPI.Transports.UNET;
+using MLAPI.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
 
@@ -20,7 +21,10 @@ public class MenuManager : MonoBehaviour
 {
     // Start is called before the first frame update
     MenuPage currentPage = MenuPage.SetUsername;
+    public TMP_InputField playerNameInput;
     public TMP_InputField IpAddressInput;
+    public GameObject gameManager; 
+
 
     public void SetCurrentPage(string pageName) {
         MenuPage result;
@@ -36,26 +40,54 @@ public class MenuManager : MonoBehaviour
     public void Host()
     {
         NetworkManager.Singleton.StartHost();
-        SceneManager.LoadScene("Game", LoadSceneMode.Single);
+        //if (NetworkManager.Singleton.IsListening)
+        //{
+        //    NetworkSceneManager.SwitchScene("Game");
+        //}
+        //else
+        //{
+        //    SceneManager.LoadSceneAsync("Game");
+        //}
+        //SceneManager.LoadScene("Game", LoadSceneMode.Single);
+
     }
 
     public void Join()
     {
+        
         if (IpAddressInput.text.Length <= 0)
         {
             NetworkManager.Singleton.GetComponent<UNetTransport>().ConnectAddress = "127.0.0.1";
+            GameManager gameManagerScript = gameManager.GetComponent<GameManager>();
+            gameManagerScript.IpAddress = "127.0.0.1";
         }
         else
         {
             NetworkManager.Singleton.GetComponent<UNetTransport>().ConnectAddress = IpAddressInput.text;
+            GameManager gameManagerScript = gameManager.GetComponent<GameManager>();
+            gameManagerScript.IpAddress = IpAddressInput.text;
         }
         NetworkManager.Singleton.StartClient();
-        SceneManager.LoadScene("Game", LoadSceneMode.Single);
+        //if (NetworkManager.Singleton.IsListening)
+        //{
+        //    NetworkSceneManager.SwitchScene("Game");
+        //}
+        //else
+        //{
+        //    SceneManager.LoadSceneAsync("Game");
+        //}
+        //SceneManager.LoadScene("Game", LoadSceneMode.Single);
+    }
+
+    public void UpdatePlayerName()
+    {
+        GameManager gameManagerScript = gameManager.GetComponent<GameManager>();
+        gameManagerScript.playerName = playerNameInput.text;
     }
 
     void Start()
     {
-        NetworkManager.Singleton.ConnectionApprovalCallback += ApprovalCheck; 
+        //NetworkManager.Singleton.ConnectionApprovalCallback += ApprovalCheck; 
     }
 
     private void ApprovalCheck(byte[] connectionData, ulong clientID, NetworkManager.ConnectionApprovedDelegate callback)

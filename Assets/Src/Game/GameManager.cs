@@ -91,3 +91,10 @@ public class GameManager : NetworkBehaviour
         Instance = null;
     }
 }
+
+    public string playerName = "Player";
+    public string IpAddress = "";
+    void Awake()
+    {
+        DontDestroyOnLoad(transform.gameObject);
+    }
