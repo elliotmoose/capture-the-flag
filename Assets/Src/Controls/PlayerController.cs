@@ -9,6 +9,7 @@ using MLAPI.NetworkVariable;
 using Cinemachine;
 public class PlayerController : NetworkBehaviour 
 {   
+    public static PlayerController LocalInstance;
     NetworkVariableBool sprinting = new NetworkVariableBool(new NetworkVariableSettings{
         WritePermission = NetworkVariablePermission.OwnerOnly
     });
@@ -39,9 +40,9 @@ public class PlayerController : NetworkBehaviour
     public override void NetworkStart()
     {
         base.NetworkStart();        
-        // if(IsLocalPlayer) {
-        //     Camera.main.GetComponent<CameraFollower>().controlType = controlType;
-        // }
+        if(IsLocalPlayer) {
+            LocalInstance = this;
+        }
     }
     
     void Start() {
@@ -51,7 +52,7 @@ public class PlayerController : NetworkBehaviour
             };
 
             //tell spawner to spawn
-            GameObject spawnedPlayerGO = PlayerSpawner.Instance.SpawnPlayer(GetComponent<NetworkObject>().OwnerClientId);            
+            GameObject spawnedPlayerGO = PlayerSpawner.Instance.SpawnPlayer(GetComponent<NetworkObject>().OwnerClientId, Team.BLUE); 
             playerObjNetId.Value = spawnedPlayerGO.GetComponent<NetworkObject>().NetworkObjectId;
             Debug.Log("server spawn id:" + playerObjNetId.Value.ToString());
         }        
@@ -64,7 +65,6 @@ public class PlayerController : NetworkBehaviour
     void Update()
     {   
         if(IsLocalPlayer) {
-            Debug.Log("Checking for controls");
             ClientControls();
         }
 
@@ -124,6 +124,18 @@ public class PlayerController : NetworkBehaviour
     void Skill2ServerRpc() {
         if(IsServer) {
             Debug.Log("Skill 2!");
+        }
+    }
+
+    public Player GetPlayer() {
+        NetworkObject playerNetworkObj = NetworkSpawnManager.SpawnedObjects[playerObjNetId.Value];
+        GameObject playerObj = playerNetworkObj.gameObject;
+        if(playerObj) {
+            Player player = playerObj.GetComponent<Player>();
+            return player;
+        }
+        else {
+            return null;
         }
     }
 }
