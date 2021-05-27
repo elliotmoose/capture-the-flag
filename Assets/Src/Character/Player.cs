@@ -81,7 +81,7 @@ public class Player : NetworkBehaviour
     }
 
     public void ResetForRound() {
-        this.stamina = maxStamina;
+        this.stamina.Value = maxStamina.Value;
         this.transform.position = Vector3.zero; //todo: make spawn point
     }
 }
