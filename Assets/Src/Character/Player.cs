@@ -24,9 +24,11 @@ public class Player : NetworkBehaviour
     protected float staminaBurnFactor = 25;
     protected float staminaRecoveryFactor = 30;
     protected bool isDisabled = false;
+
+    //skill variables
     protected bool isInvis = false;
     protected float invisAlpha = 0.3f;
-
+    
 
     float sprintMultiplier = 2.4f;
     public bool sprinting = false;
