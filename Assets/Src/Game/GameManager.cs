@@ -15,6 +15,10 @@ public class GameManager : NetworkBehaviour
 
     public GameObject redTeamFlag;
     public GameObject blueTeamFlag;
+
+    public Jail blueTeamJail;
+    public Jail redTeamJail;
+
     // Start is called before the first frame update
     void Start()
     {
