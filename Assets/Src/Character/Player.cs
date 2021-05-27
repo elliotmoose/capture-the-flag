@@ -16,7 +16,7 @@ public class Player : NetworkBehaviour
     float moveSpeed = 18;
     float sprintMultiplier = 2.4f;
     public bool sprinting = false;
-    public int team = 1;
+    public Team team = Team.BLUE;
 
     public NetworkVariableULong ownerClientId = new NetworkVariableULong(new NetworkVariableSettings{
         SendTickrate = -1,
@@ -78,5 +78,10 @@ public class Player : NetworkBehaviour
         // if(NetworkManager.LocalClientId == ownerClientId.Value) {
         //     transform.rotation = Quaternion.Euler(transform.rotation.x, Camera.main.transform.eulerAngles.y, transform.rotation.z);
         // }
+    }
+
+    public void ResetForRound() {
+        this.stamina = maxStamina;
+        this.transform.position = Vector3.zero; //todo: make spawn point
     }
 }

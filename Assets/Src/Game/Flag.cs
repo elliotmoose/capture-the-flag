@@ -5,7 +5,7 @@ using MLAPI;
 public class Flag : NetworkBehaviour
 {
     Player capturer;
-    int team = 0;
+    public Team team = Team.BLUE;
     // Start is called before the first frame update
     void Start()
     {
@@ -30,16 +30,17 @@ public class Flag : NetworkBehaviour
         }
     }
 
-    public void SetTeam(int team) {
+    public void SetTeam(Team team) {
         if(!IsServer) { return; }
         this.team = team;
-        this.transform.GetChild(1).GetComponent<Renderer>().material.color = team == 0 ? new Color32(166,56,56,255) : new Color32(34,148,197,255);
+        this.transform.GetChild(1).GetComponent<Renderer>().material.color = (team == Team.BLUE) ? new Color32(34,148,197,255) : new Color32(166,56,56,255);
     }
 
     public void ResetPosition() {
         if(!IsServer) { return; }
         this.capturer = null;
-        this.transform.position = new Vector3(0,1.25f,120 * ((team == 0) ? -1 : 1));
+        this.transform.SetParent(null);
+        this.transform.position = new Vector3(0,1.25f,120 * ((team == Team.BLUE) ? 1 : -1));
         this.transform.rotation = Quaternion.identity;
     }
 }
