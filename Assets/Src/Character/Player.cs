@@ -102,8 +102,6 @@ public class Player : NetworkBehaviour
             for (int i = 0; i < this.rends.Length; i++)
             {
                 Renderer rend = rends[i];
-                Debug.Log(this.team);
-                Debug.Log(PlayerController.LocalInstance.GetPlayer().team);
                 if (this.team == PlayerController.LocalInstance.GetPlayer().team)
                 {
                     // if same team, appear transparent
