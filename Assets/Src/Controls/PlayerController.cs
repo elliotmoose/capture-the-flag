@@ -52,7 +52,7 @@ public class PlayerController : NetworkBehaviour
             };
 
             //tell spawner to spawn
-            GameObject spawnedPlayerGO = PlayerSpawner.Instance.SpawnPlayer(GetComponent<NetworkObject>().OwnerClientId);            
+            GameObject spawnedPlayerGO = PlayerSpawner.Instance.SpawnPlayer(GetComponent<NetworkObject>().OwnerClientId, Team.BLUE); 
             playerObjNetId.Value = spawnedPlayerGO.GetComponent<NetworkObject>().NetworkObjectId;
             Debug.Log("server spawn id:" + playerObjNetId.Value.ToString());
         }        
@@ -65,7 +65,6 @@ public class PlayerController : NetworkBehaviour
     void Update()
     {   
         if(IsLocalPlayer) {
-            Debug.Log("Checking for controls");
             ClientControls();
         }
 

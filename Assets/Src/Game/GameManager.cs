@@ -7,13 +7,6 @@ public class GameManager : NetworkBehaviour
 {
     public static GameManager Instance;
 
-    GameManager() : base() {
-        if(Instance != null) {
-            throw new System.Exception("More than one GameManager exists");
-        }
-        Instance = this;
-    }
-
     public GameObject redTeamFlag;
     public GameObject blueTeamFlag;
 
@@ -28,6 +21,9 @@ public class GameManager : NetworkBehaviour
         SendTickrate = -1,
         WritePermission = NetworkVariablePermission.ServerOnly
     });
+
+    List<Player> blueTeamPlayers = new List<Player>();
+    List<Player> redTeamPlayers = new List<Player>();
 
     // Start is called before the first frame update
     void Start()
@@ -82,5 +78,16 @@ public class GameManager : NetworkBehaviour
         redTeamFlag.GetComponent<Flag>().ResetPosition();
         blueTeamFlag.GetComponent<Flag>().SetTeam(Team.BLUE);
         blueTeamFlag.GetComponent<Flag>().ResetPosition();
+    }
+
+    void Awake() {
+        if(Instance != null) {
+            throw new System.Exception("More than one GameManager exists");
+        }
+        Instance = this;
+    }
+
+    void OnDestroy() {
+        Instance = null;
     }
 }
