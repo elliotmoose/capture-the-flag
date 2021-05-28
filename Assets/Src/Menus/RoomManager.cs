@@ -2,52 +2,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using MLAPI;
+using MLAPI.SceneManagement;
 using MLAPI.Serialization;
 using MLAPI.NetworkVariable;
 using MLAPI.NetworkVariable.Collections;
 using MLAPI.Messaging;
 using MLAPI.Transports.UNET;
 using MLAPI.Spawning;
-using System;
-
-// public struct LobbyPlayerState : INetworkSerializable
-// {
-//     public ulong ClientId;
-//     public string PlayerName;
-//     public int PlayerNum; // this player's assigned "P#". (0=P1, 1=P2, etc.)
-//     public int SeatIdx; // the latest seat they were in. -1 means none
-//     public SeatState SeatState;
-//     public float LastChangeTime;
-
-//     public LobbyPlayerState(ulong clientId, string name, int playerNum, SeatState state, int seatIdx = -1, float lastChangeTime = 0)
-//     {
-//         ClientId = clientId;
-//         PlayerName = name;
-//         PlayerNum = playerNum;
-//         SeatState = state;
-//         SeatIdx = seatIdx;
-//         LastChangeTime = lastChangeTime;
-//     }
-//     public void NetworkSerialize(NetworkSerializer serializer)
-//     {
-//         serializer.Serialize(ref ClientId);
-//         serializer.Serialize(ref PlayerName);
-//         serializer.Serialize(ref PlayerNum);
-//         serializer.Serialize(ref SeatState);
-//         serializer.Serialize(ref SeatIdx);
-//         serializer.Serialize(ref LastChangeTime);
-//     }
-// }
 
 public struct User : INetworkSerializable {
     public ulong clientId;
     public string username;
     public Team team;
+    public string character;
 
     public User(ulong clientId, Team team, string username) {
         this.clientId = clientId;
         this.team = team;
         this.username = username;
+        this.character = "";
     }
 
     public void NetworkSerialize(NetworkSerializer serializer)
@@ -76,14 +49,13 @@ public class RoomManager : NetworkBehaviour
 
     public delegate void RoomManagerEvent();
     public RoomManagerEvent OnRoomUsersUpdate;
-    public RoomManagerEvent OnJoinRoom;
+    public RoomManagerEvent OnClientJoinRoom;
 
     void Start()
     {        
         // CreateRoom();
         roomUsers.OnListChanged += (NetworkListEvent<User> changeEvent)=>{
             if(OnRoomUsersUpdate != null) {
-                Debug.Log($"room users changed {RoomManager.Instance.roomUsers.Count}");
                 OnRoomUsersUpdate();
             }
         };
@@ -93,6 +65,8 @@ public class RoomManager : NetworkBehaviour
                 OnRoomUsersUpdate();
             }
         };
+
+        DontDestroyOnLoad(this.gameObject);
     }
 
 
@@ -106,15 +80,30 @@ public class RoomManager : NetworkBehaviour
     {
         //on connected
         if(IsClient && !IsHost) {
-            SetUsernameServerRpc(NetworkManager.LocalClientId, UserManager.Instance.username);
-            // RequestRoomDetailsServerRpc();            
-            if(OnJoinRoom != null) {
-                OnJoinRoom();
+            //clients should tell the server what their username is when they connect
+            SetUsernameServerRpc(NetworkManager.LocalClientId, UserManager.Instance.username);          
+            if(OnClientJoinRoom != null) {
+                OnClientJoinRoom();
             }
         }
     }
 
     #region Server Side Functions
+    public void StartGame() {
+        if(!IsServer) {return;}
+        
+        bool canStartGame = (roomUsers.Count == maxPlayersPerTeam.Value*2);
+
+        // if(!canStartGame) {
+        //     Debug.LogWarning("== RoomManager: Cannot start game as non enough players");
+        //     return;
+        // }
+
+        Debug.Log($"Pre scene change user count: ${roomUsers.Count}");
+        NetworkSceneManager.SwitchScene("Game");
+        Debug.Log($"Post scene change user count: ${roomUsers.Count}");
+    }
+
     public void CreateRoom() 
     {    
         NetworkManager.Singleton.ConnectionApprovalCallback += ApprovalCheck;
@@ -130,14 +119,8 @@ public class RoomManager : NetworkBehaviour
         }
     }
 
-    private void OnClientConnected(ulong clientId) {
-
-        if(IsClient) {
-            Debug.Log("Client connected");
-        }
-
-        
-        
+    //runs on server
+    private void OnClientConnected(ulong clientId) {        
         int blueTeamCount = FindUsersWithTeam(Team.BLUE).Count;
         int redTeamCount = (roomUsers.Count - blueTeamCount);
         bool joinRed = (blueTeamCount > redTeamCount);
@@ -186,7 +169,18 @@ public class RoomManager : NetworkBehaviour
         return users;
     }
 
+    private void UpdateUserValue(ulong clientId, Team team, string username) {
+        for(int i=0; i<roomUsers.Count; i++) {            
+            User user = roomUsers[i];
+            if(user.clientId == clientId) {
+                User updatedUser = new User(clientId, team, username);;
+                roomUsers[i] = updatedUser;
+                return;
+            }
+        }
 
+        Debug.LogWarning($"Could not find user to update: {clientId}");
+    }
     #endregion
 
     #region Client Side Functions
@@ -220,10 +214,6 @@ public class RoomManager : NetworkBehaviour
                     UpdateUserValue(user.Value.clientId, team, user.Value.username);
                 }   
             }
-
-            // if(OnRoomUsersUpdate != null) {
-            //     OnRoomUsersUpdate();
-            // }
         }
     }
     
@@ -234,27 +224,24 @@ public class RoomManager : NetworkBehaviour
             if(user != null) {
                 UpdateUserValue(user.Value.clientId, user.Value.team, username);
             }
-
-            // if(OnRoomUsersUpdate != null) {
-            //     OnRoomUsersUpdate();
-            // }
         }
-    }
-
-    void UpdateUserValue(ulong clientId, Team team, string username) {
-        for(int i=0; i<roomUsers.Count; i++) {            
-            User user = roomUsers[i];
-            if(user.clientId == clientId) {
-                User updatedUser = new User(clientId, team, username);;
-                roomUsers[i] = updatedUser;
-                return;
-            }
-        }
-
-        Debug.LogWarning($"Could not find user to update: {clientId}");
     }
 
     #endregion
+
+    //this will be called by GameManager when the game begins
+    public List<User> HandoverUsersAndDestory() {
+        List<User> users = new List<User>();
+
+        foreach(User user in roomUsers) {
+            users.Add(user);
+        }
+
+        Debug.Log($"roomUsers: {roomUsers.Count} vs users:{users.Count}");
+        //tell everyone to destroy room manager
+        // GameObject.Destroy(this.gameObject);
+        return users;
+    }
 
     void Awake() {
         if(Instance != null) {

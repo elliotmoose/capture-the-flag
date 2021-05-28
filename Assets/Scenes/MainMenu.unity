@@ -2280,7 +2280,7 @@ GameObject:
   - component: {fileID: 957093955}
   - component: {fileID: 957093958}
   m_Layer: 0
-  m_Name: GameManager
+  m_Name: LobbyManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2299,8 +2299,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NetworkInstanceId: 0
-  PrefabHash: 8259672435130462525
-  PrefabHashGenerator: RoomManager
+  PrefabHash: 6490678375337543068
+  PrefabHashGenerator: LobbyManager
   AlwaysReplicateAsRoot: 0
   DontDestroyWithOwner: 0
 --- !u!4 &957093956
@@ -2768,7 +2768,7 @@ MonoBehaviour:
     MaxReceiveEventsPerTickRate: 500
     EventTickrate: 64
     ClientConnectionBufferTimeout: 10
-    ConnectionApproval: 0
+    ConnectionApproval: 1
     ConnectionData: 
     EnableTimeResync: 0
     TimeResyncInterval: 30

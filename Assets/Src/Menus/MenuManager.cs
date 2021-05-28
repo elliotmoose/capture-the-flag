@@ -32,20 +32,11 @@ public class MenuManager : MonoBehaviour
     public GameObject blueTeamPlayerRows;
 
     void Start() {
+        //subscribe to room events
         RoomManager.Instance.OnRoomUsersUpdate += UpdateRoomPage;
-        RoomManager.Instance.OnJoinRoom += OnJoinRoom;
-        // if(currentPage == MenuPage.Room) {
-        // }
-        // else if(previousPage == MenuPage.Room) {
-        //     RoomManager.Instance.OnRoomUsersUpdate -= UpdateRoomPage;
-        // }
-        
-        // if(currentPage == MenuPage.JoinRoom) {
-        // }
-        // else if(previousPage == MenuPage.JoinRoom) {
-        //     RoomManager.Instance.OnJoinRoom -= OnJoinRoom;
-        // }
+        RoomManager.Instance.OnClientJoinRoom += OnJoinRoom;
     }
+
     public void SetCurrentPage(string pageName) {
         MenuPage result;
         System.Enum.TryParse<MenuPage>(pageName, true, out result);
@@ -69,19 +60,8 @@ public class MenuManager : MonoBehaviour
 
     public void StartHost()
     {
-        RoomManager roomManager = RoomManager.Instance;
-        roomManager.CreateRoom();
+        RoomManager.Instance.CreateRoom();
         UpdateRoomPage();
-        //if (NetworkManager.Singleton.IsListening)
-        //{
-        //    NetworkSceneManager.SwitchScene("Game");
-        //}
-        //else
-        //{
-        //    SceneManager.LoadSceneAsync("Game");
-        //}
-        //SceneManager.LoadScene("Game", LoadSceneMode.Single);
-
     }
 
     public void JoinRoom()
@@ -106,7 +86,7 @@ public class MenuManager : MonoBehaviour
 
 
     public void StartGame() {
-
+        RoomManager.Instance.StartGame();
     }
 
     // Update is called once per frame
@@ -130,9 +110,16 @@ public class MenuManager : MonoBehaviour
             if(redUser != null) {
                 redTeamPlayerRows.transform.GetChild(i+1).GetComponentInChildren<TextMeshProUGUI>().text = redUser.Value.username;
             }
+            else {
+                redTeamPlayerRows.transform.GetChild(i+1).GetComponentInChildren<TextMeshProUGUI>().text = "Empty Slot";
+            }
+
             User? blueUser = blueTeamUsers.ElementAtOrDefault<User>(i);
             if(blueUser != null) {
                 blueTeamPlayerRows.transform.GetChild(i+1).GetComponentInChildren<TextMeshProUGUI>().text = blueUser.Value.username;
+            }
+            else {
+                blueTeamPlayerRows.transform.GetChild(i+1).GetComponentInChildren<TextMeshProUGUI>().text = "Empty Slot";
             }
         }
     }
@@ -147,13 +134,13 @@ public class MenuManager : MonoBehaviour
         //remove unwanted children
         for(int x=redTeamPlayerRows.transform.childCount-1; x>=0; x--) {
             if(x > 1) {
-                redTeamPlayerRows.transform.GetChild(x).SetParent(null);
+                GameObject.DestroyImmediate(redTeamPlayerRows.transform.GetChild(x).gameObject);
             }
         }
         
         for(int x=blueTeamPlayerRows.transform.childCount-1; x>=0; x--) {
             if(x > 1) {
-                blueTeamPlayerRows.transform.GetChild(x).SetParent(null);
+                GameObject.DestroyImmediate(blueTeamPlayerRows.transform.GetChild(x).gameObject);
             }
         }
 

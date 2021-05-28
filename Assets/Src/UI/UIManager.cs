@@ -25,7 +25,12 @@ public class UIManager : MonoBehaviour
             staminaBar.fillAmount = stamina;
         }
 
-        redTeamScore.text = $"{GameManager.Instance.redTeamScore.Value}";
-        blueTeamScore.text = $"{GameManager.Instance.blueTeamScore.Value}";
+        if(GameManager.Instance != null) {
+            redTeamScore.text = $"{GameManager.Instance.redTeamScore.Value}";
+            blueTeamScore.text = $"{GameManager.Instance.blueTeamScore.Value}";
+        }
+        else {
+            Debug.LogWarning("Attempting to update UI but GameManager does not exist");
+        }
     }
 }

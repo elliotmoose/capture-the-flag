@@ -22,8 +22,10 @@ public class GameManager : NetworkBehaviour
         WritePermission = NetworkVariablePermission.ServerOnly
     });
 
+    public List<User> users = new List<User>();
     List<Player> blueTeamPlayers = new List<Player>();
     List<Player> redTeamPlayers = new List<Player>();
+
 
     // Start is called before the first frame update
     void Start()
@@ -34,6 +36,8 @@ public class GameManager : NetworkBehaviour
     public override void NetworkStart() {
         base.NetworkStart();
         if(!IsServer) { return; }
+        users = RoomManager.Instance.HandoverUsersAndDestory();
+        Debug.Log($"Handover successful with {users.Count} users");
         StartGame();
     }
 
@@ -41,6 +45,7 @@ public class GameManager : NetworkBehaviour
         if(!IsServer) { return; }
         
         Debug.Log("== GameManager: Game Started!");
+        SpawnPlayerControllers();
         ResetFlags();        
     }
 
@@ -70,6 +75,10 @@ public class GameManager : NetworkBehaviour
         foreach(Player player in PlayerSpawner.Instance.GetAllPlayers()) {
             player.ResetForRound();
         }
+    }
+
+    void SpawnPlayerControllers() {
+
     }
 
     void ResetFlags() {
