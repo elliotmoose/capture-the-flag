@@ -18,19 +18,26 @@ public class UserController : NetworkBehaviour
         
     }
 
-    [ServerRpc]
-    void JoinTeamServerRpc(Team team) {
-        if(IsServer) {
-            ulong clientId = this.OwnerClientId;
-            RoomManager.Instance.JoinTeam(clientId, team);
-        }
+    public override void NetworkStart() {
+        //upon connecting, client tells server what their username is
+        // if(IsLocalPlayer) {
+        //     SetUsernameServerRpc(UserManager.Instance.username);
+        // }
     }
+
+    // [ServerRpc]
+    // void JoinTeamServerRpc(Team team) {
+    //     if(IsServer) {
+    //         ulong clientId = this.OwnerClientId;
+    //         RoomManager.Instance.JoinTeam(clientId, team);
+    //     }
+    // }
     
-    [ServerRpc]
-    void SetUsernameServerRpc(string username) {
-        if(IsServer) {
-            ulong clientId = this.OwnerClientId;
-            RoomManager.Instance.SetUsername(clientId, username);
-        }
-    }
+    // [ServerRpc]
+    // void SetUsernameServerRpc(string username) {
+    //     if(IsServer) {
+    //         ulong clientId = this.OwnerClientId;
+    //         RoomManager.Instance.SetUsername(clientId, username);
+    //     }
+    // }
 }

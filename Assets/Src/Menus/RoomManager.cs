@@ -2,18 +2,59 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using MLAPI;
+using MLAPI.Serialization;
+using MLAPI.NetworkVariable;
+using MLAPI.NetworkVariable.Collections;
+using MLAPI.Messaging;
 using MLAPI.Transports.UNET;
 using MLAPI.Spawning;
+using System;
 
-public class User {
+// public struct LobbyPlayerState : INetworkSerializable
+// {
+//     public ulong ClientId;
+//     public string PlayerName;
+//     public int PlayerNum; // this player's assigned "P#". (0=P1, 1=P2, etc.)
+//     public int SeatIdx; // the latest seat they were in. -1 means none
+//     public SeatState SeatState;
+//     public float LastChangeTime;
+
+//     public LobbyPlayerState(ulong clientId, string name, int playerNum, SeatState state, int seatIdx = -1, float lastChangeTime = 0)
+//     {
+//         ClientId = clientId;
+//         PlayerName = name;
+//         PlayerNum = playerNum;
+//         SeatState = state;
+//         SeatIdx = seatIdx;
+//         LastChangeTime = lastChangeTime;
+//     }
+//     public void NetworkSerialize(NetworkSerializer serializer)
+//     {
+//         serializer.Serialize(ref ClientId);
+//         serializer.Serialize(ref PlayerName);
+//         serializer.Serialize(ref PlayerNum);
+//         serializer.Serialize(ref SeatState);
+//         serializer.Serialize(ref SeatIdx);
+//         serializer.Serialize(ref LastChangeTime);
+//     }
+// }
+
+public struct User : INetworkSerializable {
     public ulong clientId;
     public string username;
-    public Team team = Team.BLUE;
+    public Team team;
 
-    public User(ulong clientId, Team team) {
+    public User(ulong clientId, Team team, string username) {
         this.clientId = clientId;
         this.team = team;
-        username = "loading...";
+        this.username = username;
+    }
+
+    public void NetworkSerialize(NetworkSerializer serializer)
+    {
+        serializer.Serialize(ref clientId);
+        serializer.Serialize(ref username);
+        serializer.Serialize(ref team);
     }
 }
 
@@ -21,17 +62,37 @@ public class RoomManager : NetworkBehaviour
 {  
     public static RoomManager Instance;
 
-    public int maxPlayersPerTeam = 3;
     public bool autoStartHost = false;
     
-    public List<User> roomUsers = new List<User>();
+// public List<User> roomUsers = new List<User>();
+    public NetworkList<User> roomUsers = new NetworkList<User>(new NetworkVariableSettings {
+        WritePermission=NetworkVariablePermission.ServerOnly,
+        SendTickrate=3
+    });    
+    public NetworkVariableInt maxPlayersPerTeam = new NetworkVariableInt(new NetworkVariableSettings {
+        WritePermission=NetworkVariablePermission.ServerOnly,
+        SendTickrate=-1
+    }, 3);
 
     public delegate void RoomManagerEvent();
     public RoomManagerEvent OnRoomUsersUpdate;
+    public RoomManagerEvent OnJoinRoom;
 
     void Start()
     {        
         // CreateRoom();
+        roomUsers.OnListChanged += (NetworkListEvent<User> changeEvent)=>{
+            if(OnRoomUsersUpdate != null) {
+                Debug.Log($"room users changed {RoomManager.Instance.roomUsers.Count}");
+                OnRoomUsersUpdate();
+            }
+        };
+        
+        maxPlayersPerTeam.OnValueChanged += (int oldVal, int newVal)=>{
+            if(OnRoomUsersUpdate != null) {
+                OnRoomUsersUpdate();
+            }
+        };
     }
 
 
@@ -39,6 +100,18 @@ public class RoomManager : NetworkBehaviour
     void Update()
     {
 
+    }
+
+    public override void NetworkStart()
+    {
+        //on connected
+        if(IsClient && !IsHost) {
+            SetUsernameServerRpc(NetworkManager.LocalClientId, UserManager.Instance.username);
+            // RequestRoomDetailsServerRpc();            
+            if(OnJoinRoom != null) {
+                OnJoinRoom();
+            }
+        }
     }
 
     #region Server Side Functions
@@ -51,90 +124,135 @@ public class RoomManager : NetworkBehaviour
 
         if(IsHost) {
             Debug.Log($"Is Host with localClientId: {NetworkManager.LocalClientId}");
-            User newUser = new User(NetworkManager.LocalClientId, Team.RED);
+            User newUser = new User(NetworkManager.LocalClientId, Team.RED, "Loading...");
+            newUser.username = UserManager.Instance.username;
             roomUsers.Add(newUser);
         }
     }
 
     private void OnClientConnected(ulong clientId) {
-        int blueTeamCount = roomUsers.FindAll((eachUser)=>eachUser.team == Team.BLUE).Count;
+
+        if(IsClient) {
+            Debug.Log("Client connected");
+        }
+
+        
+        
+        int blueTeamCount = FindUsersWithTeam(Team.BLUE).Count;
         int redTeamCount = (roomUsers.Count - blueTeamCount);
         bool joinRed = (blueTeamCount > redTeamCount);
         Team team = joinRed ? Team.RED : Team.BLUE;
-        User newUser = new User(clientId, team);
+        User newUser = new User(clientId, team, "Loading...");
         Debug.Log($"== RoomManager: Client connected: {clientId} and has joined {team} team");
-
-        if(OnRoomUsersUpdate != null) {
-            OnRoomUsersUpdate();
-        }
+        roomUsers.Add(newUser);
     }
     
     private void OnClientDisconnected(ulong clientId) {
-        User userToRemove = FindUserWithClientId(clientId);
+        User? userToRemove = FindUserWithClientId(clientId);
         if(userToRemove != null) {
-            roomUsers.Remove(userToRemove);
-        }
-
-        if(OnRoomUsersUpdate != null) {
-            OnRoomUsersUpdate();
+            roomUsers.Remove(userToRemove.Value);
         }
     }
 
     private void ApprovalCheck(byte[] connectionData, ulong clientId, MLAPI.NetworkManager.ConnectionApprovedDelegate callback)
     {
         int noOfPlayers = roomUsers.Count;
-        bool hasReachMaxPlayers = (noOfPlayers < maxPlayersPerTeam*2);
+        bool hasReachMaxPlayers = (noOfPlayers < maxPlayersPerTeam.Value*2);
         bool allowConnection = !hasReachMaxPlayers;
         bool createPlayerObject = true;
         ulong? prefabHash = NetworkSpawnManager.GetPrefabHashFromGenerator("NetworkPlayerController");
         callback(createPlayerObject, prefabHash, allowConnection, Vector3.zero, Quaternion.identity);
     }
 
-    private User FindUserWithClientId(ulong clientId) {
-        int roomUserIndex = roomUsers.FindIndex((User eachUser)=>eachUser.clientId == clientId);
-        if(roomUserIndex != -1) {
-            return roomUsers[roomUserIndex];
+    public User? FindUserWithClientId(ulong clientId) {
+        foreach(User user in roomUsers) {
+            if(user.clientId == clientId) {
+                return user;
+            }
         }
         
         return null;
     }
+
+    public List<User> FindUsersWithTeam(Team team) {
+        List<User> users = new List<User>();
+
+        foreach(User user in roomUsers) {
+            if(user.team == team) {
+                users.Add(user);
+            }
+        }
+
+        return users;
+    }
+
 
     #endregion
 
     #region Client Side Functions
     public void JoinRoom(string ipAddressInput) 
     {    
-        string ipAddress = (ipAddressInput.Length <= 0) ? ipAddressInput : "127.0.0.1";
+        Debug.Log($"== RoomManager: Joining Room {ipAddressInput}...");
+        string ipAddress = (ipAddressInput.Length <= 0) ? "127.0.0.1" : ipAddressInput;
         NetworkManager.Singleton.GetComponent<UNetTransport>().ConnectAddress = ipAddress;
         NetworkManager.Singleton.StartClient();
     }
 
-    public void SetUsername(ulong clientId, string username) {
-        User user = FindUserWithClientId(clientId);
-        if(user != null) {
-            //TODO sync this information across clients
-            user.username = username;
+    public void LeaveRoom() {
+        if(IsHost) {
+            NetworkManager.Singleton.StopHost();
         }
-
-        if(OnRoomUsersUpdate != null) {
-            OnRoomUsersUpdate();
+        else if(IsClient) {
+            NetworkManager.Singleton.StopClient();
+        }
+        else if(IsServer){
+            NetworkManager.Singleton.StopServer();
         }
     }
 
-    public void JoinTeam(ulong clientId, Team team) {
-        int teamCount = roomUsers.FindAll((eachUser)=>eachUser.team == team).Count;
-        if(teamCount < maxPlayersPerTeam) {
-            User user = FindUserWithClientId(clientId);
+    [ServerRpc(RequireOwnership=false)]
+    void JoinTeamServerRpc(ulong clientId, Team team) {
+        if(IsServer) {
+            int teamCount = FindUsersWithTeam(team).Count;
+            if(teamCount < maxPlayersPerTeam.Value) {
+                User? user = FindUserWithClientId(clientId);
+                if(user != null) {
+                    UpdateUserValue(user.Value.clientId, team, user.Value.username);
+                }   
+            }
+
+            // if(OnRoomUsersUpdate != null) {
+            //     OnRoomUsersUpdate();
+            // }
+        }
+    }
+    
+    [ServerRpc(RequireOwnership=false)]
+    void SetUsernameServerRpc(ulong clientId, string username) {
+        if(IsServer) {
+            User? user = FindUserWithClientId(clientId);
             if(user != null) {
-                //TODO sync this information across clients
-                user.team = team;
-            }   
+                UpdateUserValue(user.Value.clientId, user.Value.team, username);
+            }
+
+            // if(OnRoomUsersUpdate != null) {
+            //     OnRoomUsersUpdate();
+            // }
+        }
+    }
+
+    void UpdateUserValue(ulong clientId, Team team, string username) {
+        for(int i=0; i<roomUsers.Count; i++) {            
+            User user = roomUsers[i];
+            if(user.clientId == clientId) {
+                User updatedUser = new User(clientId, team, username);;
+                roomUsers[i] = updatedUser;
+                return;
+            }
         }
 
-        if(OnRoomUsersUpdate != null) {
-            OnRoomUsersUpdate();
-        }
-    }    
+        Debug.LogWarning($"Could not find user to update: {clientId}");
+    }
 
     #endregion
 

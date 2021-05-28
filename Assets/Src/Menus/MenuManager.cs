@@ -16,7 +16,8 @@ public enum MenuPage {
     SetUsername,
     Home,
     JoinRoom,
-    Room
+    Room,
+    Connecting
 }
 
 public class MenuManager : MonoBehaviour
@@ -30,6 +31,21 @@ public class MenuManager : MonoBehaviour
     public GameObject redTeamPlayerRows;
     public GameObject blueTeamPlayerRows;
 
+    void Start() {
+        RoomManager.Instance.OnRoomUsersUpdate += UpdateRoomPage;
+        RoomManager.Instance.OnJoinRoom += OnJoinRoom;
+        // if(currentPage == MenuPage.Room) {
+        // }
+        // else if(previousPage == MenuPage.Room) {
+        //     RoomManager.Instance.OnRoomUsersUpdate -= UpdateRoomPage;
+        // }
+        
+        // if(currentPage == MenuPage.JoinRoom) {
+        // }
+        // else if(previousPage == MenuPage.JoinRoom) {
+        //     RoomManager.Instance.OnJoinRoom -= OnJoinRoom;
+        // }
+    }
     public void SetCurrentPage(string pageName) {
         MenuPage result;
         System.Enum.TryParse<MenuPage>(pageName, true, out result);
@@ -43,21 +59,18 @@ public class MenuManager : MonoBehaviour
         
         foreach(Transform child in transform) {
             child.gameObject.SetActive(child.gameObject.name == currentPage.ToString());
-        }
-        
-        if(currentPage == MenuPage.Room) {
-            RoomManager.Instance.OnRoomUsersUpdate += UpdateRoomPage;
-        }
-        else if(previousPage == MenuPage.Room) {
-            RoomManager.Instance.OnRoomUsersUpdate -= UpdateRoomPage;
-        }
+        }        
+    }
+
+    public void UpdatePlayerName()
+    {
+        UserManager.Instance.username = playerNameInput.text;
     }
 
     public void StartHost()
     {
         RoomManager roomManager = RoomManager.Instance;
         roomManager.CreateRoom();
-        GenerateRoomPage(roomManager.maxPlayersPerTeam);
         UpdateRoomPage();
         //if (NetworkManager.Singleton.IsListening)
         //{
@@ -85,17 +98,12 @@ public class MenuManager : MonoBehaviour
         //}
         //SceneManager.LoadScene("Game", LoadSceneMode.Single);
     }
-
-    public void UpdatePlayerName()
-    {
-        // GameManager gameManagerScript = gameManager.GetComponent<GameManager>();
-        // gameManagerScript.playerName = playerNameInput.text;
+    
+    public void LeaveRoom()
+    {                
+        RoomManager.Instance.LeaveRoom();
     }
 
-    void Start()
-    {
-        
-    }
 
     public void StartGame() {
 
@@ -107,42 +115,43 @@ public class MenuManager : MonoBehaviour
         
     }
 
+    #region Room Page
     void UpdateRoomPage() {
+        
         RoomManager roomManager = RoomManager.Instance;
 
-        List<User> redTeamUsers = new List<User>();
-        List<User> blueTeamUsers = new List<User>();
-        foreach(User user in roomManager.roomUsers) {
-            if(user.team == Team.BLUE) {
-                blueTeamUsers.Add(user);
-            }
-            else {
-                redTeamUsers.Add(user);
-            }
-        }
+        GenerateRoomPage(roomManager.maxPlayersPerTeam.Value);
 
-        for(int i=0; i<roomManager.maxPlayersPerTeam; i++) {
-            User redUser = redTeamUsers.ElementAtOrDefault<User>(i);
+        List<User> redTeamUsers = roomManager.FindUsersWithTeam(Team.RED);
+        List<User> blueTeamUsers = roomManager.FindUsersWithTeam(Team.BLUE);
+        
+        for(int i=0; i<roomManager.maxPlayersPerTeam.Value; i++) {
+            User? redUser = redTeamUsers.ElementAtOrDefault<User>(i);
             if(redUser != null) {
-                redTeamPlayerRows.transform.GetChild(i+1).GetComponentInChildren<TextMeshProUGUI>().text = redUser.username;
+                redTeamPlayerRows.transform.GetChild(i+1).GetComponentInChildren<TextMeshProUGUI>().text = redUser.Value.username;
             }
-            User blueUser = blueTeamUsers.ElementAtOrDefault<User>(i);
+            User? blueUser = blueTeamUsers.ElementAtOrDefault<User>(i);
             if(blueUser != null) {
-                blueTeamPlayerRows.transform.GetChild(i+1).GetComponentInChildren<TextMeshProUGUI>().text = blueUser.username;
+                blueTeamPlayerRows.transform.GetChild(i+1).GetComponentInChildren<TextMeshProUGUI>().text = blueUser.Value.username;
             }
         }
     }
 
-    void GenerateRoomPage(int noOfPlayersPerTeam) {
+    void OnJoinRoom() {        
+        SetCurrentPage("Connecting");
+        UpdateRoomPage();
+        SetCurrentPage("Room");
+    }
 
+    void GenerateRoomPage(int noOfPlayersPerTeam) {
         //remove unwanted children
-        for(int x=0; x<redTeamPlayerRows.transform.childCount; x++) {
+        for(int x=redTeamPlayerRows.transform.childCount-1; x>=0; x--) {
             if(x > 1) {
                 redTeamPlayerRows.transform.GetChild(x).SetParent(null);
             }
         }
         
-        for(int x=0; x<blueTeamPlayerRows.transform.childCount; x++) {
+        for(int x=blueTeamPlayerRows.transform.childCount-1; x>=0; x--) {
             if(x > 1) {
                 blueTeamPlayerRows.transform.GetChild(x).SetParent(null);
             }
@@ -155,4 +164,6 @@ public class MenuManager : MonoBehaviour
             GameObject.Instantiate(blueTemplate.gameObject, Vector3.zero, Quaternion.identity, blueTeamPlayerRows.transform);            
         }        
     }
+
+    #endregion
 }

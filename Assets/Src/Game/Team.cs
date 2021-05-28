@@ -1,5 +1,5 @@
 public enum Team
 {
-    BLUE,
-    RED
+    BLUE = 0,
+    RED = 1
 }
