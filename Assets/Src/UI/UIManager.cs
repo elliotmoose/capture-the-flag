@@ -2,10 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class UIManager : MonoBehaviour
 {
     public Image staminaBar;
+    public TMPro.TextMeshProUGUI redTeamScore;
+    public TMPro.TextMeshProUGUI blueTeamScore;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -20,5 +24,8 @@ public class UIManager : MonoBehaviour
             float stamina = player.curStamina.Value/player.maxStamina.Value;
             staminaBar.fillAmount = stamina;
         }
+
+        redTeamScore.text = $"{GameManager.Instance.redTeamScore.Value}";
+        blueTeamScore.text = $"{GameManager.Instance.blueTeamScore.Value}";
     }
 }

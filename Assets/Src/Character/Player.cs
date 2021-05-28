@@ -32,7 +32,7 @@ public class Player : NetworkBehaviour
 
     float sprintMultiplier = 2.4f;
     public bool sprinting = false;
-    public int team = 1;
+    public Team team = Team.BLUE;
 
     public NetworkVariableULong ownerClientId = new NetworkVariableULong(new NetworkVariableSettings{
         SendTickrate = -1,
@@ -174,7 +174,6 @@ public class Player : NetworkBehaviour
         // }
     }
 
-
     // receive effect
     public void TakeEffect(Effect effect)
     {
@@ -246,5 +245,10 @@ public class Player : NetworkBehaviour
         }           
         
         animator.SetBool("IsMoving", isMoving);
+    }
+    
+    public void ResetForRound() {
+        this.curStamina.Value = maxStamina.Value;
+        this.transform.position = Vector3.zero; //todo: make spawn point
     }
 }
