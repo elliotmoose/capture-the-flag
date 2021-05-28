@@ -10,6 +10,7 @@ using Cinemachine;
 public class PlayerController : NetworkBehaviour 
 {   
     public static PlayerController LocalInstance;
+
     NetworkVariableBool sprinting = new NetworkVariableBool(new NetworkVariableSettings{
         WritePermission = NetworkVariablePermission.OwnerOnly
     });
@@ -49,12 +50,7 @@ public class PlayerController : NetworkBehaviour
         if(IsServer) {
             moveDir.OnValueChanged += (Vector2 prevMoveDir, Vector2 newMoveDir)=>{
                 timeSinceLastCommand = 0;
-            };
-
-            //tell spawner to spawn
-            GameObject spawnedPlayerGO = PlayerSpawner.Instance.SpawnPlayer(GetComponent<NetworkObject>().OwnerClientId, Team.BLUE); 
-            playerObjNetId.Value = spawnedPlayerGO.GetComponent<NetworkObject>().NetworkObjectId;
-            // Debug.Log("server spawn id:" + playerObjNetId.Value.ToString());
+            };            
         }        
 
         Cursor.visible = false;
@@ -125,6 +121,11 @@ public class PlayerController : NetworkBehaviour
             Debug.Log("Skill 2!");
         }
     }
+
+    public void LinkPlayerReference(GameObject playerGameObject) {
+        if(!IsServer) {return;}
+        playerObjNetId.Value = playerGameObject.GetComponent<NetworkObject>().NetworkObjectId;
+    }    
 
     public Player GetPlayer() {
         NetworkObject playerNetworkObj = NetworkSpawnManager.SpawnedObjects[playerObjNetId.Value];

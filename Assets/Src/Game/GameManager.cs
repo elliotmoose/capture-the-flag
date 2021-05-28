@@ -74,9 +74,19 @@ public class GameManager : NetworkBehaviour
     }
 
     void SpawnPlayerControllers() {
+        if(!IsServer) {return;}
+
         foreach(User user in users) {
+            //spawn player controller            
             GameObject playerControllerObject = GameObject.Instantiate(playerControllerPrefab, Vector3.zero, Quaternion.identity);
+            PlayerController playerController = playerControllerObject.GetComponent<PlayerController>();
             playerControllerObject.GetComponent<NetworkObject>().SpawnAsPlayerObject(user.clientId);
+
+            //spawn player
+            GameObject spawnedPlayerGO = PlayerSpawner.Instance.SpawnPlayer(user.clientId, user.team, user.character); 
+
+            //link
+            playerController.LinkPlayerReference(spawnedPlayerGO);            
         }
     }
 

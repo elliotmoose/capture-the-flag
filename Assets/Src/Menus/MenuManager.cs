@@ -84,6 +84,13 @@ public class MenuManager : MonoBehaviour
         RoomManager.Instance.LeaveRoom();
     }
 
+    public void SelectCharacter(Character character) {
+        RoomManager.Instance.SelectCharacterServerRpc(NetworkManager.Singleton.LocalClientId, character);
+    }
+    
+    public void JoinTeam(Team team) {
+        RoomManager.Instance.JoinTeamServerRpc(NetworkManager.Singleton.LocalClientId, team);
+    }
 
     public void StartGame() {
         RoomManager.Instance.StartGame();

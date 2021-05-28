@@ -33,9 +33,28 @@ public class PlayerSpawner : NetworkBehaviour
         return players.Values.ToList<Player>();
     }
 
-    public GameObject SpawnPlayer(ulong playerId, Team team) {
+    public GameObject SpawnPlayer(ulong playerId, Team team, Character character) {
         if(!IsServer) {return null;}
-        GameObject playerObj = GameObject.Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
+
+        GameObject characterPrefab;
+        
+        switch (character)
+        {
+            case Character.Warrior:
+                characterPrefab = playerPrefab;
+                break;
+            case Character.Thief:
+                characterPrefab = playerPrefab;
+                break;
+            case Character.Mage:
+                characterPrefab = playerPrefab;
+                break;
+            default:
+                characterPrefab = playerPrefab;
+                break;
+        }
+
+        GameObject playerObj = GameObject.Instantiate(characterPrefab, Vector3.zero, Quaternion.identity);
         Player player = playerObj.GetComponent<Player>();
         player.ownerClientId.Value = playerId;
         player.team = team; //TODO: check if team is set on clients

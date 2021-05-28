@@ -152,11 +152,11 @@ public class RoomManager : NetworkBehaviour
         return users;
     }
 
-    private void UpdateUserValue(ulong clientId, Team team, string username) {
+    private void UpdateUserValue(ulong clientId, Team team, string username, Character character) {
         for(int i=0; i<roomUsers.Count; i++) {            
             User user = roomUsers[i];
             if(user.clientId == clientId) {
-                User updatedUser = new User(clientId, team, username);;
+                User updatedUser = new User(clientId, team, username, character);;
                 roomUsers[i] = updatedUser;
                 return;
             }
@@ -188,13 +188,13 @@ public class RoomManager : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership=false)]
-    void JoinTeamServerRpc(ulong clientId, Team team) {
+    public void JoinTeamServerRpc(ulong clientId, Team team) {
         if(IsServer) {
             int teamCount = FindUsersWithTeam(team).Count;
             if(teamCount < maxPlayersPerTeam.Value) {
                 User? user = FindUserWithClientId(clientId);
                 if(user != null) {
-                    UpdateUserValue(user.Value.clientId, team, user.Value.username);
+                    UpdateUserValue(user.Value.clientId, team, user.Value.username, user.Value.character);
                 }   
             }
         }
@@ -205,7 +205,17 @@ public class RoomManager : NetworkBehaviour
         if(IsServer) {
             User? user = FindUserWithClientId(clientId);
             if(user != null) {
-                UpdateUserValue(user.Value.clientId, user.Value.team, username);
+                UpdateUserValue(user.Value.clientId, user.Value.team, username, user.Value.character);
+            }
+        }
+    }
+    
+    [ServerRpc(RequireOwnership=false)]
+    public void SelectCharacterServerRpc(ulong clientId, Character character) {
+        if(IsServer) {
+            User? user = FindUserWithClientId(clientId);
+            if(user != null) {
+                UpdateUserValue(user.Value.clientId, user.Value.team, user.Value.username, character);
             }
         }
     }
