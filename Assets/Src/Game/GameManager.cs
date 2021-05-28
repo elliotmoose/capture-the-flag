@@ -85,6 +85,7 @@ public class GameManager : NetworkBehaviour
             throw new System.Exception("More than one GameManager exists");
         }
         Instance = this;
+        DontDestroyOnLoad(transform.gameObject);
     }
 
     void OnDestroy() {
@@ -92,9 +93,4 @@ public class GameManager : NetworkBehaviour
     }
 }
 
-    public string playerName = "Player";
-    public string IpAddress = "";
-    void Awake()
-    {
-        DontDestroyOnLoad(transform.gameObject);
-    }
+    

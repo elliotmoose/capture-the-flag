@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using MLAPI;
+using MLAPI.Transports.UNET;
 using MLAPI.Spawning;
 
 public class User {
@@ -11,6 +12,7 @@ public class User {
 
     public User(ulong clientId, Team team) {
         this.clientId = clientId;
+        this.team = team;
         username = "loading...";
     }
 }
@@ -22,13 +24,15 @@ public class RoomManager : NetworkBehaviour
     public int maxPlayersPerTeam = 3;
     public bool autoStartHost = false;
     
-    List<User> roomUsers = new List<User>();
+    public List<User> roomUsers = new List<User>();
+
+    public delegate void RoomManagerEvent();
+    public RoomManagerEvent OnRoomUsersUpdate;
 
     void Start()
     {        
-        CreateRoom();
+        // CreateRoom();
     }
-
 
 
     // Update is called once per frame
@@ -37,7 +41,8 @@ public class RoomManager : NetworkBehaviour
 
     }
 
-    private void CreateRoom() 
+    #region Server Side Functions
+    public void CreateRoom() 
     {    
         NetworkManager.Singleton.ConnectionApprovalCallback += ApprovalCheck;
         NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
@@ -46,7 +51,7 @@ public class RoomManager : NetworkBehaviour
 
         if(IsHost) {
             Debug.Log($"Is Host with localClientId: {NetworkManager.LocalClientId}");
-            User newUser = new User(NetworkManager.LocalClientId, Team.BLUE);
+            User newUser = new User(NetworkManager.LocalClientId, Team.RED);
             roomUsers.Add(newUser);
         }
     }
@@ -58,12 +63,20 @@ public class RoomManager : NetworkBehaviour
         Team team = joinRed ? Team.RED : Team.BLUE;
         User newUser = new User(clientId, team);
         Debug.Log($"== RoomManager: Client connected: {clientId} and has joined {team} team");
+
+        if(OnRoomUsersUpdate != null) {
+            OnRoomUsersUpdate();
+        }
     }
     
     private void OnClientDisconnected(ulong clientId) {
         User userToRemove = FindUserWithClientId(clientId);
         if(userToRemove != null) {
             roomUsers.Remove(userToRemove);
+        }
+
+        if(OnRoomUsersUpdate != null) {
+            OnRoomUsersUpdate();
         }
     }
 
@@ -86,13 +99,25 @@ public class RoomManager : NetworkBehaviour
         return null;
     }
 
-    //CLIENT ACTIONS
+    #endregion
+
+    #region Client Side Functions
+    public void JoinRoom(string ipAddressInput) 
+    {    
+        string ipAddress = (ipAddressInput.Length <= 0) ? ipAddressInput : "127.0.0.1";
+        NetworkManager.Singleton.GetComponent<UNetTransport>().ConnectAddress = ipAddress;
+        NetworkManager.Singleton.StartClient();
+    }
 
     public void SetUsername(ulong clientId, string username) {
         User user = FindUserWithClientId(clientId);
         if(user != null) {
             //TODO sync this information across clients
             user.username = username;
+        }
+
+        if(OnRoomUsersUpdate != null) {
+            OnRoomUsersUpdate();
         }
     }
 
@@ -105,7 +130,13 @@ public class RoomManager : NetworkBehaviour
                 user.team = team;
             }   
         }
-    }
+
+        if(OnRoomUsersUpdate != null) {
+            OnRoomUsersUpdate();
+        }
+    }    
+
+    #endregion
 
     void Awake() {
         if(Instance != null) {
