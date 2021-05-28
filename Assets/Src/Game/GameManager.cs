@@ -7,6 +7,8 @@ public class GameManager : NetworkBehaviour
 {
     public static GameManager Instance;
 
+    public GameObject playerControllerPrefab;
+
     public GameObject redTeamFlag;
     public GameObject blueTeamFlag;
 
@@ -28,18 +30,12 @@ public class GameManager : NetworkBehaviour
 
 
     // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    public override void NetworkStart() {
-        base.NetworkStart();
-        if(!IsServer) { return; }
-        users = RoomManager.Instance.HandoverUsersAndDestory();
-        Debug.Log($"Handover successful with {users.Count} users");
-        StartGame();
-    }
+    // void Start()
+    // {
+    //     if(!IsServer) { return; }
+    //     Debug.Log(users.Count);
+    //     StartGame();
+    // }
 
     public void StartGame() {
         if(!IsServer) { return; }
@@ -78,7 +74,10 @@ public class GameManager : NetworkBehaviour
     }
 
     void SpawnPlayerControllers() {
-
+        foreach(User user in users) {
+            GameObject playerControllerObject = GameObject.Instantiate(playerControllerPrefab, Vector3.zero, Quaternion.identity);
+            playerControllerObject.GetComponent<NetworkObject>().SpawnAsPlayerObject(user.clientId);
+        }
     }
 
     void ResetFlags() {

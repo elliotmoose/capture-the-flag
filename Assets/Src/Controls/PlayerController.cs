@@ -54,11 +54,10 @@ public class PlayerController : NetworkBehaviour
             //tell spawner to spawn
             GameObject spawnedPlayerGO = PlayerSpawner.Instance.SpawnPlayer(GetComponent<NetworkObject>().OwnerClientId, Team.BLUE); 
             playerObjNetId.Value = spawnedPlayerGO.GetComponent<NetworkObject>().NetworkObjectId;
-            Debug.Log("server spawn id:" + playerObjNetId.Value.ToString());
+            // Debug.Log("server spawn id:" + playerObjNetId.Value.ToString());
         }        
 
         Cursor.visible = false;
-       
     }
 
     // Update is called once per frame

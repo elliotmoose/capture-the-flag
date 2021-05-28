@@ -125,6 +125,7 @@ public class MenuManager : MonoBehaviour
     }
 
     void OnJoinRoom() {        
+        Debug.Log("on join room!");
         SetCurrentPage("Connecting");
         UpdateRoomPage();
         SetCurrentPage("Room");

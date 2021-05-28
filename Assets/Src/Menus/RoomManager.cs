@@ -3,33 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using MLAPI;
 using MLAPI.SceneManagement;
-using MLAPI.Serialization;
+
 using MLAPI.NetworkVariable;
 using MLAPI.NetworkVariable.Collections;
 using MLAPI.Messaging;
 using MLAPI.Transports.UNET;
 using MLAPI.Spawning;
-
-public struct User : INetworkSerializable {
-    public ulong clientId;
-    public string username;
-    public Team team;
-    public string character;
-
-    public User(ulong clientId, Team team, string username) {
-        this.clientId = clientId;
-        this.team = team;
-        this.username = username;
-        this.character = "";
-    }
-
-    public void NetworkSerialize(NetworkSerializer serializer)
-    {
-        serializer.Serialize(ref clientId);
-        serializer.Serialize(ref username);
-        serializer.Serialize(ref team);
-    }
-}
 
 public class RoomManager : NetworkBehaviour
 {  
@@ -66,7 +45,9 @@ public class RoomManager : NetworkBehaviour
             }
         };
 
-        DontDestroyOnLoad(this.gameObject);
+        NetworkManager.Singleton.ConnectionApprovalCallback += ApprovalCheck;
+        NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
+        NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnected;
     }
 
 
@@ -76,17 +57,6 @@ public class RoomManager : NetworkBehaviour
 
     }
 
-    public override void NetworkStart()
-    {
-        //on connected
-        if(IsClient && !IsHost) {
-            //clients should tell the server what their username is when they connect
-            SetUsernameServerRpc(NetworkManager.LocalClientId, UserManager.Instance.username);          
-            if(OnClientJoinRoom != null) {
-                OnClientJoinRoom();
-            }
-        }
-    }
 
     #region Server Side Functions
     public void StartGame() {
@@ -99,21 +69,16 @@ public class RoomManager : NetworkBehaviour
         //     return;
         // }
 
-        Debug.Log($"Pre scene change user count: ${roomUsers.Count}");
-        NetworkSceneManager.SwitchScene("Game");
-        Debug.Log($"Post scene change user count: ${roomUsers.Count}");
+        SceneTransitionManager.Instance.RoomToGameScene(GetUsers());
     }
 
     public void CreateRoom() 
-    {    
-        NetworkManager.Singleton.ConnectionApprovalCallback += ApprovalCheck;
-        NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
-        NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnected;    
+    {            
         NetworkManager.Singleton.StartHost();
 
         if(IsHost) {
-            Debug.Log($"Is Host with localClientId: {NetworkManager.LocalClientId}");
-            User newUser = new User(NetworkManager.LocalClientId, Team.RED, "Loading...");
+            Debug.Log($"Is Host with localClientId: {NetworkManager.Singleton.LocalClientId}");
+            User newUser = new User(NetworkManager.Singleton.LocalClientId, Team.RED, "Loading...");
             newUser.username = UserManager.Instance.username;
             roomUsers.Add(newUser);
         }
@@ -121,24 +86,42 @@ public class RoomManager : NetworkBehaviour
 
     //runs on server
     private void OnClientConnected(ulong clientId) {        
-        int blueTeamCount = FindUsersWithTeam(Team.BLUE).Count;
-        int redTeamCount = (roomUsers.Count - blueTeamCount);
-        bool joinRed = (blueTeamCount > redTeamCount);
-        Team team = joinRed ? Team.RED : Team.BLUE;
-        User newUser = new User(clientId, team, "Loading...");
-        Debug.Log($"== RoomManager: Client connected: {clientId} and has joined {team} team");
-        roomUsers.Add(newUser);
+        if(IsServer) {
+            int blueTeamCount = FindUsersWithTeam(Team.BLUE).Count;
+            int redTeamCount = (roomUsers.Count - blueTeamCount);
+            bool joinRed = (blueTeamCount > redTeamCount);
+            Team team = joinRed ? Team.RED : Team.BLUE;
+            User newUser = new User(clientId, team, "Loading...");
+            Debug.Log($"== RoomManager (Server): Client connected: {clientId} and has joined {team} team");
+            roomUsers.Add(newUser);
+        }
+        else if (IsClient) {
+            Debug.Log("== Room Manager (Client): Connected to server!");
+            SetUsernameServerRpc(NetworkManager.Singleton.LocalClientId, UserManager.Instance.username);
+
+            if(OnClientJoinRoom != null) {
+                //let client know to progress (change menu)
+                OnClientJoinRoom();
+            }
+        }
     }
     
     private void OnClientDisconnected(ulong clientId) {
-        User? userToRemove = FindUserWithClientId(clientId);
-        if(userToRemove != null) {
-            roomUsers.Remove(userToRemove.Value);
+        if(IsServer) {
+            User? userToRemove = FindUserWithClientId(clientId);
+            if(userToRemove != null) {
+                roomUsers.Remove(userToRemove.Value);
+            }
+        }
+        else if (IsClient) {
+            
         }
     }
 
+    //server
     private void ApprovalCheck(byte[] connectionData, ulong clientId, MLAPI.NetworkManager.ConnectionApprovedDelegate callback)
     {
+        if(!IsServer) {return;}
         int noOfPlayers = roomUsers.Count;
         bool hasReachMaxPlayers = (noOfPlayers < maxPlayersPerTeam.Value*2);
         bool allowConnection = !hasReachMaxPlayers;
@@ -230,16 +213,13 @@ public class RoomManager : NetworkBehaviour
     #endregion
 
     //this will be called by GameManager when the game begins
-    public List<User> HandoverUsersAndDestory() {
+    public List<User> GetUsers() {
         List<User> users = new List<User>();
 
         foreach(User user in roomUsers) {
             users.Add(user);
         }
-
-        Debug.Log($"roomUsers: {roomUsers.Count} vs users:{users.Count}");
-        //tell everyone to destroy room manager
-        // GameObject.Destroy(this.gameObject);
+        
         return users;
     }
 

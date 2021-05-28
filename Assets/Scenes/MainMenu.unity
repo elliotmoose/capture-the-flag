@@ -2276,15 +2276,15 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 957093956}
-  - component: {fileID: 957093957}
   - component: {fileID: 957093955}
   - component: {fileID: 957093958}
+  - component: {fileID: 957093957}
   m_Layer: 0
   m_Name: LobbyManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!114 &957093955
 MonoBehaviour:
@@ -2699,6 +2699,7 @@ GameObject:
   - component: {fileID: 1024904971}
   - component: {fileID: 1024904970}
   - component: {fileID: 1024904969}
+  - component: {fileID: 1024904972}
   m_Layer: 0
   m_Name: NetworkManager
   m_TagString: Untagged
@@ -2758,8 +2759,6 @@ MonoBehaviour:
       PlayerPrefab: 0
     - Prefab: {fileID: 8715549257419821114, guid: 9cb4daa18f4b34bcfb909ca9cd4de466, type: 3}
       PlayerPrefab: 0
-    - Prefab: {fileID: 7218106968360669568, guid: bc6b7535a316c4ca58a1df71a1f5fc3e, type: 3}
-      PlayerPrefab: 0
     PlayerPrefabHash:
       id: 0
     CreatePlayerPrefab: 0
@@ -2768,7 +2767,7 @@ MonoBehaviour:
     MaxReceiveEventsPerTickRate: 500
     EventTickrate: 64
     ClientConnectionBufferTimeout: 10
-    ConnectionApproval: 1
+    ConnectionApproval: 0
     ConnectionData: 
     EnableTimeResync: 0
     TimeResyncInterval: 30
@@ -2802,6 +2801,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1024904972
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1024904968}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dedeaf77baf634d9e8f1f2b48aa3fdbf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1081545286
 GameObject:
   m_ObjectHideFlags: 0

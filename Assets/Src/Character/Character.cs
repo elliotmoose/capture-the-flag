@@ -1,5 +1,5 @@
 public enum Character {
-    Warrior,
-    Mage,
-    Thief
+    Warrior = 0,
+    Mage = 1,
+    Thief = 2
 }
