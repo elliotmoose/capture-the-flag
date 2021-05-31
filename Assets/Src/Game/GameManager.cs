@@ -44,6 +44,29 @@ public class GameManager : NetworkBehaviour
         ResetFlags();        
     }
 
+    public void Imprison(Player player, Player imprisonedBy) {
+        if(player.team == imprisonedBy.team) {
+            Debug.LogError("Cannot be imprisoned by player of same team");
+            return;
+        }
+
+        if(player.team == Team.BLUE) {
+            redTeamJail.Imprison(player);
+        }
+        else {
+            blueTeamJail.Imprison(player);
+        }
+    }
+
+    public void Release(Player player, Player releasedBy) {
+        Jail targetJail = player.team == Team.BLUE ? blueTeamJail : redTeamJail;        
+        // only release if player is not jailed themselves
+        if (!targetJail.GetJailedPlayers().Contains(player))
+        {
+            targetJail.Release(player);
+        }
+    }
+    
     public void ScorePoint(Team team) {
         if(team == Team.BLUE) {
             blueTeamScore.Value += 1;

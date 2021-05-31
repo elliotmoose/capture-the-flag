@@ -20,20 +20,32 @@ public class CloneCatch : Catch
         {
             Player target = c.gameObject.GetComponent<Player>();
 
-            if (target != null)
+            if (target == null)
             {
-                Skill skill = target.skills[1];
-                if (player.skills.Count == 2)
-                {
-                    player.skills[1] = skill;
-                }
-                else if (player.skills.Count == 1)
-                {
-                    player.skills.Add(skill);
-                }
-                break;
+                continue;
+            }
+            
+            if(target == player) {
+                // Debug.Log("cannot clone self");
+                continue;
             }
 
+            if(target.skills.Count < 2) {
+                Debug.Log("Target does not have enough skills");
+                continue;
+            }
+
+            Skill skill = target.skills[1];
+            if (player.skills.Count == 2)
+            {
+                player.skills[1] = skill;
+            }
+            else if (player.skills.Count == 1)
+            {
+                player.skills.Add(skill);
+            }
+
+            break;
         }
     }
 

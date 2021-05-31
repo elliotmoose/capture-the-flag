@@ -35,7 +35,6 @@ public class Player : NetworkBehaviour
     float sprintMultiplier = 2.4f;
     public bool sprinting = false;
     public Team team = Team.BLUE;
-    protected Jail jail;
 
     public NetworkVariableULong ownerClientId = new NetworkVariableULong(new NetworkVariableSettings{
         SendTickrate = -1,
@@ -51,23 +50,9 @@ public class Player : NetworkBehaviour
         this.moveSpeed = newSpeed;
     }
 
-    public Jail GetJail()
-    {
-        return this.jail;
-    }
-
     void Start()
     {
-        this.rends = this.GetComponentsInChildren<Renderer>();
-
-        if (this.team == Team.BLUE)
-        {
-            jail = GameObject.Find("RedJail").GetComponent<Jail>();
-        }
-        else
-        {
-            jail = GameObject.Find("BlueJail").GetComponent<Jail>();
-        }
+        this.rends = this.GetComponentsInChildren<Renderer>();        
     }
 
     // Update is called once per frame
@@ -86,7 +71,6 @@ public class Player : NetworkBehaviour
 
     void Update()
     {
-
         if(!IsServer) { return; }
 
         bool isMoving = (moveDir.magnitude > 0.01f && !isDisabled);
@@ -170,7 +154,7 @@ public class Player : NetworkBehaviour
     }
 
     public void CastSkillAtIndex(int index) {
-        if(index > skills.Count) {
+        if(index >= skills.Count) {
             Debug.LogWarning($"Skill index out of range: {index}");
             return;
         }

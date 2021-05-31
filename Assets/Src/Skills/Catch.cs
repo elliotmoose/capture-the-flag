@@ -7,7 +7,7 @@ public class Catch : Skill
     private float radius;
     public Catch(float radius)
     {
-        cooldown = 3.0f;
+        cooldown = 1.0f;
         name = "Catch";
         this.radius = radius;
         
@@ -22,18 +22,18 @@ public class Catch : Skill
             Player target = c.gameObject.GetComponent<Player>();
             
             if (target != null){
-                if (player.team != target.team && target.IsCatchable())
+                if (player.team != target.team)
                 {
-                    target.GetJail().Imprison(target);
-
+                    if(target.IsCatchable()) {
+                        GameManager.Instance.Imprison(target, player);
+                    }
+                    // else if (player.IsCatchable()){ //i can imprison myself
+                    //     player.GetJail().Imprison(player);
+                    // }
                 }
                 else if (player.team == target.team)
                 {
-                    // only release if player is not jailed themselves
-                    if (!player.GetJail().GetJailedPlayers().Contains(player))
-                    {
-                        target.GetJail().Release(target);
-                    }
+                    GameManager.Instance.Release(target, player);                    
                 }
             }
 

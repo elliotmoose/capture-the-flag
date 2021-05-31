@@ -92,6 +92,7 @@ public class PlayerController : NetworkBehaviour
         faceAngle.Value = Camera.main.transform.eulerAngles.y;
         
         if(Input.GetMouseButtonDown(0)) {
+            Debug.Log("Catch!");
             CatchServerRpc();
         }
         if(Input.GetKeyDown(SKILL1_KEY)) {
@@ -106,8 +107,7 @@ public class PlayerController : NetworkBehaviour
 
     [ServerRpc]
     void CatchServerRpc() {
-        if(IsServer) {
-            Debug.Log("Catch!");
+        if(IsServer) {            
             Player player = GetPlayer();
             if (player)
             {
