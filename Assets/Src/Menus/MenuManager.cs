@@ -154,10 +154,29 @@ public class MenuManager : MonoBehaviour
 
         Transform redTemplate = redTeamPlayerRows.transform.GetChild(1);
         Transform blueTemplate = blueTeamPlayerRows.transform.GetChild(1);
-        for(int i=0; i<noOfPlayersPerTeam-1; i++) {
-            GameObject.Instantiate(redTemplate.gameObject, Vector3.zero, Quaternion.identity, redTeamPlayerRows.transform);
-            GameObject.Instantiate(blueTemplate.gameObject, Vector3.zero, Quaternion.identity, blueTeamPlayerRows.transform);            
-        }        
+        redTemplate.GetComponentInChildren<Button>().onClick.AddListener(()=>{
+            RequestJoinTeam(Team.RED, 0);            
+        });
+        blueTemplate.GetComponentInChildren<Button>().onClick.AddListener(()=>{
+            RequestJoinTeam(Team.BLUE, 0);            
+        });
+        
+        for(int i=1; i<noOfPlayersPerTeam; i++) {
+            GameObject redPlayerButton = GameObject.Instantiate(redTemplate.gameObject, Vector3.zero, Quaternion.identity, redTeamPlayerRows.transform);
+            GameObject bluePlayerButton = GameObject.Instantiate(blueTemplate.gameObject, Vector3.zero, Quaternion.identity, blueTeamPlayerRows.transform);            
+
+            int copy = i; //copy the index value because it passes by reference
+            redPlayerButton.GetComponentInChildren<Button>().onClick.AddListener(()=>{
+                RequestJoinTeam(Team.RED, copy);            
+            });
+            bluePlayerButton.GetComponentInChildren<Button>().onClick.AddListener(()=>{
+                RequestJoinTeam(Team.BLUE, copy);            
+            });
+        }
+    }
+
+    void RequestJoinTeam(Team team, int slotIndex) {
+        RoomManager.Instance.JoinTeamServerRpc(NetworkManager.Singleton.LocalClientId, team);
     }
 
     #endregion

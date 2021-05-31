@@ -197,6 +197,9 @@ public class RoomManager : NetworkBehaviour
                     UpdateUserValue(user.Value.clientId, team, user.Value.username, user.Value.character);
                 }   
             }
+            else {
+                Debug.LogWarning("Need to implement request team swap mechanism");
+            }
         }
     }
     
