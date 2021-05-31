@@ -29,7 +29,6 @@ public class Catch : Skill
                 }
                 else if (player.team == target.team)
                 {
-                    Debug.Log("Released");
                     target.GetJail().Release(target);
                 }
             }

@@ -326,7 +326,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 13251492}
-  m_LocalRotation: {x: 0.1712266, y: -0.0000000084761345, z: 0.0000000014730952, w: 0.9852317}
+  m_LocalRotation: {x: 0.1712266, y: 0.000000008476137, z: -0.0000000014730956, w: 0.9852317}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1106,7 +1106,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6294791109381138747, guid: 9cb4daa18f4b34bcfb909ca9cd4de466, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2.7
+      value: 13.4
       objectReference: {fileID: 0}
     - target: {fileID: 6294791109381138747, guid: 9cb4daa18f4b34bcfb909ca9cd4de466, type: 3}
       propertyPath: m_LocalPosition.y
@@ -2932,14 +2932,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 1191813051}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1e277482f30a3c54088e9765fb142a75, type: 3}
+  m_Script: {fileID: 11500000, guid: 703d9232ed32841478a70476ba7f03ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   flagSlot: {fileID: 0}
   moveDir: {x: 0, y: 0}
   faceAngle: 0
   sprinting: 0
-  team: 1
+  team: 0
   ownerClientId:
     m_InternalValue: 0
   curStamina:
@@ -4123,7 +4123,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6294791109381138747, guid: 9cb4daa18f4b34bcfb909ca9cd4de466, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -6.01
       objectReference: {fileID: 0}
     - target: {fileID: 6294791109381138747, guid: 9cb4daa18f4b34bcfb909ca9cd4de466, type: 3}
       propertyPath: m_LocalPosition.y
@@ -4182,14 +4182,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 1968849632}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1e277482f30a3c54088e9765fb142a75, type: 3}
+  m_Script: {fileID: 11500000, guid: b354a3fd1e872974e9c0d1141cdc7bae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   flagSlot: {fileID: 0}
   moveDir: {x: 0, y: 0}
   faceAngle: 0
   sprinting: 0
-  team: 1
+  team: 0
   ownerClientId:
     m_InternalValue: 0
   curStamina:
@@ -4513,7 +4513,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2100198216}
-  m_LocalRotation: {x: 0.17122662, y: -0.000000016952272, z: 0.0000000029461902, w: 0.9852317}
+  m_LocalRotation: {x: 0.17122662, y: 0.000000016952274, z: -0.0000000029461906, w: 0.9852317}
   m_LocalPosition: {x: 0, y: 7, z: -15.81}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []

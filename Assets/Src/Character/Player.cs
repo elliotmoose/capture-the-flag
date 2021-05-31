@@ -9,7 +9,7 @@ using MLAPI.Messaging;
 public class Player : NetworkBehaviour
 {
     protected Skill catchSkill;   
-    protected List<Skill> skills = new List<Skill>();
+    public List<Skill> skills = new List<Skill>();
     public List<Effect> effects = new List<Effect>();
     protected float cdTimer1 = 0.0f;
     protected float cdTimer2 = 0.0f;
