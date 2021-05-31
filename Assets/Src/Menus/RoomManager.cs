@@ -60,7 +60,7 @@ public class RoomManager : NetworkBehaviour
 
     #region Server Side Functions
     public void StartGame() {
-        if(!IsServer) {return;}
+        if(!NetworkManager.Singleton.IsServer) {return;}
         
         bool canStartGame = (roomUsers.Count == roomSize.Value*2);
 
@@ -76,7 +76,7 @@ public class RoomManager : NetworkBehaviour
     {            
         NetworkManager.Singleton.StartHost();
 
-        if(IsHost) {
+        if(NetworkManager.Singleton.IsHost) {
             Debug.Log($"Is Host with localClientId: {NetworkManager.Singleton.LocalClientId}");
             User newUser = new User(NetworkManager.Singleton.LocalClientId, Team.RED, "Loading...");
             newUser.username = UserManager.Instance.username;
@@ -86,7 +86,7 @@ public class RoomManager : NetworkBehaviour
 
     //runs on server
     private void OnClientConnected(ulong clientId) {        
-        if(IsServer) {
+        if(NetworkManager.Singleton.IsServer) {
             int blueTeamCount = FindUsersWithTeam(Team.BLUE).Count;
             int redTeamCount = (roomUsers.Count - blueTeamCount);
             bool joinRed = (blueTeamCount > redTeamCount);
@@ -95,7 +95,7 @@ public class RoomManager : NetworkBehaviour
             Debug.Log($"== RoomManager (Server): Client connected: {clientId} and has joined {team} team");
             roomUsers.Add(newUser);
         }
-        else if (IsClient) {
+        else if (NetworkManager.Singleton.IsClient) {
             Debug.Log("== Room Manager (Client): Connected to server!");
             SetUsernameServerRpc(NetworkManager.Singleton.LocalClientId, UserManager.Instance.username);
 
@@ -105,23 +105,35 @@ public class RoomManager : NetworkBehaviour
             }
         }
     }
+
+
     
     private void OnClientDisconnected(ulong clientId) {
-        if(IsServer) {
+        Debug.Log("Bij");
+        if(NetworkManager.Singleton.IsServer) {
             User? userToRemove = FindUserWithClientId(clientId);
             if(userToRemove != null) {
                 roomUsers.Remove(userToRemove.Value);
             }
+            Debug.Log("Heya");
         }
         else if (IsClient) {
-            
+            Debug.Log("Hoho");
+        }
+        else if (IsHost) {
+            Debug.Log("WTF are you here");
+        }
+        else
+        {
+            Debug.Log("WHAT");
+            UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
         }
     }
 
     //server
     private void ApprovalCheck(byte[] connectionData, ulong clientId, MLAPI.NetworkManager.ConnectionApprovedDelegate callback)
     {
-        if(!IsServer) {return;}
+        if(!NetworkManager.Singleton.IsServer) {return;}
         int noOfPlayers = roomUsers.Count;
         bool hasReachMaxPlayers = (noOfPlayers < roomSize.Value*2);
         bool allowConnection = !hasReachMaxPlayers;
@@ -175,17 +187,21 @@ public class RoomManager : NetworkBehaviour
         NetworkManager.Singleton.StartClient();
     }
 
+    
     public void LeaveRoom() {
-        if(IsHost) {
+        if (NetworkManager.Singleton.IsHost) {
             NetworkManager.Singleton.StopHost();
         }
-        else if(IsClient) {
+        else if(NetworkManager.Singleton.IsClient) {
             NetworkManager.Singleton.StopClient();
         }
-        else if(IsServer){
+        else if(NetworkManager.Singleton.IsServer){
             NetworkManager.Singleton.StopServer();
         }
+        
     }
+
+
 
     [ServerRpc(RequireOwnership=false)]
     public void JoinTeamServerRpc(ulong clientId, Team team) {
@@ -205,7 +221,7 @@ public class RoomManager : NetworkBehaviour
     
     [ServerRpc(RequireOwnership=false)]
     void SetUsernameServerRpc(ulong clientId, string username) {
-        if(IsServer) {
+        if(NetworkManager.Singleton.IsServer) {
             User? user = FindUserWithClientId(clientId);
             if(user != null) {
                 UpdateUserValue(user.Value.clientId, user.Value.team, username, user.Value.character);
@@ -215,7 +231,7 @@ public class RoomManager : NetworkBehaviour
     
     [ServerRpc(RequireOwnership=false)]
     public void SelectCharacterServerRpc(ulong clientId, Character character) {
-        if(IsServer) {
+        if(NetworkManager.Singleton.IsServer) {
             User? user = FindUserWithClientId(clientId);
             if(user != null) {
                 UpdateUserValue(user.Value.clientId, user.Value.team, user.Value.username, character);
@@ -244,7 +260,7 @@ public class RoomManager : NetworkBehaviour
     }
 
     void OnDestroy() {
-        if(IsServer) {
+        if(NetworkManager.Singleton.IsServer) {
             //TODO: check if events are unsubscribed when changing scene
             NetworkManager.Singleton.ConnectionApprovalCallback -= ApprovalCheck;
             NetworkManager.Singleton.OnClientConnectedCallback -= OnClientConnected;
