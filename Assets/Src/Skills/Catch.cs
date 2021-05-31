@@ -29,7 +29,11 @@ public class Catch : Skill
                 }
                 else if (player.team == target.team)
                 {
-                    target.GetJail().Release(target);
+                    // only release if player is not jailed themselves
+                    if (!player.GetJail().GetJailedPlayers().Contains(player))
+                    {
+                        target.GetJail().Release(target);
+                    }
                 }
             }
 

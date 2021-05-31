@@ -20,6 +20,11 @@ public class Jail : MonoBehaviour
         }
     }
 
+    public List<Player> GetJailedPlayers()
+    {
+        return this.jailed;
+    }
+
 
     // Start is called before the first frame update
     void Start()
