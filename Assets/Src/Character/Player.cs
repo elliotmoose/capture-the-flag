@@ -8,11 +8,12 @@ using MLAPI.Messaging;
 
 public class Player : NetworkBehaviour
 {
-    // Start is called before the first frame update    
+    protected Skill catchSkill;   
     protected List<Skill> skills = new List<Skill>();
     public List<Effect> effects = new List<Effect>();
     protected float cdTimer1 = 0.0f;
     protected float cdTimer2 = 0.0f;
+    protected float cdTimerCD = 0.0f;
     
     //movement controls
     public GameObject flagSlot;
@@ -20,6 +21,7 @@ public class Player : NetworkBehaviour
     public float faceAngle = 0;
     protected Renderer[] rends;
 
+    protected float catchRadius = 5;
     protected float moveSpeed = 18;
     protected float staminaBurnFactor = 25;
     protected float staminaRecoveryFactor = 30;
@@ -33,6 +35,7 @@ public class Player : NetworkBehaviour
     float sprintMultiplier = 2.4f;
     public bool sprinting = false;
     public Team team = Team.BLUE;
+    protected Jail jail;
 
     public NetworkVariableULong ownerClientId = new NetworkVariableULong(new NetworkVariableSettings{
         SendTickrate = -1,
@@ -48,9 +51,23 @@ public class Player : NetworkBehaviour
         this.moveSpeed = newSpeed;
     }
 
+    public Jail GetJail()
+    {
+        return this.jail;
+    }
+
     void Start()
     {
         this.rends = this.GetComponentsInChildren<Renderer>();
+
+        if (this.team == Team.BLUE)
+        {
+            jail = GameObject.Find("RedJail").GetComponent<Jail>();
+        }
+        else
+        {
+            jail = GameObject.Find("BlueJail").GetComponent<Jail>();
+        }
     }
 
     // Update is called once per frame
@@ -138,6 +155,20 @@ public class Player : NetworkBehaviour
         UpdateEffects(); // update skill effects applied to player
     }
 
+    public void Catch()
+    {
+        if(cdTimerCD < 0)
+        {
+            catchSkill.UseSkill(this);
+            cdTimerCD = catchSkill.cooldown;
+        }
+        else
+        {
+            Debug.Log($"Catch remainding cooldown: {cdTimerCD}");
+        }
+
+    }
+
     public void CastSkillAtIndex(int index) {
         if(index > skills.Count) {
             Debug.LogWarning($"Skill index out of range: {index}");
@@ -212,6 +243,7 @@ public class Player : NetworkBehaviour
     void UpdateCooldowns() {
         cdTimer1 -= Time.deltaTime;
         cdTimer2 -= Time.deltaTime;
+        cdTimerCD -= Time.deltaTime;
     }
     
     public void SetDisabled(bool disabled)
@@ -223,7 +255,23 @@ public class Player : NetworkBehaviour
     {
         this.isInvis = invis;
     }
-
+    
+    public bool IsCatchable()
+    {
+        float z_pos = transform.position.z;
+        if (this.team == Team.BLUE && z_pos <= 0)
+        {
+            return true;
+        }
+        else if (this.team == Team.RED && z_pos >= 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 
     private void SetAnimationsSmooth(bool isMoving, bool isSprinting) {
         if(!IsServer) { return; }

@@ -23,18 +23,16 @@ public class Slow : Skill
         
         foreach (Collider c in hitColliders)
         {
-            // if object is a Player
-            if (c.gameObject.CompareTag("Player"))
-            {
-                Player target = c.gameObject.GetComponent<Player>();
+            
+            Player target = c.gameObject.GetComponent<Player>();
                 
-                if (player != target)
-                {
-                    SlowEffect effect = new SlowEffect(target, percentageDecrease, duration);
-                    target.TakeEffect(effect);
-                }
-
+            if (target != null && player != target)
+            {
+                SlowEffect effect = new SlowEffect(target, percentageDecrease, duration);
+                target.TakeEffect(effect);
             }
+
+            
         }
     }
 }

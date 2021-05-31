@@ -15,7 +15,7 @@ public class Jail : MonoBehaviour
     }
     
     public void Release(Player player) {
-        if(!jailed.Contains(player)) {
+        if(jailed.Contains(player)) {
             jailed.Remove(player);
         }
     }

@@ -108,6 +108,11 @@ public class PlayerController : NetworkBehaviour
     void CatchServerRpc() {
         if(IsServer) {
             Debug.Log("Catch!");
+            Player player = GetPlayer();
+            if (player)
+            {
+                player.Catch();
+            }
         }
     }
 
