@@ -107,12 +107,12 @@ public class MenuManager : MonoBehaviour
         
         RoomManager roomManager = RoomManager.Instance;
 
-        GenerateRoomPage(roomManager.maxPlayersPerTeam.Value);
+        GenerateRoomPage(roomManager.roomSize.Value);
 
         List<User> redTeamUsers = roomManager.FindUsersWithTeam(Team.RED);
         List<User> blueTeamUsers = roomManager.FindUsersWithTeam(Team.BLUE);
         
-        for(int i=0; i<roomManager.maxPlayersPerTeam.Value; i++) {
+        for(int i=0; i<roomManager.roomSize.Value; i++) {
             User? redUser = redTeamUsers.ElementAtOrDefault<User>(i);
             if(redUser != null) {
                 redTeamPlayerRows.transform.GetChild(i+1).GetComponentInChildren<TextMeshProUGUI>().text = redUser.Value.username;

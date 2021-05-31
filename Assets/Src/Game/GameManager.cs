@@ -25,8 +25,8 @@ public class GameManager : NetworkBehaviour
     });
 
     public List<User> users = new List<User>();
-    List<Player> blueTeamPlayers = new List<Player>();
-    List<Player> redTeamPlayers = new List<Player>();
+    public int roomSize = 3; //no of players per team
+    
 
 
     // Start is called before the first frame update
@@ -76,17 +76,34 @@ public class GameManager : NetworkBehaviour
     void SpawnPlayerControllers() {
         if(!IsServer) {return;}
 
+        int redTeamIndex = 0;
+        int blueTeamIndex = 0;
+
+        //testing
+        // for(int i=0; i<5; i++) {
+        //     users.Add(new User(0, i%2 == 0 ? Team.BLUE: Team.RED, "test", Character.Warrior));
+        // }
+        
         foreach(User user in users) {
             //spawn player controller            
             GameObject playerControllerObject = GameObject.Instantiate(playerControllerPrefab, Vector3.zero, Quaternion.identity);
             PlayerController playerController = playerControllerObject.GetComponent<PlayerController>();
+            playerController.user = user;
             playerControllerObject.GetComponent<NetworkObject>().SpawnAsPlayerObject(user.clientId);
 
             //spawn player
-            GameObject spawnedPlayerGO = PlayerSpawner.Instance.SpawnPlayer(user.clientId, user.team, user.character); 
+            int playerIndex = (user.team == Team.RED ? redTeamIndex : blueTeamIndex);
+            GameObject spawnedPlayerGO = PlayerSpawner.Instance.SpawnPlayer(user.clientId, user.team, user.character, playerIndex, roomSize); 
 
             //link
             playerController.LinkPlayerReference(spawnedPlayerGO);            
+
+            if(user.team == Team.BLUE) {
+                blueTeamIndex += 1;
+            }
+            else {
+                redTeamIndex += 1;
+            }
         }
     }
 

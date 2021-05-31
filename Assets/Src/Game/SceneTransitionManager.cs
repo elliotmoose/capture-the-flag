@@ -19,10 +19,11 @@ public class SceneTransitionManager : MonoBehaviour
     }
 
 
-    public void RoomToGameScene(List<User> users) {
+    public void RoomToGameScene(List<User> users, int roomSize) {
         SceneSwitchProgress sceneSwitchProgress = NetworkSceneManager.SwitchScene("Game");
         sceneSwitchProgress.OnComplete += (bool timeOut) => {
             GameManager.Instance.users = users;            
+            GameManager.Instance.roomSize = roomSize;            
             GameManager.Instance.StartGame();  
         };     
     }

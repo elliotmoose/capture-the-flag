@@ -26,6 +26,9 @@ public class CameraFollower : MonoBehaviour
                     target = NetworkSpawnManager.SpawnedObjects[playerGameObjectNetId].gameObject;
                     camera.LookAt = target.transform;
                     camera.Follow = target.transform;
+
+                    Team playerTeam = playerController.user.team;
+                    camera.m_XAxis.Value = (playerTeam == Team.BLUE ? 180 : 0);
                 }
             }
         }

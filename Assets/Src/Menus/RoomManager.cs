@@ -21,7 +21,7 @@ public class RoomManager : NetworkBehaviour
         WritePermission=NetworkVariablePermission.ServerOnly,
         SendTickrate=3
     });    
-    public NetworkVariableInt maxPlayersPerTeam = new NetworkVariableInt(new NetworkVariableSettings {
+    public NetworkVariableInt roomSize = new NetworkVariableInt(new NetworkVariableSettings {
         WritePermission=NetworkVariablePermission.ServerOnly,
         SendTickrate=-1
     }, 3);
@@ -39,7 +39,7 @@ public class RoomManager : NetworkBehaviour
             }
         };
         
-        maxPlayersPerTeam.OnValueChanged += (int oldVal, int newVal)=>{
+        roomSize.OnValueChanged += (int oldVal, int newVal)=>{
             if(OnRoomUsersUpdate != null) {
                 OnRoomUsersUpdate();
             }
@@ -62,14 +62,14 @@ public class RoomManager : NetworkBehaviour
     public void StartGame() {
         if(!IsServer) {return;}
         
-        bool canStartGame = (roomUsers.Count == maxPlayersPerTeam.Value*2);
+        bool canStartGame = (roomUsers.Count == roomSize.Value*2);
 
         // if(!canStartGame) {
         //     Debug.LogWarning("== RoomManager: Cannot start game as non enough players");
         //     return;
         // }
 
-        SceneTransitionManager.Instance.RoomToGameScene(GetUsers());
+        SceneTransitionManager.Instance.RoomToGameScene(GetUsers(), roomSize.Value);
     }
 
     public void CreateRoom() 
@@ -123,7 +123,7 @@ public class RoomManager : NetworkBehaviour
     {
         if(!IsServer) {return;}
         int noOfPlayers = roomUsers.Count;
-        bool hasReachMaxPlayers = (noOfPlayers < maxPlayersPerTeam.Value*2);
+        bool hasReachMaxPlayers = (noOfPlayers < roomSize.Value*2);
         bool allowConnection = !hasReachMaxPlayers;
         bool createPlayerObject = true;
         ulong? prefabHash = NetworkSpawnManager.GetPrefabHashFromGenerator("NetworkPlayerController");
@@ -191,7 +191,7 @@ public class RoomManager : NetworkBehaviour
     public void JoinTeamServerRpc(ulong clientId, Team team) {
         if(IsServer) {
             int teamCount = FindUsersWithTeam(team).Count;
-            if(teamCount < maxPlayersPerTeam.Value) {
+            if(teamCount < roomSize.Value) {
                 User? user = FindUserWithClientId(clientId);
                 if(user != null) {
                     UpdateUserValue(user.Value.clientId, team, user.Value.username, user.Value.character);

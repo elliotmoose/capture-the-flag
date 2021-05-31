@@ -33,7 +33,7 @@ public class PlayerController : NetworkBehaviour
     float commandDurationThreshold = 0.1f;
     float timeSinceLastCommand = 0f;
     bool isStale = false;
-
+    public User user;
     public KeyCode SKILL1_KEY = KeyCode.Q;
     public KeyCode SKILL2_KEY = KeyCode.E;
     public KeyCode SPRINT_KEY = KeyCode.Space;
@@ -42,7 +42,8 @@ public class PlayerController : NetworkBehaviour
     {
         base.NetworkStart();        
         if(IsLocalPlayer) {
-            LocalInstance = this;
+            LocalInstance = this;            
+            Debug.Log($"== PlayerController: Entered Game as User: {user.username} Team: {user.team} ClientId: {user.clientId} Character: {user.character}");
         }
     }
     
