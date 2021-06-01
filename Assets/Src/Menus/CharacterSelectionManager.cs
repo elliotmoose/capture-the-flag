@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using MLAPI;
 
 public class CharacterSelectionManager : MonoBehaviour
 {
@@ -21,7 +22,8 @@ public class CharacterSelectionManager : MonoBehaviour
 
     public void InstantiateHero()
     {
-        GameObject.Instantiate(Heroes[HeroIndex], Vector3.zero, Quaternion.identity);
+        GameObject go = GameObject.Instantiate(Heroes[HeroIndex], Vector3.zero, Quaternion.identity);
+        go.GetComponent<Player>().enabled = false;
     }
 
     public void ChangeHero()
@@ -42,24 +44,29 @@ public class CharacterSelectionManager : MonoBehaviour
     public void SelectWarrior()
     {
         HeroIndex = 0;
+        RoomManager.Instance.SelectCharacterServerRpc(NetworkManager.Singleton.LocalClientId, Character.Warrior);
         ChangeHero();
     }
 
     public void SelectMage()
     {
         HeroIndex = 1;
+        RoomManager.Instance.SelectCharacterServerRpc(NetworkManager.Singleton.LocalClientId, Character.Mage);
         ChangeHero();
     }
 
     public void SelectNinja()
     {
         HeroIndex = 2;
+        RoomManager.Instance.SelectCharacterServerRpc(NetworkManager.Singleton.LocalClientId, Character.Thief);
         ChangeHero();
     }
 
     // Update is called once per frame
     void Update()
     {
-        Heroes[HeroIndex].transform.Rotate(0, -5f, 0, Space.World);
+        if(Heroes[HeroIndex] != null) {
+            Heroes[HeroIndex].transform.Rotate(0, -80*Time.deltaTime, 0, Space.World);
+        }
     }
 }

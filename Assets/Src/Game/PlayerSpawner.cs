@@ -6,7 +6,10 @@ using MLAPI;
 
 public class PlayerSpawner : NetworkBehaviour
 {
-    public GameObject playerPrefab;
+    public GameObject magePrefab;
+    public GameObject warriorPrefab;
+    public GameObject thiefPrefab;
+    public GameObject bowmanPrefab;
 
     public static PlayerSpawner Instance;
 
@@ -40,16 +43,19 @@ public class PlayerSpawner : NetworkBehaviour
         switch (character)
         {
             case Character.Warrior:
-                characterPrefab = playerPrefab;
+                characterPrefab = warriorPrefab;
                 break;
             case Character.Thief:
-                characterPrefab = playerPrefab;
+                characterPrefab = thiefPrefab;
                 break;
             case Character.Mage:
-                characterPrefab = playerPrefab;
+                characterPrefab = magePrefab;
+                break;
+            case Character.Bowman:
+                characterPrefab = bowmanPrefab;
                 break;
             default:
-                characterPrefab = playerPrefab;
+                characterPrefab = warriorPrefab;
                 break;
         }
 
