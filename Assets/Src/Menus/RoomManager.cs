@@ -21,7 +21,7 @@ public class RoomManager : NetworkBehaviour
     });    
     public NetworkVariableInt roomSize = new NetworkVariableInt(new NetworkVariableSettings {
         WritePermission=NetworkVariablePermission.ServerOnly,
-        SendTickrate=-1
+        SendTickrate=3
     }, 3);
 
     public delegate void RoomManagerEvent();
@@ -137,7 +137,7 @@ public class RoomManager : NetworkBehaviour
             return;
         }
         int noOfPlayers = roomUsers.Count;
-        bool hasReachMaxPlayers = (noOfPlayers < roomSize.Value*2);
+        bool hasReachMaxPlayers = (noOfPlayers >= roomSize.Value*2);
         bool allowConnection = !hasReachMaxPlayers;
         bool createPlayerObject = true;
         ulong? prefabHash = NetworkSpawnManager.GetPrefabHashFromGenerator("NetworkPlayerController");
@@ -206,9 +206,9 @@ public class RoomManager : NetworkBehaviour
     }
 
 
-
     [ServerRpc(RequireOwnership=false)]
     public void JoinTeamServerRpc(ulong clientId, Team team) {
+        Debug.Log($"{clientId} joint team {team}");
         if(IsServer) {
             int teamCount = FindUsersWithTeam(team).Count;
             if(teamCount < roomSize.Value) {
@@ -225,6 +225,7 @@ public class RoomManager : NetworkBehaviour
     
     [ServerRpc(RequireOwnership=false)]
     void SetUsernameServerRpc(ulong clientId, string username) {
+        Debug.Log($"{clientId} set username {username}");
         if(NetworkManager.Singleton.IsServer) {
             User? user = FindUserWithClientId(clientId);
             if(user != null) {
@@ -235,6 +236,7 @@ public class RoomManager : NetworkBehaviour
     
     [ServerRpc(RequireOwnership=false)]
     public void SelectCharacterServerRpc(ulong clientId, Character character) {
+        Debug.Log($"{clientId} selected {character}");
         if(NetworkManager.Singleton.IsServer) {
             User? user = FindUserWithClientId(clientId);
             if(user != null) {
@@ -264,12 +266,10 @@ public class RoomManager : NetworkBehaviour
     }
 
     void OnDestroy() {
-        if(NetworkManager.Singleton.IsServer) {
-            //TODO: check if events are unsubscribed when changing scene
-            NetworkManager.Singleton.ConnectionApprovalCallback -= ApprovalCheck;
-            NetworkManager.Singleton.OnClientConnectedCallback -= OnClientConnected;
-            NetworkManager.Singleton.OnClientDisconnectCallback -= OnClientDisconnected;
-        }
+        //TODO: check if events are unsubscribed when changing scene
+        NetworkManager.Singleton.ConnectionApprovalCallback -= ApprovalCheck;
+        NetworkManager.Singleton.OnClientConnectedCallback -= OnClientConnected;
+        NetworkManager.Singleton.OnClientDisconnectCallback -= OnClientDisconnected;
         
         Instance = null;
     }

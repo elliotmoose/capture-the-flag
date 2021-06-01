@@ -22,8 +22,8 @@ public class CharacterSelectionManager : MonoBehaviour
 
     public void InstantiateHero()
     {
-        GameObject go = GameObject.Instantiate(Heroes[HeroIndex], Vector3.zero, Quaternion.identity);
-        go.GetComponent<Player>().enabled = false;
+        // GameObject go = GameObject.Instantiate(Heroes[HeroIndex], Vector3.zero, Quaternion.identity);
+        // go.GetComponent<Player>().enabled = false;
     }
 
     public void ChangeHero()
