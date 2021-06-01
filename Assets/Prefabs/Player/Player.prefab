@@ -106,8 +106,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3333731150336403353}
-  m_LocalRotation: {x: 0.063873574, y: -0.704216, z: 0.063873574, w: 0.704216}
-  m_LocalPosition: {x: 0.019387148, y: 1.1783702, z: 0}
+  m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
   m_Children:
   - {fileID: 5263822213459324280}
@@ -116,7 +116,7 @@ Transform:
   - {fileID: 7120955188703149463}
   m_Father: {fileID: 6294791109381138747}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 10.365, y: -90, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
 --- !u!1 &4490548685612404115
 GameObject:
   m_ObjectHideFlags: 0
@@ -142,13 +142,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4490548685612404115}
-  m_LocalRotation: {x: 0.12294063, y: -0, z: -0, w: 0.9924141}
-  m_LocalPosition: {x: 0, y: 0.13, z: 0.1816867}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2668411903839370531}
   m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 14.124, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &5615118172612498834
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -321,13 +321,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5919121141643040230}
-  m_LocalRotation: {x: 0.15203035, y: -0, z: -0, w: 0.98837584}
-  m_LocalPosition: {x: 0, y: -0.2995722, z: -0.25}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2668411903839370531}
   m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 17.489, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &3132135377944973491
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -501,6 +501,10 @@ MonoBehaviour:
   team: 1
   ownerClientId:
     m_InternalValue: 0
+  stamina:
+    m_InternalValue: 100
+  maxStamina:
+    m_InternalValue: 100
 --- !u!195 &7262231596660080098
 NavMeshAgent:
   m_ObjectHideFlags: 0
