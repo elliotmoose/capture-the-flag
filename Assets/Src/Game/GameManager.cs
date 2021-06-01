@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using MLAPI;
 using MLAPI.NetworkVariable;
+using MLAPI.Messaging;
+
 public class GameManager : NetworkBehaviour
 {
     public static GameManager Instance;
@@ -26,7 +28,7 @@ public class GameManager : NetworkBehaviour
 
     public List<User> users = new List<User>();
     public int roomSize = 3; //no of players per team
-    
+    public bool roundInProgress = false;
 
 
     // Start is called before the first frame update
@@ -37,12 +39,39 @@ public class GameManager : NetworkBehaviour
     //     StartGame();
     // }
 
-    public void StartGame() {
+    public void StartGame() {        
         if(!IsServer) { return; }
         
         Debug.Log("== GameManager: Game Started!");
-        SpawnPlayerControllers();
-        ResetFlags();        
+        SpawnPlayerControllers();         
+        ResetRound();
+        BeginCountdownForRound();
+    }
+
+    private void BeginCountdownForRound() {
+        roundInProgress = false;
+        StartCoroutine(RoundCountdown());
+    }
+
+    private IEnumerator RoundCountdown() {
+        CountdownClientRpc(3);
+        yield return new WaitForSeconds(1);
+        CountdownClientRpc(2);
+        yield return new WaitForSeconds(1);
+        CountdownClientRpc(1);
+        yield return new WaitForSeconds(1);
+        CountdownClientRpc(0);
+        roundInProgress = true;
+    }
+
+    [ClientRpc]
+    private void CountdownClientRpc(int count) {
+        UIManager.Instance.DisplayCountdown(count);        
+    } 
+
+    [ClientRpc]
+    private void ResetPlayerCamerasClientRpc() {
+        CameraFollower.Instance.ResetFaceDirection();
     }
 
     public void Imprison(Player player, Player imprisonedBy) {
@@ -77,6 +106,7 @@ public class GameManager : NetworkBehaviour
         }
 
         ResetRound();
+        BeginCountdownForRound();
     }
     // Update is called once per frame
     void Update()
@@ -94,6 +124,8 @@ public class GameManager : NetworkBehaviour
         foreach(Player player in PlayerSpawner.Instance.GetAllPlayers()) {
             player.ResetForRound();
         }
+
+        ResetPlayerCamerasClientRpc();
     }
 
     void SpawnPlayerControllers() {

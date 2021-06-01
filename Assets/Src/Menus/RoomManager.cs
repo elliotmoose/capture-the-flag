@@ -27,6 +27,7 @@ public class RoomManager : NetworkBehaviour
     public delegate void RoomManagerEvent();
     public RoomManagerEvent OnRoomUsersUpdate;
     public RoomManagerEvent OnClientJoinRoom;
+    public RoomManagerEvent OnClientLeaveRoom;
 
     void Start()
     {        
@@ -107,36 +108,40 @@ public class RoomManager : NetworkBehaviour
 
     
     private void OnClientDisconnected(ulong clientId) {
-        Debug.Log("Bij");
         if(NetworkManager.Singleton.IsServer) {
             User? userToRemove = FindUserWithClientId(clientId);
             if(userToRemove != null) {
                 roomUsers.Remove(userToRemove.Value);
             }
-            Debug.Log("Heya");
         }
         else if (IsClient) {
-            Debug.Log("Hoho");
+            
         }
         else if (IsHost) {
-            Debug.Log("WTF are you here");
+            
         }
         else
         {
-            Debug.Log("WHAT");
-            UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
+            if(OnClientLeaveRoom != null) {
+                OnClientLeaveRoom();
+            }
+            // UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
         }
     }
 
     //server
     private void ApprovalCheck(byte[] connectionData, ulong clientId, MLAPI.NetworkManager.ConnectionApprovedDelegate callback)
     {
-        if(!NetworkManager.Singleton.IsServer) {return;}
+        if(!NetworkManager.Singleton.IsServer) {
+            Debug.Log("client approval check");
+            return;
+        }
         int noOfPlayers = roomUsers.Count;
         bool hasReachMaxPlayers = (noOfPlayers < roomSize.Value*2);
         bool allowConnection = !hasReachMaxPlayers;
         bool createPlayerObject = true;
         ulong? prefabHash = NetworkSpawnManager.GetPrefabHashFromGenerator("NetworkPlayerController");
+        Debug.Log($"== RoomManager: Approving client connection: {allowConnection}");
         callback(createPlayerObject, prefabHash, allowConnection, Vector3.zero, Quaternion.identity);
     }
 
@@ -183,6 +188,7 @@ public class RoomManager : NetworkBehaviour
         string ipAddress = (ipAddressInput.Length <= 0) ? "127.0.0.1" : ipAddressInput;
         NetworkManager.Singleton.GetComponent<UNetTransport>().ConnectAddress = ipAddress;
         NetworkManager.Singleton.StartClient();
+        Debug.Log($"== RoomManager: StartClient finished");
     }
 
     

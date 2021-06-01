@@ -6,8 +6,12 @@ using Cinemachine;
 
 public class CameraFollower : MonoBehaviour
 {
+    public static CameraFollower Instance;
     GameObject target;
 
+    void Awake() {
+        Instance = this;
+    }
     // Update is called once per frame
     void Update()
     {
@@ -31,6 +35,17 @@ public class CameraFollower : MonoBehaviour
                     camera.m_XAxis.Value = (playerTeam == Team.BLUE ? 180 : 0);
                 }
             }
+        }
+    }
+
+    public void ResetFaceDirection() {
+        GameObject localPlayerObject = NetworkSpawnManager.GetLocalPlayerObject()?.gameObject;
+        PlayerController playerController = localPlayerObject?.GetComponent<PlayerController>();
+        if (playerController)
+        {
+            CinemachineFreeLook camera = GameObject.FindGameObjectWithTag("CinemachineCamera").GetComponent<CinemachineFreeLook>();
+            Team playerTeam = playerController.user.team;
+            camera.m_XAxis.Value = (playerTeam == Team.BLUE ? 180 : 0);
         }
     }
 }

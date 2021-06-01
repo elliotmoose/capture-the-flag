@@ -6,14 +6,37 @@ using TMPro;
 
 public class UIManager : MonoBehaviour
 {
+    public static UIManager Instance;
     public Image staminaBar;
     public TMPro.TextMeshProUGUI redTeamScore;
     public TMPro.TextMeshProUGUI blueTeamScore;
+    public GameObject countdownText;
 
+    void Awake() {
+        Instance = this;
+    }
     // Start is called before the first frame update
     void Start()
     {
         
+    }
+
+    public void DisplayCountdown(int count) {
+        TMP_Text textMeshPro = countdownText.GetComponent<TMPro.TMP_Text>(); 
+        Animation animation = countdownText.GetComponent<Animation>();
+
+        if(count > 0) {
+            textMeshPro.fontSize = 600;
+            textMeshPro.text = $"{count}";
+            animation.Rewind();
+            animation.Play("CountdownAnim");
+        }
+        else {
+            textMeshPro.fontSize = 300;
+            textMeshPro.text = "ROUND START";
+            animation.Rewind();
+            animation.Play("CountdownAnim");
+        }
     }
 
     // Update is called once per frame

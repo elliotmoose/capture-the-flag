@@ -35,6 +35,7 @@ public class MenuManager : MonoBehaviour
         //subscribe to room events
         RoomManager.Instance.OnRoomUsersUpdate += UpdateRoomPage;
         RoomManager.Instance.OnClientJoinRoom += OnJoinRoom;
+        RoomManager.Instance.OnClientLeaveRoom += OnLeaveRoom;
     }
 
     public void SetCurrentPage(string pageName) {
@@ -136,6 +137,10 @@ public class MenuManager : MonoBehaviour
         SetCurrentPage("Connecting");
         UpdateRoomPage();
         SetCurrentPage("Room");
+    }
+
+    void OnLeaveRoom() {
+        SetCurrentPage("Home");
     }
 
     void GenerateRoomPage(int noOfPlayersPerTeam) {

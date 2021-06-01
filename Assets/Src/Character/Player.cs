@@ -8,6 +8,9 @@ using MLAPI.Messaging;
 
 public class Player : NetworkBehaviour
 {
+    public Vector3 spawnPos;
+    public Quaternion spawnDir;
+    
     protected Skill catchSkill;   
     public List<Skill> skills = new List<Skill>();
     public List<Effect> effects = new List<Effect>();
@@ -76,6 +79,7 @@ public class Player : NetworkBehaviour
     void Update()
     {
         if(!IsServer) { return; }
+        if(!GameManager.Instance.roundInProgress) { return; }
 
         bool isMoving = (moveDir.magnitude > 0.01f && !isDisabled);
         bool canSprint = (curStamina.Value > 0 && isMoving);
@@ -145,6 +149,8 @@ public class Player : NetworkBehaviour
 
     public void Catch()
     {
+        if(!GameManager.Instance.roundInProgress) { return; }
+
         if(cdTimerCD < 0)
         {
             catchSkill.UseSkill(this);
@@ -158,6 +164,8 @@ public class Player : NetworkBehaviour
     }
 
     public void CastSkillAtIndex(int index) {
+        if(!GameManager.Instance.roundInProgress) { return; }
+
         if(index >= skills.Count) {
             Debug.LogWarning($"Skill index out of range: {index}");
             return;
@@ -196,6 +204,8 @@ public class Player : NetworkBehaviour
     // receive effect
     public void TakeEffect(Effect effect)
     {
+        if(!GameManager.Instance.roundInProgress) { return; }
+
         Effect existingEffect = this.effects.Find((thisEffect) =>
         {
             return thisEffect.name == effect.name;
@@ -216,7 +226,9 @@ public class Player : NetworkBehaviour
 
     public void UpdateEffects()
     {        
-        for(int i=0; i< this.effects.Count; i++)
+        if(!GameManager.Instance.roundInProgress) { return; }
+
+        for(int i=this.effects.Count-1; i>=0 && i<this.effects.Count; i++)
         {
             Effect effect = this.effects[i];
             effect.Update();
@@ -284,7 +296,25 @@ public class Player : NetworkBehaviour
     }
     
     public void ResetForRound() {
+        //reset position
+        this.transform.position = spawnPos;
+        this.transform.rotation = spawnDir; 
+        
+        //reset stats
         this.curStamina.Value = maxStamina.Value;
-        this.transform.position = Vector3.zero; //todo: make spawn point
+
+        //reset effects
+        for(int i=this.effects.Count-1; i>=0; i++)
+        {
+            Effect effect = this.effects[i];
+            effect.OnEffectEnd();
+        }
+        this.effects.Clear(); 
+
+        //reset animation 
+        Animator animator = GetComponent<Animator>();
+        animator.SetFloat("HorMovement", 0);
+        animator.SetFloat("VertMovement", 0);      
+        animator.SetBool("IsMoving", false); 
     }
 }

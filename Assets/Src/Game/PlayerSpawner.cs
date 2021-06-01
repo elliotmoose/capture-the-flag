@@ -68,6 +68,8 @@ public class PlayerSpawner : NetworkBehaviour
         Quaternion faceDirection = Quaternion.Euler(0, team == Team.BLUE ? 180 : 0, 0);
         GameObject playerObj = GameObject.Instantiate(characterPrefab, spawnPosition, faceDirection);
         Player player = playerObj.GetComponent<Player>();
+        player.spawnPos = spawnPosition;
+        player.spawnDir = faceDirection;
         player.ownerClientId.Value = playerId;
         player.team = team; //TODO: check if team is set on clients
         playerObj.GetComponent<NetworkObject>().Spawn();
