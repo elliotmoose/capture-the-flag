@@ -304,7 +304,7 @@ public class Player : NetworkBehaviour
         this.curStamina.Value = maxStamina.Value;
 
         //reset effects
-        for(int i=this.effects.Count-1; i>=0; i++)
+        for(int i=this.effects.Count-1; i>=0 && i < this.effects.Count; i++)
         {
             Effect effect = this.effects[i];
             effect.OnEffectEnd();
