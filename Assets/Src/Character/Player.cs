@@ -52,7 +52,11 @@ public class Player : NetworkBehaviour
 
     void Start()
     {
-        this.rends = this.GetComponentsInChildren<Renderer>();        
+        this.rends = this.GetComponentsInChildren<Renderer>();     
+        this.flagSlot = this.transform.Find("model/body/FlagSlot").gameObject;
+        if(!flagSlot) {
+            Debug.LogError("This player has no flag slot");
+        }   
     }
 
     // Update is called once per frame

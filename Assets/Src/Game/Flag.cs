@@ -23,6 +23,7 @@ public class Flag : NetworkBehaviour
 
         Player player = collider.gameObject.GetComponent<Player>();
         if(player != null && player.team != team && capturer == null) {
+            Debug.Log($"{team} flag caught!");
             this.transform.SetParent(player.flagSlot.transform);
             this.transform.localRotation = Quaternion.identity;
             this.transform.localPosition = Vector3.zero;
