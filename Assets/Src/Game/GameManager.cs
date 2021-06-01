@@ -96,6 +96,11 @@ public class GameManager : NetworkBehaviour
             targetJail.Release(player);
         }
     }
+
+    public void ResetJail() {
+        blueTeamJail.ReleaseAll();
+        redTeamJail.ReleaseAll();
+    }
     
     public void ScorePoint(Team team) {
         if(team == Team.BLUE) {

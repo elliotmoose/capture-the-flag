@@ -22,9 +22,9 @@ public class UIManager : MonoBehaviour
     }
 
     public void DisplayCountdown(int count) {
+        countdownText.SetActive(true);
         TMP_Text textMeshPro = countdownText.GetComponent<TMPro.TMP_Text>(); 
         Animation animation = countdownText.GetComponent<Animation>();
-
         if(count > 0) {
             textMeshPro.fontSize = 600;
             textMeshPro.text = $"{count}";

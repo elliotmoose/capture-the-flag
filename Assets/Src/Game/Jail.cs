@@ -25,6 +25,10 @@ public class Jail : MonoBehaviour
         return this.jailed;
     }
 
+    public void ReleaseAll() {
+        jailed.Clear();
+    }
+
 
     // Start is called before the first frame update
     void Start()

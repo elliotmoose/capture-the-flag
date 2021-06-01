@@ -296,6 +296,9 @@ public class Player : NetworkBehaviour
     }
     
     public void ResetForRound() {
+        //reset jail
+        GameManager.Instance.ResetJail();
+        
         //reset position
         this.transform.position = spawnPos;
         this.transform.rotation = spawnDir; 
@@ -315,6 +318,6 @@ public class Player : NetworkBehaviour
         Animator animator = GetComponent<Animator>();
         animator.SetFloat("HorMovement", 0);
         animator.SetFloat("VertMovement", 0);      
-        animator.SetBool("IsMoving", false); 
+        animator.SetBool("IsMoving", false);         
     }
 }

@@ -833,6 +833,7 @@ MonoBehaviour:
   redTeamScore:
     m_InternalValue: 0
   roomSize: 3
+  roundInProgress: 0
 --- !u!114 &368055229
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3393,7 +3394,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!111 &1790904213
 Animation:
   m_ObjectHideFlags: 0
@@ -3718,6 +3719,12 @@ MonoBehaviour:
     - Prefab: {fileID: 8715549257419821114, guid: 9cb4daa18f4b34bcfb909ca9cd4de466, type: 3}
       PlayerPrefab: 0
     - Prefab: {fileID: 368055224}
+      PlayerPrefab: 0
+    - Prefab: {fileID: 8382036429028065265, guid: d31cb0926b6e8ca4b96b4d2a229bdf24, type: 3}
+      PlayerPrefab: 0
+    - Prefab: {fileID: 2482793296607934278, guid: 9ad2283e1cd995c40a3d5bf453039022, type: 3}
+      PlayerPrefab: 0
+    - Prefab: {fileID: 2353708130486342299, guid: eba2a4702c0058645a99cd0866aa90f6, type: 3}
       PlayerPrefab: 0
     PlayerPrefabHash:
       id: 0

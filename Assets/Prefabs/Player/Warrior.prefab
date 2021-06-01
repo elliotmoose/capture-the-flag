@@ -265,8 +265,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NetworkInstanceId: 0
-  PrefabHash: 1897319656204293034
-  PrefabHashGenerator: Player
+  PrefabHash: 9905265964456609982
+  PrefabHashGenerator: WarriorPlayer
   AlwaysReplicateAsRoot: 0
   DontDestroyWithOwner: 0
 --- !u!195 &7935145524592292120
@@ -366,6 +366,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 703d9232ed32841478a70476ba7f03ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spawnPos: {x: 0, y: 0, z: 0}
+  spawnDir: {x: 0, y: 0, z: 0, w: 0}
   flagSlot: {fileID: 0}
   moveDir: {x: 0, y: 0}
   faceAngle: 0

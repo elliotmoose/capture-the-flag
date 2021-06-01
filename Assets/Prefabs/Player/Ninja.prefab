@@ -361,8 +361,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NetworkInstanceId: 0
-  PrefabHash: 1897319656204293034
-  PrefabHashGenerator: Player
+  PrefabHash: 3747261996025210664
+  PrefabHashGenerator: ThiefPlayer
   AlwaysReplicateAsRoot: 0
   DontDestroyWithOwner: 0
 --- !u!195 &5276864991511373060
@@ -462,6 +462,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b17a0b5e09c11a499f312be5b3d073d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spawnPos: {x: 0, y: 0, z: 0}
+  spawnDir: {x: 0, y: 0, z: 0, w: 0}
   flagSlot: {fileID: 0}
   moveDir: {x: 0, y: 0}
   faceAngle: 0
