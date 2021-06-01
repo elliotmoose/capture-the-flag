@@ -13,8 +13,6 @@ using MLAPI.Spawning;
 public class RoomManager : NetworkBehaviour
 {  
     public static RoomManager Instance;
-
-    public bool autoStartHost = false;
     
 // public List<User> roomUsers = new List<User>();
     public NetworkList<User> roomUsers = new NetworkList<User>(new NetworkVariableSettings {

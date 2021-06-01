@@ -1,12 +1,12 @@
 fileFormatVersion: 2
-guid: 025f66f40915a492180c417c9e17c991
+guid: 0b17a0b5e09c11a499f312be5b3d073d
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
   defaultReferences:
   - flagSlot: {instanceID: 0}
   - smoke: {fileID: 8622611870752946589, guid: 0157679236ada9e4ca70294df248874b, type: 3}
-  executionOrder: -500
+  executionOrder: 0
   icon: {instanceID: 0}
   userData: 
   assetBundleName: 
