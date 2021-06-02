@@ -86,12 +86,9 @@ public class MenuManager : MonoBehaviour
     }
 
     public void SelectCharacter(Character character) {
-        RoomManager.Instance.SelectCharacterServerRpc(NetworkManager.Singleton.LocalClientId, character);
+        UserController.LocalInstance.SelectCharacterServerRpc(NetworkManager.Singleton.LocalClientId, character);
     }
     
-    public void JoinTeam(Team team) {
-        RoomManager.Instance.JoinTeamServerRpc(NetworkManager.Singleton.LocalClientId, team);
-    }
 
     public void StartGame() {
         RoomManager.Instance.StartGame();
@@ -181,7 +178,7 @@ public class MenuManager : MonoBehaviour
     }
 
     void RequestJoinTeam(Team team, int slotIndex) {
-        RoomManager.Instance.JoinTeamServerRpc(NetworkManager.Singleton.LocalClientId, team);
+        UserController.LocalInstance.JoinTeamServerRpc(NetworkManager.Singleton.LocalClientId, team);
     }
 
     #endregion

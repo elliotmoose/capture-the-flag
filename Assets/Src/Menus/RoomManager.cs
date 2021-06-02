@@ -10,11 +10,19 @@ using MLAPI.Messaging;
 using MLAPI.Transports.UNET;
 using MLAPI.Spawning;
 
+/// <summary>
+/// IMPLEMENTATION DETAILS:
+/// 1. RoomManager requires a NetworkObject in order to be synced
+/// 2. However, we want to put RoomManager on NetworkManager so that the script will be brought into Game scene
+/// 
+/// The two are mutually exclusive. as NetworkObjects cannot be brought into next scene.
+/// 
+/// To solve this, for each scene we have a RoomManager to keep track of the users. We let the SceneTransitionManager hand over the NetworkList states
+/// </summary>
 public class RoomManager : NetworkBehaviour
 {  
     public static RoomManager Instance;
     
-// public List<User> roomUsers = new List<User>();
     public NetworkList<User> roomUsers = new NetworkList<User>(new NetworkVariableSettings {
         WritePermission=NetworkVariablePermission.ServerOnly,
         SendTickrate=3
@@ -28,6 +36,7 @@ public class RoomManager : NetworkBehaviour
     public RoomManagerEvent OnRoomUsersUpdate;
     public RoomManagerEvent OnClientJoinRoom;
     public RoomManagerEvent OnClientLeaveRoom;
+
 
     void Start()
     {        
@@ -53,35 +62,12 @@ public class RoomManager : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        
     }
 
 
     #region Server Side Functions
-    public void StartGame() {
-        if(!NetworkManager.Singleton.IsServer) {return;}
-        
-        bool canStartGame = (roomUsers.Count == roomSize.Value*2);
-
-        // if(!canStartGame) {
-        //     Debug.LogWarning("== RoomManager: Cannot start game as non enough players");
-        //     return;
-        // }
-
-        SceneTransitionManager.Instance.RoomToGameScene(GetUsers(), roomSize.Value);
-    }
-
-    public void CreateRoom() 
-    {            
-        NetworkManager.Singleton.StartHost();
-
-        if(NetworkManager.Singleton.IsHost) {
-            Debug.Log($"Is Host with localClientId: {NetworkManager.Singleton.LocalClientId}");
-            User newUser = new User(NetworkManager.Singleton.LocalClientId, Team.RED, "Loading...");
-            newUser.username = UserManager.Instance.username;
-            roomUsers.Add(newUser);
-        }
-    }
+    
 
     //runs on server
     private void OnClientConnected(ulong clientId) {        
@@ -95,8 +81,7 @@ public class RoomManager : NetworkBehaviour
             roomUsers.Add(newUser);
         }
         else if (NetworkManager.Singleton.IsClient) {
-            Debug.Log("== Room Manager (Client): Connected to server!");
-            SetUsernameServerRpc(NetworkManager.Singleton.LocalClientId, UserManager.Instance.username);
+            Debug.Log("== Room Manager (Client): Connected to server!");            
 
             if(OnClientJoinRoom != null) {
                 //let client know to progress (change menu)
@@ -181,7 +166,33 @@ public class RoomManager : NetworkBehaviour
     }
     #endregion
 
-    #region Client Side Functions
+    #region User actions
+
+    public void StartGame() {
+        if(!NetworkManager.Singleton.IsServer) {return;}
+        
+        bool canStartGame = (roomUsers.Count == roomSize.Value*2);
+
+        // if(!canStartGame) {
+        //     Debug.LogWarning("== RoomManager: Cannot start game as non enough players");
+        //     return;
+        // }
+
+        SceneTransitionManager.Instance.RoomToGameScene(GetUsers(), roomSize.Value);
+    }
+
+    public void CreateRoom() 
+    {            
+        NetworkManager.Singleton.StartHost();
+
+        if(NetworkManager.Singleton.IsHost) {
+            Debug.Log($"Is Host with localClientId: {NetworkManager.Singleton.LocalClientId}");
+            User newUser = new User(NetworkManager.Singleton.LocalClientId, Team.RED, "Loading...");
+            newUser.username = UserManager.Instance.username;
+            roomUsers.Add(newUser);
+        }
+    }
+    
     public void JoinRoom(string ipAddressInput) 
     {    
         Debug.Log($"== RoomManager: Joining Room {ipAddressInput}...");
@@ -205,9 +216,7 @@ public class RoomManager : NetworkBehaviour
         
     }
 
-
-    [ServerRpc(RequireOwnership=false)]
-    public void JoinTeamServerRpc(ulong clientId, Team team) {
+    public void UserRequestJoinTeam(ulong clientId, Team team) {
         Debug.Log($"{clientId} joint team {team}");
         if(IsServer) {
             int teamCount = FindUsersWithTeam(team).Count;
@@ -223,8 +232,7 @@ public class RoomManager : NetworkBehaviour
         }
     }
     
-    [ServerRpc(RequireOwnership=false)]
-    void SetUsernameServerRpc(ulong clientId, string username) {
+    public void UserRequestSetUsername(ulong clientId, string username) {
         Debug.Log($"{clientId} set username {username}");
         if(NetworkManager.Singleton.IsServer) {
             User? user = FindUserWithClientId(clientId);
@@ -234,8 +242,7 @@ public class RoomManager : NetworkBehaviour
         }
     }
     
-    [ServerRpc(RequireOwnership=false)]
-    public void SelectCharacterServerRpc(ulong clientId, Character character) {
+    public void UserRequestSelectCharacter(ulong clientId, Character character) {
         Debug.Log($"{clientId} selected {character}");
         if(NetworkManager.Singleton.IsServer) {
             User? user = FindUserWithClientId(clientId);
@@ -259,18 +266,17 @@ public class RoomManager : NetworkBehaviour
     }
 
     void Awake() {
-        if(Instance != null) {
-            throw new System.Exception("More than one RoomManager exists");
-        }
+        // if(Instance != null) {
+        //     throw new System.Exception("More than one RoomManager exists");
+        // }
         Instance = this;
     }
 
     void OnDestroy() {
         //TODO: check if events are unsubscribed when changing scene
-        NetworkManager.Singleton.ConnectionApprovalCallback -= ApprovalCheck;
-        NetworkManager.Singleton.OnClientConnectedCallback -= OnClientConnected;
-        NetworkManager.Singleton.OnClientDisconnectCallback -= OnClientDisconnected;
-        
-        Instance = null;
+        // NetworkManager.Singleton.ConnectionApprovalCallback -= ApprovalCheck;
+        // NetworkManager.Singleton.OnClientConnectedCallback -= OnClientConnected;
+        // NetworkManager.Singleton.OnClientDisconnectCallback -= OnClientDisconnected;        
+        // Instance = null;
     }
 }

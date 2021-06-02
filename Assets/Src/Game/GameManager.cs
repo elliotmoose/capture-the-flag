@@ -26,10 +26,7 @@ public class GameManager : NetworkBehaviour
         WritePermission = NetworkVariablePermission.ServerOnly
     });
 
-    public List<User> users = new List<User>();
-    public int roomSize = 3; //no of players per team
     public bool roundInProgress = false;
-
 
     // Start is called before the first frame update
     // void Start()
@@ -38,7 +35,7 @@ public class GameManager : NetworkBehaviour
     //     Debug.Log(users.Count);
     //     StartGame();
     // }
-
+    
     public void StartGame() {        
         if(!IsServer) { return; }
         
@@ -136,7 +133,9 @@ public class GameManager : NetworkBehaviour
     void SpawnPlayerControllers() {
         if(!IsServer) {return;}
 
-        Debug.Log($"spawning controllers for {users.Count} users");
+        List<User> users = RoomManager.Instance.GetUsers();
+        int roomSize = RoomManager.Instance.roomSize.Value;
+
         int redTeamIndex = 0;
         int blueTeamIndex = 0;
 
@@ -149,8 +148,8 @@ public class GameManager : NetworkBehaviour
             //spawn player controller            
             GameObject playerControllerObject = GameObject.Instantiate(playerControllerPrefab, Vector3.zero, Quaternion.identity);
             PlayerController playerController = playerControllerObject.GetComponent<PlayerController>();
-            playerController.user = user;
             playerControllerObject.GetComponent<NetworkObject>().SpawnAsPlayerObject(user.clientId);
+            playerController.user.Value = user;
 
             //spawn player
             int playerIndex = (user.team == Team.RED ? redTeamIndex : blueTeamIndex);

@@ -18,5 +18,6 @@ public struct User : INetworkSerializable {
         serializer.Serialize(ref clientId);
         serializer.Serialize(ref username);
         serializer.Serialize(ref team);
+        serializer.Serialize(ref character);
     }
 }

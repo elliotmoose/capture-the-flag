@@ -18,12 +18,13 @@ public class TestManager : MonoBehaviour
     void Start()
     {
         if(autoStartHost) {
-            NetworkManager.Singleton.StartHost();
-            List<User> users = new List<User>();
-            User me = new User(NetworkManager.Singleton.LocalClientId, Team.BLUE, "testUser", Character.Warrior);
-            users.Add(me);
-            GameManager.Instance.users = users;            
-            GameManager.Instance.roomSize = 3;
+            this.gameObject.AddComponent<UserManager>();
+            // this.gameObject.AddComponent<RoomManager>().CreateRoom();
+            RoomManager.Instance.CreateRoom();
+            // NetworkManager.Singleton.StartHost();
+            // List<User> users = new List<User>();
+            // User me = new User(NetworkManager.Singleton.LocalClientId, Team.BLUE, "testUser", Character.Warrior);
+            // users.Add(me);
             GameManager.Instance.StartGame();
             GameObject.Find("RedFlag").GetComponent<SmoothSyncMLAPI>().enabled = true;
             GameObject.Find("BlueFlag").GetComponent<SmoothSyncMLAPI>().enabled = true;

@@ -31,7 +31,7 @@ public class CameraFollower : MonoBehaviour
                     camera.LookAt = target.transform;
                     camera.Follow = target.transform;
 
-                    Team playerTeam = playerController.user.team;
+                    Team playerTeam = playerController.user.Value.team;
                     camera.m_XAxis.Value = (playerTeam == Team.BLUE ? 180 : 0);
                 }
             }
@@ -44,7 +44,7 @@ public class CameraFollower : MonoBehaviour
         if (playerController)
         {
             CinemachineFreeLook camera = GameObject.FindGameObjectWithTag("CinemachineCamera").GetComponent<CinemachineFreeLook>();
-            Team playerTeam = playerController.user.team;
+            Team playerTeam = playerController.user.Value.team;
             camera.m_XAxis.Value = (playerTeam == Team.BLUE ? 180 : 0);
         }
     }

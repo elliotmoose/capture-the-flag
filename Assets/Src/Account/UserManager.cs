@@ -7,7 +7,7 @@ public class UserManager : MonoBehaviour
     public static UserManager Instance;
     public string username = "";
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         Instance = this;
     }
