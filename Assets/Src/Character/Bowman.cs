@@ -9,5 +9,6 @@ public class Bowman : Player
         moveSpeed = 15;
         catchSkill = new Catch(catchRadius);
         skills.Add(new Smoke());
+        skills.Add(new Reach());
     }
 }
