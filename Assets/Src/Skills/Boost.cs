@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Boost : Skill
 {
-    private float distance = 25.0f;
-    private float timeTaken = 0.5f;
+    private float distance = 30.0f;
+    private float timeTaken = 0.4f;
 
     public Boost()
     {
