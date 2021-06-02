@@ -14,13 +14,17 @@ public class UIManager : MonoBehaviour
 
     //prefabs
     public GameObject playerIconTemplate;
-
+    
+    private List<GameObject> generatedPlayerIcons = new List<GameObject>();
     void Awake() {
         Instance = this;
     }
     // Start is called before the first frame update
     void Start()
     {
+        UIManager.Instance.GenerateGameSummaryUI(RoomManager.Instance.GetUsers(), RoomManager.Instance.roomSize.Value);
+        UIManager.Instance.GenerateGameSummaryUI(RoomManager.Instance.GetUsers(), RoomManager.Instance.roomSize.Value);
+
         RoomManager.Instance.OnRoomUsersUpdate += ()=>{
             UIManager.Instance.GenerateGameSummaryUI(RoomManager.Instance.GetUsers(), RoomManager.Instance.roomSize.Value);
         };
@@ -46,10 +50,19 @@ public class UIManager : MonoBehaviour
 
     public void GenerateGameSummaryUI(List<User> users, int teamSize) {
         Transform gameSummaryUI = this.transform.Find("GameSummaryUI");
+        Debug.Log(generatedPlayerIcons.Count);
+        for(int i=0; i < generatedPlayerIcons.Count; i++) {
+            generatedPlayerIcons[i].transform.SetParent(null);
+            GameObject.Destroy(generatedPlayerIcons[i]);
+        }
+
+        generatedPlayerIcons.Clear();
+
         for(int i=0; i<teamSize;i++) {
             foreach(Team team in Team.GetValues(typeof(Team))) {
                 GameObject playerIconGameObject = GameObject.Instantiate(playerIconTemplate, Vector3.zero, Quaternion.identity, gameSummaryUI);
                 playerIconGameObject.transform.SetSiblingIndex(team == Team.BLUE ? i+3 : i);
+                generatedPlayerIcons.Add(playerIconGameObject);
 
                 List<User> teamUsers = users.FindAll((User user) => {
                     return user.team == team;
