@@ -5,7 +5,7 @@ using UnityEngine;
 public class Knockback : Skill
 {
     private float finalDistance = 15.0f;
-    private float timeTaken = 1.0f;
+    private float timeTaken = 0.3f;
     private float radius = 15.0f;
 
     public Knockback()
