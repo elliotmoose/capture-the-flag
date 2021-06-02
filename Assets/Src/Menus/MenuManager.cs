@@ -107,24 +107,28 @@ public class MenuManager : MonoBehaviour
 
         GenerateRoomPage(roomManager.roomSize.Value);
 
-        List<User> redTeamUsers = roomManager.FindUsersWithTeam(Team.RED);
+        
         List<User> blueTeamUsers = roomManager.FindUsersWithTeam(Team.BLUE);
         
-        for(int i=0; i<roomManager.roomSize.Value; i++) {
-            User? redUser = redTeamUsers.ElementAtOrDefault<User>(i);
-            if(redUser != null) {
-                redTeamPlayerRows.transform.GetChild(i+1).GetComponentInChildren<TextMeshProUGUI>().text = redUser.Value.username;
-            }
-            else {
-                redTeamPlayerRows.transform.GetChild(i+1).GetComponentInChildren<TextMeshProUGUI>().text = "Empty Slot";
-            }
+        Color32 white = new Color32(255, 255, 255, 255);
+        Color32 gray = new Color32(159, 159, 159, 255);
 
-            User? blueUser = blueTeamUsers.ElementAtOrDefault<User>(i);
-            if(blueUser != null) {
-                blueTeamPlayerRows.transform.GetChild(i+1).GetComponentInChildren<TextMeshProUGUI>().text = blueUser.Value.username;
-            }
-            else {
-                blueTeamPlayerRows.transform.GetChild(i+1).GetComponentInChildren<TextMeshProUGUI>().text = "Empty Slot";
+        for(int i=0; i<roomManager.roomSize.Value; i++) {            
+            foreach(Team team in Team.GetValues(typeof(Team))) {
+                List<User> users = roomManager.FindUsersWithTeam(team);
+                GameObject playerRows = (team == Team.BLUE ? blueTeamPlayerRows : redTeamPlayerRows);
+            
+                if(i < users.Count) {
+                    User user = users[i];
+                    playerRows.transform.GetChild(i+1).GetComponentInChildren<TextMeshProUGUI>().text = user.username;
+                    playerRows.transform.GetChild(i+1).GetComponentInChildren<Image>().sprite = PrefabsManager.Instance.IconForCharacter(user.character);
+                    playerRows.transform.GetChild(i+1).GetComponentInChildren<Image>().color = white;
+                }
+                else {
+                    playerRows.transform.GetChild(i+1).GetComponentInChildren<TextMeshProUGUI>().text = "Empty Slot";
+                    playerRows.transform.GetChild(i+1).GetComponentInChildren<Image>().sprite = null;
+                    playerRows.transform.GetChild(i+1).GetComponentInChildren<Image>().color = gray;
+                }
             }
         }
     }

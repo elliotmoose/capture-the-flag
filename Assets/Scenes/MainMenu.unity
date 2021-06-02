@@ -1363,6 +1363,7 @@ GameObject:
   - component: {fileID: 478187859}
   - component: {fileID: 478187858}
   - component: {fileID: 478187857}
+  - component: {fileID: 478187860}
   m_Layer: 0
   m_Name: LobbyManager
   m_TagString: Untagged
@@ -1415,6 +1416,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &478187860
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 478187856}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3c9c6f2b92048d4a8339ccfa663f925, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  smoke: {fileID: 0}
+  warriorIcon: {fileID: 21300000, guid: d53f2076967484e7ca7865244cd941e1, type: 3}
+  mageIcon: {fileID: 21300000, guid: 2f7404c7474c9458698a640073285f7f, type: 3}
+  thiefIcon: {fileID: 21300000, guid: 3cfa2d9e712644bae8caf05aa8aaf10a, type: 3}
 --- !u!1 &518016829
 GameObject:
   m_ObjectHideFlags: 0
@@ -3645,8 +3662,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 0
+  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -4057,8 +4074,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 0
+  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
