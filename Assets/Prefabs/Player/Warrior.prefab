@@ -234,7 +234,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SendRate: 0.1
   m_Animator: {fileID: 2006663619837999612}
-  m_TrackedParamFlags: 0
+  m_TrackedParamFlags: 31
 --- !u!95 &2006663619837999612
 Animator:
   serializedVersion: 3
@@ -301,13 +301,14 @@ MonoBehaviour:
   moveDir: {x: 0, y: 0}
   faceAngle: 0
   sprinting: 0
-  team: 0
   ownerClientId:
     m_InternalValue: 0
   curStamina:
     m_InternalValue: 100
   maxStamina:
     m_InternalValue: 100
+  team:
+    m_InternalValue: 0
 --- !u!114 &-7012932869787170332
 MonoBehaviour:
   m_ObjectHideFlags: 0

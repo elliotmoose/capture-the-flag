@@ -448,7 +448,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SendRate: 0.1
   m_Animator: {fileID: 8158180437212963690}
-  m_TrackedParamFlags: 1
+  m_TrackedParamFlags: 31
 --- !u!95 &8158180437212963690
 Animator:
   serializedVersion: 3
@@ -499,13 +499,14 @@ MonoBehaviour:
   moveDir: {x: 0, y: 0}
   faceAngle: 0
   sprinting: 0
-  team: 1
   ownerClientId:
     m_InternalValue: 0
   curStamina:
     m_InternalValue: 100
   maxStamina:
     m_InternalValue: 100
+  team:
+    m_InternalValue: 0
 --- !u!54 &4682214866918665150
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -540,13 +541,14 @@ MonoBehaviour:
   moveDir: {x: 0, y: 0}
   faceAngle: 0
   sprinting: 0
-  team: 1
   ownerClientId:
     m_InternalValue: 0
   curStamina:
     m_InternalValue: 100
   maxStamina:
     m_InternalValue: 100
+  team:
+    m_InternalValue: 0
 --- !u!114 &-8639053039359840742
 MonoBehaviour:
   m_ObjectHideFlags: 0
