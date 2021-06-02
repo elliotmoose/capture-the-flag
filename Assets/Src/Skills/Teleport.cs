@@ -5,7 +5,7 @@ using UnityEngine;
 // Teleport skill
 public class Teleport : Skill
 {
-    private float teleportFactor = 2.0f;
+    private float teleportDistance = 20.0f;
 
     public Teleport()
     {
@@ -17,7 +17,7 @@ public class Teleport : Skill
     {
         Debug.Log(name + " skill is used");
         Debug.Log(player.transform.position.ToString());
-        player.transform.position += player.transform.forward * teleportFactor;
+        player.transform.position += player.transform.forward * teleportDistance;
         Debug.Log(player.transform.position.ToString());
     }
 }

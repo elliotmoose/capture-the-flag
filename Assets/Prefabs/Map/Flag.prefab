@@ -288,7 +288,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d8e856ff02de4cf4b9f62a579512a0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  team: 0
+  team:
+    m_InternalValue: 0
 --- !u!114 &440171485690494545
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -339,7 +340,7 @@ MonoBehaviour:
   scaleLerpSpeed: 0.85
   timeCorrectionSpeed: 0.1
   snapTimeThreshold: 3
-  syncPosition: 2
+  syncPosition: 0
   syncRotation: 0
   syncScale: 7
   syncVelocity: 7

@@ -7,6 +7,7 @@ using Smooth;
 public class TestManager : MonoBehaviour
 {
     public bool autoStartHost = true;
+    public Character character;
     // Start is called before the first frame update
 
     void Awake() {
@@ -21,6 +22,7 @@ public class TestManager : MonoBehaviour
             this.gameObject.AddComponent<UserManager>();
             // this.gameObject.AddComponent<RoomManager>().CreateRoom();
             RoomManager.Instance.CreateRoom();
+            RoomManager.Instance.UserRequestSelectCharacter(NetworkManager.Singleton.LocalClientId, character);
             // NetworkManager.Singleton.StartHost();
             // List<User> users = new List<User>();
             // User me = new User(NetworkManager.Singleton.LocalClientId, Team.BLUE, "testUser", Character.Warrior);

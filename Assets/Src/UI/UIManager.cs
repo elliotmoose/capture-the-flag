@@ -17,14 +17,13 @@ public class UIManager : MonoBehaviour
 
     void Awake() {
         Instance = this;
-        RoomManager.Instance.OnRoomUsersUpdate += ()=>{
-            UIManager.Instance.GenerateGameSummaryUI(RoomManager.Instance.GetUsers(), RoomManager.Instance.roomSize.Value);
-        };
     }
     // Start is called before the first frame update
     void Start()
     {
-
+        RoomManager.Instance.OnRoomUsersUpdate += ()=>{
+            UIManager.Instance.GenerateGameSummaryUI(RoomManager.Instance.GetUsers(), RoomManager.Instance.roomSize.Value);
+        };
     }
 
     public void DisplayCountdown(int count) {

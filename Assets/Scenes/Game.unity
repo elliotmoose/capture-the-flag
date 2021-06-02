@@ -483,9 +483,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_BindingMode: 4
   m_FollowOffset: {x: 0, y: 7, z: -15.81}
-  m_XDamping: 1
-  m_YDamping: 1
-  m_ZDamping: 1
+  m_XDamping: 0
+  m_YDamping: 0
+  m_ZDamping: 0
   m_AngularDampingMode: 0
   m_PitchDamping: 0
   m_YawDamping: 0
@@ -674,9 +674,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_BindingMode: 4
   m_FollowOffset: {x: 0, y: 7, z: -15.81}
-  m_XDamping: 1
-  m_YDamping: 1
-  m_ZDamping: 1
+  m_XDamping: 0
+  m_YDamping: 0
+  m_ZDamping: 0
   m_AngularDampingMode: 0
   m_PitchDamping: 0
   m_YawDamping: 0
@@ -1400,9 +1400,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_BindingMode: 4
   m_FollowOffset: {x: 0, y: 7, z: -15.81}
-  m_XDamping: 1
-  m_YDamping: 1
-  m_ZDamping: 1
+  m_XDamping: 0
+  m_YDamping: 0
+  m_ZDamping: 0
   m_AngularDampingMode: 0
   m_PitchDamping: 0
   m_YawDamping: 0
@@ -3137,6 +3137,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3886766385546344591, guid: 9c819b117196a4f50b725bb9b3087a87, type: 3}
+      propertyPath: syncPosition
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8062280885767414518, guid: 9c819b117196a4f50b725bb9b3087a87, type: 3}
       propertyPath: m_RootOrder
       value: 8
@@ -3732,6 +3736,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   autoStartHost: 0
+  character: 0
 --- !u!1 &1919407903
 GameObject:
   m_ObjectHideFlags: 0
@@ -4042,6 +4047,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3886766385546344591, guid: 9c819b117196a4f50b725bb9b3087a87, type: 3}
+      propertyPath: syncPosition
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8062280885767414518, guid: 9c819b117196a4f50b725bb9b3087a87, type: 3}
       propertyPath: m_RootOrder
       value: 9

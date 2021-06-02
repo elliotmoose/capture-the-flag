@@ -22,9 +22,9 @@ public class Player : NetworkBehaviour
     protected Renderer[] rends;
 
     protected float catchRadius = 5;
-    protected float moveSpeed = 18;
-    protected float staminaBurnFactor = 25;
-    protected float staminaRecoveryFactor = 30;
+    protected float moveSpeed = 12;
+    protected float staminaBurnFactor = 30;
+    protected float staminaRecoveryFactor = 35;
     protected bool isDisabled = false;
 
     //skill variables
