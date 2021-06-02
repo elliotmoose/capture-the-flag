@@ -136,6 +136,7 @@ public class GameManager : NetworkBehaviour
     void SpawnPlayerControllers() {
         if(!IsServer) {return;}
 
+        Debug.Log($"spawning controllers for {users.Count} users");
         int redTeamIndex = 0;
         int blueTeamIndex = 0;
 
