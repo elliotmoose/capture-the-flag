@@ -22,7 +22,7 @@ public class Flag : NetworkBehaviour
         if(!IsServer) { return; }
 
         Player player = collider.gameObject.GetComponent<Player>();
-        if(player != null && player.team != team && capturer == null) {
+        if(player != null && player.GetTeam() != team && capturer == null) {
             Debug.Log($"{team} flag caught!");
             this.transform.SetParent(player.flagSlot.transform);
             this.transform.localRotation = Quaternion.identity;

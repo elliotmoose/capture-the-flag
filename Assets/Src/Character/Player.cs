@@ -14,9 +14,6 @@ public class Player : NetworkBehaviour
     protected Skill catchSkill;   
     public List<Skill> skills = new List<Skill>();
     public List<Effect> effects = new List<Effect>();
-    protected float cdTimer1 = 0.0f;
-    protected float cdTimer2 = 0.0f;
-    protected float cdTimerCD = 0.0f;
     
     //movement controls
     public GameObject flagSlot;
@@ -31,18 +28,53 @@ public class Player : NetworkBehaviour
     protected bool isDisabled = false;
 
     //skill variables
-    protected bool isInvis = false;
     protected float invisAlpha = 0.3f;
     
-
     float sprintMultiplier = 2.4f;
     public bool sprinting = false;
-    public Team team = Team.BLUE;
 
+    private float _animationTransitionTime = 0.15f;
+    private float _curTransitionTime = 0f;
+
+    //Network Variables
     public NetworkVariableULong ownerClientId = new NetworkVariableULong(new NetworkVariableSettings{
         SendTickrate = -1,
         WritePermission = NetworkVariablePermission.ServerOnly
     });
+
+    public NetworkVariableFloat curStamina = new NetworkVariableFloat(new NetworkVariableSettings{
+        SendTickrate = 20,
+        WritePermission = NetworkVariablePermission.ServerOnly
+    }, 100);
+    
+    public NetworkVariableFloat maxStamina = new NetworkVariableFloat(new NetworkVariableSettings{
+        SendTickrate = -1,
+        WritePermission = NetworkVariablePermission.ServerOnly
+    }, 100);
+
+
+    NetworkVariableBool isInvis = new NetworkVariableBool(new NetworkVariableSettings{
+        SendTickrate = -1,
+        WritePermission = NetworkVariablePermission.ServerOnly
+    }, false);
+    // protected bool isInvis = false;
+    public NetworkVariable<Team> team = new NetworkVariable<Team>(new NetworkVariableSettings{
+        SendTickrate = -1,
+        WritePermission = NetworkVariablePermission.ServerOnly
+    }, Team.BLUE);
+    
+    
+    protected float cdTimer1 = 0.0f;
+    protected float cdTimer2 = 0.0f;
+    protected float cdTimerCD = 0.0f;
+
+    public Team GetTeam() {
+        return team.Value;
+    }
+
+    public void SetTeam(Team team) {
+        this.team.Value = team;
+    }
 
     public float GetMoveSpeed()
     {
@@ -60,21 +92,14 @@ public class Player : NetworkBehaviour
         if(!flagSlot) {
             Debug.LogError("This player has no flag slot");
         }   
+
+        this.isInvis.OnValueChanged += (bool oldVal, bool newVal) => {
+            UpdateInvisRenderer();
+            Debug.Log("invis val updated!");
+        };
     }
 
-    // Update is called once per frame
-    public NetworkVariableFloat curStamina = new NetworkVariableFloat(new NetworkVariableSettings{
-        SendTickrate = 20,
-        WritePermission = NetworkVariablePermission.ServerOnly
-    }, 100);
     
-    public NetworkVariableFloat maxStamina = new NetworkVariableFloat(new NetworkVariableSettings{
-        SendTickrate = -1,
-        WritePermission = NetworkVariablePermission.ServerOnly
-    }, 100);
-
-    private float _animationTransitionTime = 0.15f;
-    private float _curTransitionTime = 0f;
 
     void Update()
     {
@@ -106,43 +131,6 @@ public class Player : NetworkBehaviour
         }
 
         SetAnimationsSmooth(isMoving, isSprinting);
-
-        // check if player is invisible
-        if (isInvis)
-        {
-            for (int i = 0; i < this.rends.Length; i++)
-            {
-                Renderer rend = rends[i];
-                if (this.team == PlayerController.LocalInstance.GetPlayer().team)
-                {
-                    // if same team, appear transparent
-                    rend.material.color = new Color(rend.material.color.r, rend.material.color.g, rend.material.color.b, invisAlpha);
-                }
-                else
-                {
-                    // if enemy team, appear invisible
-                    rend.enabled = false;
-                }
-            }
-        }
-        else
-        {
-            for (int i = 0; i < this.rends.Length; i++)
-            {
-                Renderer rend = rends[i];
-
-                // revert invisible effect
-                if (this.team == PlayerController.LocalInstance.GetPlayer().team)
-                {
-                    rend.material.color = new Color(rend.material.color.r, rend.material.color.g, rend.material.color.b, 1.0f);
-                }
-                else
-                {
-                    rend.enabled = true;
-                }
-            }
-        }
-
         UpdateCooldowns(); //update cooldowns
         UpdateEffects(); // update skill effects applied to player
     }
@@ -253,17 +241,55 @@ public class Player : NetworkBehaviour
 
     public void SetInvis(bool invis)
     {
-        this.isInvis = invis;
+        this.isInvis.Value = invis;
     }
     
+    public void UpdateInvisRenderer() {
+        // check if player is invisible
+        if (isInvis.Value)
+        {
+            for (int i = 0; i < this.rends.Length; i++)
+            {
+                Renderer rend = rends[i];
+                if (this.team == PlayerController.LocalInstance.GetPlayer().team)
+                {
+                    // if same team, appear transparent
+                    rend.material.color = new Color(rend.material.color.r, rend.material.color.g, rend.material.color.b, invisAlpha);
+                }
+                else
+                {
+                    // if enemy team, appear invisible
+                    rend.enabled = false;
+                }
+            }
+        }
+        else
+        {
+            for (int i = 0; i < this.rends.Length; i++)
+            {
+                Renderer rend = rends[i];
+
+                // revert invisible effect
+                if (this.team == PlayerController.LocalInstance.GetPlayer().team)
+                {
+                    rend.material.color = new Color(rend.material.color.r, rend.material.color.g, rend.material.color.b, 1.0f);
+                }
+                else
+                {
+                    rend.enabled = true;
+                }
+            }
+        }
+    }
+
     public bool IsCatchable()
     {
         float z_pos = transform.position.z;
-        if (this.team == Team.BLUE && z_pos <= 0)
+        if (this.team.Value == Team.BLUE && z_pos <= 0)
         {
             return true;
         }
-        else if (this.team == Team.RED && z_pos >= 0)
+        else if (this.team.Value == Team.RED && z_pos >= 0)
         {
             return true;
         }

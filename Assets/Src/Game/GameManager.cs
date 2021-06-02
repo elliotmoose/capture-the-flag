@@ -72,12 +72,12 @@ public class GameManager : NetworkBehaviour
     }
 
     public void Imprison(Player player, Player imprisonedBy) {
-        if(player.team == imprisonedBy.team) {
+        if(player.GetTeam() == imprisonedBy.GetTeam()) {
             Debug.LogError("Cannot be imprisoned by player of same team");
             return;
         }
 
-        if(player.team == Team.BLUE) {
+        if(player.team.Value == Team.BLUE) {
             redTeamJail.Imprison(player);
         }
         else {
@@ -86,7 +86,7 @@ public class GameManager : NetworkBehaviour
     }
 
     public void Release(Player player, Player releasedBy) {
-        Jail targetJail = player.team == Team.BLUE ? blueTeamJail : redTeamJail;        
+        Jail targetJail = player.GetTeam() == Team.BLUE ? blueTeamJail : redTeamJail;        
         // only release if player is not jailed themselves
         if (!targetJail.GetJailedPlayers().Contains(player))
         {

@@ -71,7 +71,7 @@ public class PlayerSpawner : NetworkBehaviour
         player.spawnPos = spawnPosition;
         player.spawnDir = faceDirection;
         player.ownerClientId.Value = playerId;
-        player.team = team; //TODO: check if team is set on clients
+        player.SetTeam(team);
         playerObj.GetComponent<NetworkObject>().Spawn();
         players[playerId] = player;
         return playerObj;
