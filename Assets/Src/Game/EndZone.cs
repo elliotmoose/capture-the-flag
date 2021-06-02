@@ -19,7 +19,7 @@ public class EndZone : MonoBehaviour
 
     void OnTriggerEnter(Collider hit) {
         Flag flag = hit.gameObject.GetComponent<Flag>();
-        if(flag && flag.team != team) {
+        if(flag && flag.GetTeam() != team) {
             GameManager.Instance.ScorePoint(team);
         }
     }
