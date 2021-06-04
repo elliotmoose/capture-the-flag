@@ -25,6 +25,20 @@ public class PlayerController : NetworkBehaviour
         SendTickrate = 20,
     });
 
+    //skill cooldown displats
+    public NetworkVariableFloat skill1CooldownDisplay = new NetworkVariableFloat(new NetworkVariableSettings{
+        WritePermission = NetworkVariablePermission.OwnerOnly,
+        SendTickrate = 1,
+    });
+    public NetworkVariableFloat skill2CooldownDisplay = new NetworkVariableFloat(new NetworkVariableSettings{
+        WritePermission = NetworkVariablePermission.OwnerOnly,
+        SendTickrate = 1,
+    });
+    public NetworkVariableFloat catchCooldownDisplay = new NetworkVariableFloat(new NetworkVariableSettings{
+        WritePermission = NetworkVariablePermission.OwnerOnly,
+        SendTickrate = 1,
+    });
+
     public NetworkVariableULong playerObjNetId = new NetworkVariableULong(new NetworkVariableSettings{
         WritePermission = NetworkVariablePermission.ServerOnly,
         SendTickrate = 0,        
@@ -80,6 +94,11 @@ public class PlayerController : NetworkBehaviour
                 player.moveDir = moveDir.Value;
                 player.faceAngle = faceAngle.Value;
                 player.sprinting = sprinting.Value;
+
+                //display cooldowns
+                skill1CooldownDisplay.Value = player.skill1CooldownTime;
+                skill2CooldownDisplay.Value = player.skill2CooldownTime;
+                catchCooldownDisplay.Value = player.catchCooldownTime;
             }
         }
     }

@@ -11,7 +11,7 @@ public class Player : NetworkBehaviour
     public Vector3 spawnPos;
     public Quaternion spawnDir;
     
-    protected Skill catchSkill;   
+    public Skill catchSkill;   
     public List<Skill> skills = new List<Skill>();
     public List<Effect> effects = new List<Effect>();
     
@@ -64,9 +64,9 @@ public class Player : NetworkBehaviour
     }, Team.BLUE);
     
     
-    protected float cdTimer1 = 0.0f;
-    protected float cdTimer2 = 0.0f;
-    protected float cdTimerCD = 0.0f;
+    public float skill1CooldownTime = 0.0f;
+    public float skill2CooldownTime = 0.0f;
+    public float catchCooldownTime = 0.0f;
 
     public Team GetTeam() {
         return team.Value;
@@ -139,14 +139,14 @@ public class Player : NetworkBehaviour
     {
         if(!GameManager.Instance.roundInProgress) { return; }
 
-        if(cdTimerCD < 0)
+        if(catchCooldownTime < 0)
         {
             catchSkill.UseSkill(this);
-            cdTimerCD = catchSkill.cooldown;
+            catchCooldownTime = catchSkill.cooldown;
         }
         else
         {
-            Debug.Log($"Catch remainding cooldown: {cdTimerCD}");
+            Debug.Log($"Catch remainding cooldown: {catchCooldownTime}");
         }
 
     }
@@ -162,22 +162,22 @@ public class Player : NetworkBehaviour
         Skill skill = skills[index];
 
         if(index == 0) {
-            if(cdTimer1 < 0) {
+            if(skill1CooldownTime < 0) {
                 skill.UseSkill(this);
-                cdTimer1 = skill.cooldown;
+                skill1CooldownTime = skill.cooldown;
             }
             else {
-                Debug.Log($"Skill 1 remainding cooldown: {cdTimer1}");
+                Debug.Log($"Skill 1 remainding cooldown: {skill1CooldownTime}");
             }
         }
 
         if(index == 1) {
-            if(cdTimer2 < 0) {
+            if(skill2CooldownTime < 0) {
                 skill.UseSkill(this);
-                cdTimer2 = skill.cooldown;
+                skill2CooldownTime = skill.cooldown;
             }
             else {
-                Debug.Log($"Skill 2 remainding cooldown: {cdTimer2}");
+                Debug.Log($"Skill 2 remainding cooldown: {skill2CooldownTime}");
             }
         }
     }
@@ -229,9 +229,9 @@ public class Player : NetworkBehaviour
     }
 
     void UpdateCooldowns() {
-        cdTimer1 -= Time.deltaTime;
-        cdTimer2 -= Time.deltaTime;
-        cdTimerCD -= Time.deltaTime;
+        skill1CooldownTime -= Time.deltaTime;
+        skill2CooldownTime -= Time.deltaTime;
+        catchCooldownTime -= Time.deltaTime;
     }
     
     public void SetDisabled(bool disabled)

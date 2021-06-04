@@ -19,15 +19,21 @@ public class UIManager : MonoBehaviour
     void Awake() {
         Instance = this;
     }
+
+    private SkillButton skill1Button;
+    private SkillButton skill2Button;
+    private SkillButton catchButton;
+
     // Start is called before the first frame update
     void Start()
     {
-        UIManager.Instance.GenerateGameSummaryUI(RoomManager.Instance.GetUsers(), RoomManager.Instance.roomSize.Value);
-        UIManager.Instance.GenerateGameSummaryUI(RoomManager.Instance.GetUsers(), RoomManager.Instance.roomSize.Value);
-
         RoomManager.Instance.OnRoomUsersUpdate += ()=>{
             UIManager.Instance.GenerateGameSummaryUI(RoomManager.Instance.GetUsers(), RoomManager.Instance.roomSize.Value);
         };
+
+        skill1Button = this.transform.Find("PlayerUI/Skill1Button").GetComponent<SkillButton>();
+        skill2Button = this.transform.Find("PlayerUI/Skill2Button").GetComponent<SkillButton>();
+        catchButton = this.transform.Find("PlayerUI/CatchButton").GetComponent<SkillButton>();
     }
 
     public void DisplayCountdown(int count) {
@@ -84,14 +90,24 @@ public class UIManager : MonoBehaviour
         User user = PlayerController.LocalInstance.user.Value;
         Debug.Log($"Updating player UI for user: {user.username} {user.character}");
         Transform playerUI = this.transform.Find("PlayerUI");
-        Transform character = this.transform.Find("PlayerUI/Character");
-        Transform skill1Button = this.transform.Find("PlayerUI/Skill1Button");
-        Transform skill2Button = this.transform.Find("PlayerUI/Skill2Button");
-        Transform catchButton = this.transform.Find("PlayerUI/CatchButton");
         Transform passive = this.transform.Find("PlayerUI/Passive");
 
+        Transform character = this.transform.Find("PlayerUI/Character");
         character.GetComponent<Image>().sprite = PrefabsManager.Instance.IconForCharacter(user.character);
         character.GetComponent<Image>().color = new Color32(255,255,255,255);
+        
+        skill1Button.curCooldown = PlayerController.LocalInstance.skill1CooldownDisplay.Value;
+        skill2Button.curCooldown = PlayerController.LocalInstance.skill2CooldownDisplay.Value;
+        catchButton.curCooldown = PlayerController.LocalInstance.catchCooldownDisplay.Value;
+        
+        Player player = PlayerController.LocalInstance.GetPlayer();
+        if(player != null) {
+            skill1Button.maxCooldown = player.skills[0].cooldown;
+            if(player.skills.Count > 1) {
+                skill2Button.maxCooldown = player.skills[1].cooldown;
+            }
+            catchButton.maxCooldown = player.catchSkill.cooldown;
+        }
     }
 
     // Update is called once per frame
