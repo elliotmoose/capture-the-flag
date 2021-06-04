@@ -90,8 +90,13 @@ public class GameManager : NetworkBehaviour
         // only release if player is not jailed themselves
         if (!targetJail.GetJailedPlayers().Contains(releasedBy))
         {
-            targetJail.Release(player);
+            Debug.Log("1");
+            Debug.Log(redTeamJail.GetJailedPlayers().Count);
+            Debug.Log(blueTeamJail.GetJailedPlayers().Count);
+            redTeamJail.Release(player);
+            blueTeamJail.Release(player);
         }
+        Debug.Log("2");
     }
 
     public void ResetJail() {
