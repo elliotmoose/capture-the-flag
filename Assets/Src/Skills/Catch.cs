@@ -22,7 +22,7 @@ public class Catch : Skill
             Player target = c.gameObject.GetComponent<Player>();
             
             if (target != null){
-                if (player.team != target.team)
+                if (player.GetTeam() != target.GetTeam())
                 {
                     if(target.IsCatchable()) {
                         GameManager.Instance.Imprison(target, player);
@@ -31,7 +31,7 @@ public class Catch : Skill
                     //     player.GetJail().Imprison(player);
                     // }
                 }
-                else if (player.team == target.team)
+                else
                 {
                     GameManager.Instance.Release(target, player);                    
                 }

@@ -77,7 +77,7 @@ public class GameManager : NetworkBehaviour
             return;
         }
 
-        if(player.team.Value == Team.BLUE) {
+        if(player.GetTeam() == Team.BLUE) {
             redTeamJail.Imprison(player);
         }
         else {
@@ -86,9 +86,9 @@ public class GameManager : NetworkBehaviour
     }
 
     public void Release(Player player, Player releasedBy) {
-        Jail targetJail = player.GetTeam() == Team.BLUE ? blueTeamJail : redTeamJail;        
+        Jail targetJail = player.GetTeam() == Team.RED ? blueTeamJail : redTeamJail;        
         // only release if player is not jailed themselves
-        if (!targetJail.GetJailedPlayers().Contains(player))
+        if (!targetJail.GetJailedPlayers().Contains(releasedBy))
         {
             targetJail.Release(player);
         }

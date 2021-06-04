@@ -21,7 +21,19 @@ public class SceneTransitionManager : MonoBehaviour
 
     public void RoomToGameScene(List<User> users, int roomSize) {
         SceneSwitchProgress sceneSwitchProgress = NetworkSceneManager.SwitchScene("Game");
+        sceneSwitchProgress.OnClientLoadedScene += (ulong clientId) => {
+            foreach(User user in users) {
+                if(user.clientId == clientId) {
+                    Debug.Log($"== SceneTransitionManager: {user.username} has changed scene successfully!");
+                }
+            }
+        };
+
         sceneSwitchProgress.OnComplete += (bool timeOut) => {
+            if(timeOut) {
+                Debug.Log("== SceneTransitionManager: connection timed out!!");
+            }
+
             //handover room state
             foreach(User user in users) {
                 RoomManager.Instance.roomUsers.Add(user);
@@ -30,8 +42,7 @@ public class SceneTransitionManager : MonoBehaviour
             RoomManager.Instance.roomSize.Value = roomSize;
 
             GameManager.Instance.StartGame();  
-            
-        };     
+        }; 
     }
 
     public void SwitchScene(string sceneName) {

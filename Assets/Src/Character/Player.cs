@@ -58,7 +58,7 @@ public class Player : NetworkBehaviour
         WritePermission = NetworkVariablePermission.ServerOnly
     }, false);
     // protected bool isInvis = false;
-    public NetworkVariable<Team> team = new NetworkVariable<Team>(new NetworkVariableSettings{
+    private NetworkVariable<Team> _team = new NetworkVariable<Team>(new NetworkVariableSettings{
         SendTickrate = -1,
         WritePermission = NetworkVariablePermission.ServerOnly
     }, Team.BLUE);
@@ -69,11 +69,11 @@ public class Player : NetworkBehaviour
     public float catchCooldownTime = 0.0f;
 
     public Team GetTeam() {
-        return team.Value;
+        return _team.Value;
     }
 
     public void SetTeam(Team team) {
-        this.team.Value = team;
+        this._team.Value = team;
     }
 
     public float GetMoveSpeed()
@@ -251,7 +251,7 @@ public class Player : NetworkBehaviour
             for (int i = 0; i < this.rends.Length; i++)
             {
                 Renderer rend = rends[i];
-                if (this.team == PlayerController.LocalInstance.GetPlayer().team)
+                if (this.GetTeam() == PlayerController.LocalInstance.GetPlayer().GetTeam())
                 {
                     // if same team, appear transparent
                     rend.material.color = new Color(rend.material.color.r, rend.material.color.g, rend.material.color.b, invisAlpha);
@@ -270,7 +270,7 @@ public class Player : NetworkBehaviour
                 Renderer rend = rends[i];
 
                 // revert invisible effect
-                if (this.team == PlayerController.LocalInstance.GetPlayer().team)
+                if (this.GetTeam() == PlayerController.LocalInstance.GetPlayer().GetTeam())
                 {
                     rend.material.color = new Color(rend.material.color.r, rend.material.color.g, rend.material.color.b, 1.0f);
                 }
@@ -285,11 +285,11 @@ public class Player : NetworkBehaviour
     public bool IsCatchable()
     {
         float z_pos = transform.position.z;
-        if (this.team.Value == Team.BLUE && z_pos <= 0)
+        if (this.GetTeam() == Team.BLUE && z_pos <= 0)
         {
             return true;
         }
-        else if (this.team.Value == Team.RED && z_pos >= 0)
+        else if (this.GetTeam() == Team.RED && z_pos >= 0)
         {
             return true;
         }
