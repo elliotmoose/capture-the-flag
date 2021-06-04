@@ -1402,6 +1402,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   roomSize:
     m_InternalValue: 3
+  userControllerPrefab: {fileID: 7218106968360669568, guid: bc6b7535a316c4ca58a1df71a1f5fc3e, type: 3}
 --- !u!4 &478187859
 Transform:
   m_ObjectHideFlags: 0
@@ -3343,7 +3344,7 @@ MonoBehaviour:
     AllowRuntimeSceneChanges: 1
     NetworkPrefabs:
     - Prefab: {fileID: 7218106968360669568, guid: bc6b7535a316c4ca58a1df71a1f5fc3e, type: 3}
-      PlayerPrefab: 1
+      PlayerPrefab: 0
     - Prefab: {fileID: 4282573181762047490, guid: 8be812059cbbd4c309f61eccaac98e4c, type: 3}
       PlayerPrefab: 0
     - Prefab: {fileID: 478187856}
@@ -3358,7 +3359,7 @@ MonoBehaviour:
       PlayerPrefab: 0
     PlayerPrefabHash:
       id: 0
-    CreatePlayerPrefab: 1
+    CreatePlayerPrefab: 0
     ReceiveTickrate: 64
     NetworkTickIntervalSec: 0.05
     MaxReceiveEventsPerTickRate: 500
@@ -3383,9 +3384,7 @@ MonoBehaviour:
   references:
     version: 1
     00000000:
-      type: {class: NullableBoolSerializable, ns: MLAPI.Configuration, asm: Unity.Multiplayer.MLAPI.Runtime}
-      data:
-        Value: 8304672952135599860
+      type: {class: , ns: , asm: }
 --- !u!4 &1024904971
 Transform:
   m_ObjectHideFlags: 0

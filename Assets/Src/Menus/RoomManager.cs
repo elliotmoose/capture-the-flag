@@ -37,6 +37,7 @@ public class RoomManager : NetworkBehaviour
     public RoomManagerEvent OnClientJoinRoom;
     public RoomManagerEvent OnClientLeaveRoom;
 
+    public GameObject userControllerPrefab;
 
     void Start()
     {        
@@ -79,7 +80,11 @@ public class RoomManager : NetworkBehaviour
             User newUser = new User(clientId, team, "Loading...");
             Debug.Log($"== RoomManager (Server): Client connected: {clientId} and has joined {team} team");
             roomUsers.Add(newUser);
+
+            GameObject userController = GameObject.Instantiate(userControllerPrefab, Vector3.zero, Quaternion.identity);
+            userController.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientId, null, true);            
         }
+
         else if (NetworkManager.Singleton.IsClient) {
             Debug.Log("== Room Manager (Client): Connected to server!");            
 
@@ -176,6 +181,12 @@ public class RoomManager : NetworkBehaviour
         // if(!canStartGame) {
         //     Debug.LogWarning("== RoomManager: Cannot start game as non enough players");
         //     return;
+        // }
+
+        // foreach(User user in GetUsers()) {
+        //     Debug.Log("Destroying user controller:" + user.username);
+        //     NetworkObject no = NetworkSpawnManager.GetPlayerNetworkObject(user.clientId);
+        //     no.Despawn(true);
         // }
 
         SceneTransitionManager.Instance.RoomToGameScene(GetUsers(), roomSize.Value);
