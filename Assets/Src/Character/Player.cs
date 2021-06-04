@@ -91,18 +91,13 @@ public class Player : NetworkBehaviour
         this.flagSlot = this.transform.Find("model/body/FlagSlot").gameObject;
         if(!flagSlot) {
             Debug.LogError("This player has no flag slot");
-        }   
-
-        this.isInvis.OnValueChanged += (bool oldVal, bool newVal) => {
-            UpdateInvisRenderer();
-            Debug.Log("invis val updated!");
-        };
+        }      
     }
-
-    
 
     void Update()
     {
+        UpdateInvisRenderer();
+
         if(!IsServer) { return; }
         if(!GameManager.Instance.roundInProgress) { return; }
 
