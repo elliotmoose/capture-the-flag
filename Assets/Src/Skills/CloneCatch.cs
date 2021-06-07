@@ -4,17 +4,16 @@ using UnityEngine;
 
 public class CloneCatch : Catch
 {
-    private float radius;
-    public CloneCatch(float radius) : base(radius)
+    public CloneCatch() : base()
     {
         name = "Clone Catch";
-        this.radius = radius;
     }
 
     public override void UseSkill(Player player)
     {
         base.UseSkill(player);
-        Collider[] hitColliders = Physics.OverlapSphere(player.transform.position, this.radius);
+        float radius = player.GetCatchRadius();
+        Collider[] hitColliders = Physics.OverlapSphere(player.transform.position, radius);
 
         foreach (Collider c in hitColliders)
         {

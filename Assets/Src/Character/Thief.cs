@@ -7,7 +7,7 @@ public class Thief : Player
     private void Awake()
     {
         moveSpeed = 15;
-        catchSkill = new CloneCatch(catchRadius);
+        catchSkill = new CloneCatch();
         skills.Add(new Invisibility());
 
     }

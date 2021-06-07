@@ -7,6 +7,7 @@ using MLAPI.NetworkVariable;
 public class PrefabsManager : NetworkBehaviour
 {
     public GameObject smoke;
+    public GameObject catchField;
 
     // Start is called before the first frame update
     void Start()

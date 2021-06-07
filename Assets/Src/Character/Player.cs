@@ -21,7 +21,7 @@ public class Player : NetworkBehaviour
     public float faceAngle = 0;
     protected Renderer[] rends;
 
-    protected float catchRadius = 5;
+    protected float catchRadius = 6;
     protected float moveSpeed = 18;
     protected float staminaBurnFactor = 25;
     protected float staminaRecoveryFactor = 30;
@@ -48,6 +48,16 @@ public class Player : NetworkBehaviour
     public void SetMoveSpeed(float newSpeed)
     {
         this.moveSpeed = newSpeed;
+    }
+
+    public float GetCatchRadius()
+    {
+        return catchRadius;
+    }
+
+    public void SetCatchRadius(float radius)
+    {
+        this.catchRadius = radius;
     }
 
     void Start()

@@ -8,7 +8,8 @@ public class Mage : Player
     void Awake()
     {
         moveSpeed = 15;
-        catchSkill = new Catch(catchRadius);
+        SetCatchRadius(8.0f);
+        catchSkill = new Catch();
         skills.Add(new Teleport());
         skills.Add(new Slow());
     }

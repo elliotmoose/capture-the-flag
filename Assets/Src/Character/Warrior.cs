@@ -7,7 +7,7 @@ public class Warrior : Player
     void Awake()
     {
         moveSpeed = 15.0f;
-        catchSkill = new Catch(catchRadius);
+        catchSkill = new Catch();
         skills.Add(new Boost());
         skills.Add(new Knockback());
     }
