@@ -11,8 +11,8 @@ public class GameManager : NetworkBehaviour
 
     public GameObject playerControllerPrefab;
 
-    public GameObject redTeamFlag;
-    public GameObject blueTeamFlag;
+    public Flag redTeamFlag;
+    public Flag blueTeamFlag;
 
     public Jail blueTeamJail;
     public Jail redTeamJail;

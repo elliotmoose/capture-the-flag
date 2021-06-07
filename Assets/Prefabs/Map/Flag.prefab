@@ -288,6 +288,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d8e856ff02de4cf4b9f62a579512a0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  capturer: {fileID: 0}
   team:
     m_InternalValue: 0
 --- !u!114 &440171485690494545
@@ -322,9 +323,9 @@ MonoBehaviour:
   interpolationBackTime: 0.1
   extrapolationMode: 1
   useExtrapolationTimeLimit: 1
-  extrapolationTimeLimit: 5
+  extrapolationTimeLimit: 1
   useExtrapolationDistanceLimit: 0
-  extrapolationDistanceLimit: 20
+  extrapolationDistanceLimit: 5
   sendPositionThreshold: 0
   sendRotationThreshold: 0
   sendScaleThreshold: 0
@@ -332,7 +333,7 @@ MonoBehaviour:
   sendAngularVelocityThreshold: 0
   receivedPositionThreshold: 0
   receivedRotationThreshold: 0
-  snapPositionThreshold: 0
+  snapPositionThreshold: 10
   snapRotationThreshold: 0
   snapScaleThreshold: 0
   positionLerpSpeed: 0.85
@@ -345,10 +346,10 @@ MonoBehaviour:
   syncScale: 7
   syncVelocity: 7
   syncAngularVelocity: 7
-  isPositionCompressed: 0
-  isRotationCompressed: 0
-  isScaleCompressed: 0
-  isVelocityCompressed: 0
+  isPositionCompressed: 1
+  isRotationCompressed: 1
+  isScaleCompressed: 1
+  isVelocityCompressed: 1
   isAngularVelocityCompressed: 0
   automaticallyResetTime: 1
   isSmoothingAuthorityChanges: 0

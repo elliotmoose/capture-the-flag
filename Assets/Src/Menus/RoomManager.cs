@@ -183,11 +183,14 @@ public class RoomManager : NetworkBehaviour
         //     return;
         // }
 
-        // foreach(User user in GetUsers()) {
-        //     Debug.Log("Destroying user controller:" + user.username);
-        //     NetworkObject no = NetworkSpawnManager.GetPlayerNetworkObject(user.clientId);
-        //     no.Despawn(true);
-        // }
+        foreach(User user in GetUsers()) {
+            Debug.Log("Destroying user controller:" + user.username);
+            NetworkObject no = NetworkSpawnManager.GetPlayerNetworkObject(user.clientId);
+
+            if(no != null) {
+                no.Despawn(true);
+            }
+        }
 
         SceneTransitionManager.Instance.RoomToGameScene(GetUsers(), roomSize.Value);
     }

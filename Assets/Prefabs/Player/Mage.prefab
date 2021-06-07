@@ -520,8 +520,9 @@ MonoBehaviour:
     m_InternalValue: 100
   maxStamina:
     m_InternalValue: 100
-  team:
-    m_InternalValue: 0
+  skill1CooldownTime: 0
+  skill2CooldownTime: 0
+  catchCooldownTime: 0
 --- !u!114 &8264470574377572014
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -537,9 +538,9 @@ MonoBehaviour:
   interpolationBackTime: 0.1
   extrapolationMode: 1
   useExtrapolationTimeLimit: 1
-  extrapolationTimeLimit: 5
+  extrapolationTimeLimit: 1
   useExtrapolationDistanceLimit: 0
-  extrapolationDistanceLimit: 20
+  extrapolationDistanceLimit: 5
   sendPositionThreshold: 0
   sendRotationThreshold: 0
   sendScaleThreshold: 0
@@ -547,7 +548,7 @@ MonoBehaviour:
   sendAngularVelocityThreshold: 0
   receivedPositionThreshold: 0
   receivedRotationThreshold: 0
-  snapPositionThreshold: 0
+  snapPositionThreshold: 10
   snapRotationThreshold: 0
   snapScaleThreshold: 0
   positionLerpSpeed: 0.85
@@ -560,10 +561,10 @@ MonoBehaviour:
   syncScale: 7
   syncVelocity: 7
   syncAngularVelocity: 7
-  isPositionCompressed: 0
-  isRotationCompressed: 0
-  isScaleCompressed: 0
-  isVelocityCompressed: 0
+  isPositionCompressed: 1
+  isRotationCompressed: 1
+  isScaleCompressed: 1
+  isVelocityCompressed: 1
   isAngularVelocityCompressed: 0
   automaticallyResetTime: 1
   isSmoothingAuthorityChanges: 0

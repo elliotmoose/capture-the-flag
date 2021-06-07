@@ -24,7 +24,7 @@ public class Player : NetworkBehaviour
     protected float catchRadius = 5;
     protected float moveSpeed = 12;
     protected float staminaBurnFactor = 30;
-    protected float staminaRecoveryFactor = 35;
+    protected float staminaRecoveryFactor = 20;
     protected bool isDisabled = false;
 
     //skill variables
@@ -128,6 +128,7 @@ public class Player : NetworkBehaviour
         SetAnimationsSmooth(isMoving, isSprinting);
         UpdateCooldowns(); //update cooldowns
         UpdateEffects(); // update skill effects applied to player
+        Debug.Log(IsCatchable());
     }
 
     public void Catch()
@@ -278,20 +279,13 @@ public class Player : NetworkBehaviour
     }
 
     public bool IsCatchable()
-    {
+    {   
+        bool isHoldingFlag = (GameManager.Instance.redTeamFlag.capturer == this || GameManager.Instance.blueTeamFlag.capturer == this);
+        if(isHoldingFlag) return true;
         float z_pos = transform.position.z;
-        if (this.GetTeam() == Team.BLUE && z_pos <= 0)
-        {
-            return true;
-        }
-        else if (this.GetTeam() == Team.RED && z_pos >= 0)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        if (this.GetTeam() == Team.BLUE && z_pos <= 0) return true;
+        else if (this.GetTeam() == Team.RED && z_pos >= 0) return true;
+        else return false;
     }
 
     private void SetAnimationsSmooth(bool isMoving, bool isSprinting) {

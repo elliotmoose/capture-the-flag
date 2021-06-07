@@ -5,7 +5,7 @@ using MLAPI;
 using MLAPI.NetworkVariable;
 public class Flag : NetworkBehaviour
 {
-    Player capturer;
+    public Player capturer;
     // public Team team = Team.BLUE;
     public NetworkVariable<Team> team = new NetworkVariable<Team>(new NetworkVariableSettings{
         WritePermission=NetworkVariablePermission.ServerOnly,
