@@ -27,9 +27,6 @@ public class Player : NetworkBehaviour
     protected float staminaRecoveryFactor = 30;
     protected bool isDisabled = false;
 
-    //skill variables
-    protected bool isInvis = false;
-    protected float invisAlpha = 0.3f;
     
 
     float sprintMultiplier = 2.4f;
@@ -112,42 +109,6 @@ public class Player : NetworkBehaviour
         }
 
         SetAnimationsSmooth(isMoving, isSprinting);
-
-        // check if player is invisible
-        if (isInvis)
-        {
-            for (int i = 0; i < this.rends.Length; i++)
-            {
-                Renderer rend = rends[i];
-                if (this.team == PlayerController.LocalInstance.GetPlayer().team)
-                {
-                    // if same team, appear transparent
-                    rend.material.color = new Color(rend.material.color.r, rend.material.color.g, rend.material.color.b, invisAlpha);
-                }
-                else
-                {
-                    // if enemy team, appear invisible
-                    rend.enabled = false;
-                }
-            }
-        }
-        else
-        {
-            for (int i = 0; i < this.rends.Length; i++)
-            {
-                Renderer rend = rends[i];
-
-                // revert invisible effect
-                if (this.team == PlayerController.LocalInstance.GetPlayer().team)
-                {
-                    rend.material.color = new Color(rend.material.color.r, rend.material.color.g, rend.material.color.b, 1.0f);
-                }
-                else
-                {
-                    rend.enabled = true;
-                }
-            }
-        }
 
         UpdateCooldowns(); //update cooldowns
         UpdateEffects(); // update skill effects applied to player
@@ -249,10 +210,6 @@ public class Player : NetworkBehaviour
         this.isDisabled = disabled;
     }
 
-    public void SetInvis(bool invis)
-    {
-        this.isInvis = invis;
-    }
     
     public bool IsCatchable()
     {
