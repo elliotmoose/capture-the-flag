@@ -47,7 +47,7 @@ public class TeleportEffect : Effect
     public override void OnEffectApplied()
     {
         GameObject.Instantiate(teleport, _target.transform.position, Quaternion.Euler(new Vector3(-90, 0, 0)));
-        
+        _target.SetDisabled(true);
         col.enabled = false;
         
     }
@@ -88,6 +88,7 @@ public class TeleportEffect : Effect
     {
         
         col.enabled = true;
-        
+        _target.SetDisabled(false);
+
     }
 }
