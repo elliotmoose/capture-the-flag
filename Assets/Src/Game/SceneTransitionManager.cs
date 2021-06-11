@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using MLAPI;
 using MLAPI.SceneManagement;
 
@@ -18,7 +19,7 @@ public class SceneTransitionManager : MonoBehaviour
         
     }
 
-
+    //called by server only
     public void RoomToGameScene(List<User> users, int roomSize) {
         SceneSwitchProgress sceneSwitchProgress = NetworkSceneManager.SwitchScene("Game");
         sceneSwitchProgress.OnClientLoadedScene += (ulong clientId) => {
@@ -45,13 +46,36 @@ public class SceneTransitionManager : MonoBehaviour
         }; 
     }
 
-    public void SwitchScene(string sceneName) {
-        SceneSwitchProgress sceneSwitchProgress = NetworkSceneManager.SwitchScene(sceneName);        
+    //called by all
+    public void GameToMainMenu() {
+        if(NetworkManager.Singleton.IsClient) NetworkManager.Singleton.StopClient();
+        if(NetworkManager.Singleton.IsHost) NetworkManager.Singleton.StopHost();
+        GameObject.Destroy(this.gameObject);
+        SceneManager.LoadScene("MainMenu", LoadSceneMode.Single);
     }
 
-    // Update is called once per frame
-    void Update()
+    // called first
+    void OnEnable()
     {
-        
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    // called second
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if(scene.name == "MainMenu") {
+            Debug.Log("main menu loaded!");
+            Debug.Log(UserManager.Instance.username);
+            if(UserManager.Instance.username != "") {
+                MenuManager.Instance.SetCurrentPage("Home");
+                Debug.Log("Set as home!");
+            }
+        }
+    }
+
+    // called when the game is terminated
+    void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 }

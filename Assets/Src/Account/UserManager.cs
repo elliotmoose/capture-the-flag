@@ -9,6 +9,10 @@ public class UserManager : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
+        if(Instance != null) {
+            this.username = Instance.username;
+        }
+        
         Instance = this;
     }
 

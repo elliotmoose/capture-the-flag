@@ -48,10 +48,19 @@ public class PlayerController : NetworkBehaviour
     float timeSinceLastCommand = 0f;
     bool isStale = false;
     // public User user;
-    public NetworkVariable<User> user = new NetworkVariable<User>(new NetworkVariableSettings{
+    private NetworkVariable<User> _user = new NetworkVariable<User>(new NetworkVariableSettings{
         WritePermission = NetworkVariablePermission.ServerOnly,
         SendTickrate = -1,
     });
+
+    public User GetUser() {
+        return this._user.Value;
+    }
+
+    public void SetUser(User user) {
+        this._user.Value = user;
+    }
+
     public KeyCode SKILL1_KEY = KeyCode.Q;
     public KeyCode SKILL2_KEY = KeyCode.E;
     public KeyCode SPRINT_KEY = KeyCode.Space;
@@ -71,9 +80,7 @@ public class PlayerController : NetworkBehaviour
             moveDir.OnValueChanged += (Vector2 prevMoveDir, Vector2 newMoveDir)=>{
                 timeSinceLastCommand = 0;
             };            
-        }        
-
-        Cursor.visible = false;
+        }                
     }
 
     // Update is called once per frame

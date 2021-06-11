@@ -35,12 +35,12 @@ public class PlayerSpawner : NetworkBehaviour
         return players.Values.ToList<Player>();
     }
 
-    public GameObject SpawnPlayer(ulong playerId, Team team, Character character, int index, int noOfPlayersPerTeam) {
+    public GameObject SpawnPlayer(User user, int index, int noOfPlayersPerTeam) {
         if(!IsServer) {return null;}
 
         GameObject characterPrefab;
         
-        switch (character)
+        switch (user.character)
         {
             case Character.Warrior:
                 characterPrefab = warriorPrefab;
@@ -59,6 +59,8 @@ public class PlayerSpawner : NetworkBehaviour
                 break;
         }
 
+        Team team = user.team;
+        
         float teamPosition = 120 * (team == Team.BLUE ? 1 : -1);     
         float distanceBetweenPlayers = 7;   
         float teamIndexPosition = -(noOfPlayersPerTeam-1) * distanceBetweenPlayers/2 + (index * distanceBetweenPlayers);
@@ -70,10 +72,10 @@ public class PlayerSpawner : NetworkBehaviour
         Player player = playerObj.GetComponent<Player>();
         player.spawnPos = spawnPosition;
         player.spawnDir = faceDirection;
-        player.ownerClientId.Value = playerId;
+        player.SetUser(user);
         player.SetTeam(team);
         playerObj.GetComponent<NetworkObject>().Spawn();
-        players[playerId] = player;
+        players[user.clientId] = player;
         return playerObj;
     }
 }

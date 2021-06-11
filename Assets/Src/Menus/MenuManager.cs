@@ -22,6 +22,10 @@ public enum MenuPage {
 
 public class MenuManager : MonoBehaviour
 {
+    public static MenuManager Instance;
+    void Awake() {
+        Instance = this;
+    }
     // Start is called before the first frame update
     MenuPage currentPage = MenuPage.SetUsername;
     public TMP_InputField playerNameInput;
@@ -30,12 +34,19 @@ public class MenuManager : MonoBehaviour
     //Room
     public GameObject redTeamPlayerRows;
     public GameObject blueTeamPlayerRows;
+    public GameObject startGameButton;
 
     void Start() {
         //subscribe to room events
         RoomManager.Instance.OnRoomUsersUpdate += UpdateRoomPage;
         RoomManager.Instance.OnClientJoinRoom += OnJoinRoom;
         RoomManager.Instance.OnClientLeaveRoom += OnLeaveRoom;
+    }
+    void OnDestroy() {
+        //subscribe to room events
+        RoomManager.Instance.OnRoomUsersUpdate -= UpdateRoomPage;
+        RoomManager.Instance.OnClientJoinRoom -= OnJoinRoom;
+        RoomManager.Instance.OnClientLeaveRoom -= OnLeaveRoom;
     }
 
     public void SetCurrentPage(string pageName) {
@@ -63,26 +74,25 @@ public class MenuManager : MonoBehaviour
     {
         RoomManager.Instance.CreateRoom();
         UpdateRoomPage();
+        SetCurrentPage("Room");
+        startGameButton.SetActive(true);
     }
 
     public void JoinRoom()
     {                
+        SetCurrentPage("Connecting");        
         RoomManager.Instance.JoinRoom(IpAddressInput.text);
-        
-        //if (NetworkManager.Singleton.IsListening)
-        //{
-        //    NetworkSceneManager.SwitchScene("Game");
-        //}
-        //else
-        //{
-        //    SceneManager.LoadSceneAsync("Game");
-        //}
-        //SceneManager.LoadScene("Game", LoadSceneMode.Single);
     }
-    
-    public void LeaveRoom()
-    {                
-        RoomManager.Instance.LeaveRoom();
+
+    public void CancelJoinRoom() {
+        SetCurrentPage("Home");
+        NetworkManager.Singleton.StopClient();
+    }
+
+    void OnJoinRoom() {        
+        UpdateRoomPage();
+        SetCurrentPage("Room");
+        startGameButton.SetActive(false);
     }
 
     public void SelectCharacter(Character character) {
@@ -131,13 +141,11 @@ public class MenuManager : MonoBehaviour
                 }
             }
         }
-    }
+    }    
 
-    void OnJoinRoom() {        
-        Debug.Log("on join room!");
-        SetCurrentPage("Connecting");
-        UpdateRoomPage();
-        SetCurrentPage("Room");
+    public void LeaveRoom()
+    {                
+        RoomManager.Instance.LeaveRoom();
     }
 
     void OnLeaveRoom() {

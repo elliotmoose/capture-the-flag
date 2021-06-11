@@ -5,6 +5,9 @@ using MLAPI;
 using MLAPI.NetworkVariable;
 using MLAPI.Messaging;
 
+public delegate void GameEvent(Player player);
+public delegate void GameEventInteraction(Player receiver, Player giver);
+
 public class GameManager : NetworkBehaviour
 {
     public static GameManager Instance;
@@ -26,23 +29,37 @@ public class GameManager : NetworkBehaviour
         WritePermission = NetworkVariablePermission.ServerOnly
     });
 
+    int winScore = 15;
+
     public bool roundInProgress = false;
 
-    // Start is called before the first frame update
-    // void Start()
-    // {
-    //     if(!IsServer) { return; }
-    //     Debug.Log(users.Count);
-    //     StartGame();
-    // }
+    public GameEvent OnPlayerScored;
+    public GameEventInteraction OnPlayerJailed;
+    public GameEventInteraction OnPlayerFreed;
     
     public void StartGame() {        
         if(!IsServer) { return; }
-        
         Debug.Log("== GameManager: Game Started!");
-        SpawnPlayerControllers();         
+        UIManager.Instance.GenerateGameSummaryUI();
+        SpawnPlayerControllers();     
+        StatsManager.Instance.Initialise(RoomManager.Instance.GetUsers());    
         ResetRound();
         BeginCountdownForRound();
+    }
+
+    #region Round methods
+    void ResetRound() {
+        if(!IsServer) {return;}
+        ResetFlags();
+        ResetPlayerPositions();
+    }
+
+    void ResetPlayerPositions() {
+        foreach(Player player in PlayerSpawner.Instance.GetAllPlayers()) {
+            player.ResetForRound();
+        }
+
+        ResetPlayerCamerasClientRpc();
     }
 
     private void BeginCountdownForRound() {
@@ -61,6 +78,9 @@ public class GameManager : NetworkBehaviour
         roundInProgress = true;
     }
 
+    #endregion
+
+    #region Client RPCS
     [ClientRpc]
     private void CountdownClientRpc(int count) {
         UIManager.Instance.DisplayCountdown(count);        
@@ -71,25 +91,41 @@ public class GameManager : NetworkBehaviour
         CameraFollower.Instance.ResetFaceDirection();
     }
 
-    public void Imprison(Player player, Player imprisonedBy) {
+    [ClientRpc]
+    private void GameOverClientRpc(Team winningTeam) {
+        UIManager.Instance.DisplayGameOver(winningTeam);
+        UIManager.Instance.FreezeCamera();
+    }
+
+    #endregion
+
+    #region Server Game Methods
+    public void Imprison(Player player, Player imprisonedBy) {        
         if(player.GetTeam() == imprisonedBy.GetTeam()) {
             Debug.LogError("Cannot be imprisoned by player of same team");
             return;
         }
 
         if(player.GetTeam() == Team.BLUE) {
-            redTeamJail.Imprison(player);
+            if(!redTeamJail.GetJailedPlayers().Contains(player)) {
+                redTeamJail.Imprison(player);
+                if(OnPlayerJailed != null) OnPlayerJailed(player, imprisonedBy);
+            }
         }
         else {
-            blueTeamJail.Imprison(player);
+            if(!blueTeamJail.GetJailedPlayers().Contains(player)) {
+                blueTeamJail.Imprison(player);
+                if(OnPlayerJailed != null) OnPlayerJailed(player, imprisonedBy);
+            }
         }
     }
 
     public void Release(Player player, Player releasedBy) {
-        Jail targetJail = player.GetTeam() == Team.RED ? blueTeamJail : redTeamJail;        
+        Jail targetJail = player.GetTeam() == Team.RED ? blueTeamJail : redTeamJail;
         // only release if player is not jailed themselves
-        if (!targetJail.GetJailedPlayers().Contains(releasedBy))
+        if (!targetJail.GetJailedPlayers().Contains(releasedBy) && targetJail.GetJailedPlayers().Contains(player))
         {
+            if(OnPlayerFreed != null) OnPlayerFreed(player, releasedBy);
             targetJail.Release(player);
         }
     }
@@ -99,16 +135,29 @@ public class GameManager : NetworkBehaviour
         redTeamJail.ReleaseAll();
     }
     
-    public void ScorePoint(Team team) {
+    public void ScorePoint(Player player) {
+        if(!IsServer) {return;}
+
+        if(OnPlayerScored != null) OnPlayerScored(player);
+
+        Team team = player.GetTeam();
         if(team == Team.BLUE) {
             blueTeamScore.Value += 1;
         }
         else {
             redTeamScore.Value += 1;
-        }
+        }        
 
-        ResetRound();
-        BeginCountdownForRound();
+        if(blueTeamScore.Value >= winScore) {
+            GameOver(Team.BLUE);
+        }
+        else if(redTeamScore.Value >= winScore) {
+            GameOver(Team.RED);
+        }
+        else {
+            ResetRound();
+            BeginCountdownForRound();
+        }
     }
     // Update is called once per frame
     void Update()
@@ -116,18 +165,10 @@ public class GameManager : NetworkBehaviour
         
     }
 
-    void ResetRound() {
-        if(!IsServer) {return;}
-        ResetFlags();
-        ResetPlayerPositions();
-    }
-
-    void ResetPlayerPositions() {
-        foreach(Player player in PlayerSpawner.Instance.GetAllPlayers()) {
-            player.ResetForRound();
-        }
-
-        ResetPlayerCamerasClientRpc();
+    void GameOver(Team winningTeam) {
+        roundInProgress = false;
+        StatsManager.Instance.PublishStats();
+        GameOverClientRpc(winningTeam);
     }
 
     void SpawnPlayerControllers() {
@@ -149,11 +190,11 @@ public class GameManager : NetworkBehaviour
             GameObject playerControllerObject = GameObject.Instantiate(playerControllerPrefab, Vector3.zero, Quaternion.identity);
             PlayerController playerController = playerControllerObject.GetComponent<PlayerController>();
             playerControllerObject.GetComponent<NetworkObject>().SpawnAsPlayerObject(user.clientId);
-            playerController.user.Value = user;
+            playerController.SetUser(user);
 
             //spawn player
             int playerIndex = (user.team == Team.RED ? redTeamIndex : blueTeamIndex);
-            GameObject spawnedPlayerGO = PlayerSpawner.Instance.SpawnPlayer(user.clientId, user.team, user.character, playerIndex, roomSize); 
+            GameObject spawnedPlayerGO = PlayerSpawner.Instance.SpawnPlayer(user, playerIndex, roomSize); 
 
             //link
             playerController.LinkPlayerReference(spawnedPlayerGO);            
@@ -175,6 +216,7 @@ public class GameManager : NetworkBehaviour
         blueTeamFlag.GetComponent<Flag>().ResetPosition();
     }
 
+    #endregion
     void Awake() {
         if(Instance != null) {
             throw new System.Exception("More than one GameManager exists");

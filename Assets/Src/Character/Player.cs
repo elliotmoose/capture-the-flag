@@ -37,7 +37,7 @@ public class Player : NetworkBehaviour
     private float _curTransitionTime = 0f;
 
     //Network Variables
-    public NetworkVariableULong ownerClientId = new NetworkVariableULong(new NetworkVariableSettings{
+    NetworkVariable<User> _user = new NetworkVariable<User>(new NetworkVariableSettings{
         SendTickrate = -1,
         WritePermission = NetworkVariablePermission.ServerOnly
     });
@@ -74,6 +74,14 @@ public class Player : NetworkBehaviour
 
     public void SetTeam(Team team) {
         this._team.Value = team;
+    }
+
+    public User GetUser() {
+        return _user.Value;
+    }
+
+    public void SetUser(User user) {
+        this._user.Value = user;
     }
 
     public float GetMoveSpeed()
@@ -128,7 +136,6 @@ public class Player : NetworkBehaviour
         SetAnimationsSmooth(isMoving, isSprinting);
         UpdateCooldowns(); //update cooldowns
         UpdateEffects(); // update skill effects applied to player
-        Debug.Log(IsCatchable());
     }
 
     public void Catch()
@@ -142,7 +149,7 @@ public class Player : NetworkBehaviour
         }
         else
         {
-            Debug.Log($"Catch remainding cooldown: {catchCooldownTime}");
+            // Debug.Log($"Catch remainding cooldown: {catchCooldownTime}");
         }
 
     }
@@ -163,7 +170,7 @@ public class Player : NetworkBehaviour
                 skill1CooldownTime = skill.cooldown;
             }
             else {
-                Debug.Log($"Skill 1 remainding cooldown: {skill1CooldownTime}");
+                // Debug.Log($"Skill 1 remainding cooldown: {skill1CooldownTime}");
             }
         }
 
@@ -173,16 +180,9 @@ public class Player : NetworkBehaviour
                 skill2CooldownTime = skill.cooldown;
             }
             else {
-                Debug.Log($"Skill 2 remainding cooldown: {skill2CooldownTime}");
+                // Debug.Log($"Skill 2 remainding cooldown: {skill2CooldownTime}");
             }
         }
-    }
-
-    void LateUpdate() {
-        //TODO: face based on facedir
-        // if(NetworkManager.LocalClientId == ownerClientId.Value) {
-        //     transform.rotation = Quaternion.Euler(transform.rotation.x, Camera.main.transform.eulerAngles.y, transform.rotation.z);
-        // }
     }
 
     // receive effect
@@ -278,14 +278,18 @@ public class Player : NetworkBehaviour
         }
     }
 
-    public bool IsCatchable()
-    {   
-        bool isHoldingFlag = (GameManager.Instance.redTeamFlag.capturer == this || GameManager.Instance.blueTeamFlag.capturer == this);
-        if(isHoldingFlag) return true;
+    public bool IsInEnemyTerritory(){
         float z_pos = transform.position.z;
         if (this.GetTeam() == Team.BLUE && z_pos <= 0) return true;
         else if (this.GetTeam() == Team.RED && z_pos >= 0) return true;
         else return false;
+    }
+
+    public bool IsCatchable()
+    {   
+        bool isHoldingFlag = (GameManager.Instance.redTeamFlag.capturer == this || GameManager.Instance.blueTeamFlag.capturer == this);
+        if(isHoldingFlag) return true;        
+        return IsInEnemyTerritory();
     }
 
     private void SetAnimationsSmooth(bool isMoving, bool isSprinting) {
