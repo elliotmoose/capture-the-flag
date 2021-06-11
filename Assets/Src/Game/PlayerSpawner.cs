@@ -61,7 +61,7 @@ public class PlayerSpawner : NetworkBehaviour
 
         Team team = user.team;
         
-        float teamPosition = 120 * (team == Team.BLUE ? 1 : -1);     
+        float teamPosition = 100 * (team == Team.BLUE ? 1 : -1);     
         float distanceBetweenPlayers = 7;   
         float teamIndexPosition = -(noOfPlayersPerTeam-1) * distanceBetweenPlayers/2 + (index * distanceBetweenPlayers);
         Vector3 spawnPosition = new Vector3(teamIndexPosition,0,teamPosition);
