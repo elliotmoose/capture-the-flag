@@ -64,9 +64,7 @@ public class SceneTransitionManager : MonoBehaviour
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         if(scene.name == "MainMenu") {
-            Debug.Log("main menu loaded!");
-            Debug.Log(UserManager.Instance.username);
-            if(UserManager.Instance.username != "") {
+            if(UserManager.Instance.GetUsernameFresh() != "") {
                 MenuManager.Instance.SetCurrentPage("Home");
                 Debug.Log("Set as home!");
             }

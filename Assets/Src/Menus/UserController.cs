@@ -24,7 +24,7 @@ public class UserController : NetworkBehaviour
         //upon connecting, client tells server what their username is
         if(IsLocalPlayer) {
             LocalInstance = this;            
-            SetUsernameServerRpc(NetworkManager.Singleton.LocalClientId, UserManager.Instance.username);
+            SetUsernameServerRpc(NetworkManager.Singleton.LocalClientId, UserManager.Instance.GetUsername());
         }
     }
 

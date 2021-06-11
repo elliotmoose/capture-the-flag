@@ -67,7 +67,7 @@ public class MenuManager : MonoBehaviour
 
     public void UpdatePlayerName()
     {
-        UserManager.Instance.username = playerNameInput.text;
+        UserManager.Instance.SetUsername(playerNameInput.text);
     }
 
     public void StartHost()
