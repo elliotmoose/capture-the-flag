@@ -301,8 +301,7 @@ MonoBehaviour:
   moveDir: {x: 0, y: 0}
   faceAngle: 0
   sprinting: 0
-  ownerClientId:
-    m_InternalValue: 0
+  usernamePrefab: {fileID: 0}
   curStamina:
     m_InternalValue: 100
   maxStamina:

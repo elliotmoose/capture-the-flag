@@ -1703,6 +1703,7 @@ MonoBehaviour:
   warriorIcon: {fileID: 21300000, guid: d53f2076967484e7ca7865244cd941e1, type: 3}
   mageIcon: {fileID: 21300000, guid: 2f7404c7474c9458698a640073285f7f, type: 3}
   thiefIcon: {fileID: 21300000, guid: 3cfa2d9e712644bae8caf05aa8aaf10a, type: 3}
+  playerUsername: {fileID: 7223234545913753362, guid: 43b04c55078d74c0d8613dc3c0fe21c4, type: 3}
 --- !u!114 &368055231
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -13,6 +13,8 @@ public class PrefabsManager : NetworkBehaviour
     public Sprite mageIcon;
     public Sprite thiefIcon;
 
+    public GameObject playerUsername;
+
     void Awake() {
         Instance = this;
     }

@@ -36,6 +36,8 @@ public class Player : NetworkBehaviour
     private float _animationTransitionTime = 0.15f;
     private float _curTransitionTime = 0f;
 
+    private Transform usernameTextTransform;
+
     //Network Variables
     NetworkVariable<User> _user = new NetworkVariable<User>(new NetworkVariableSettings{
         SendTickrate = -1,
@@ -84,6 +86,21 @@ public class Player : NetworkBehaviour
         this._user.Value = user;
     }
 
+    private void SpawnUsername() {
+        usernameTextTransform = GameObject.Instantiate(PrefabsManager.Instance.playerUsername, this.transform).transform;
+        usernameTextTransform.transform.localPosition = new Vector3(0,3,0);
+        usernameTextTransform.transform.localRotation = Quaternion.identity;
+    }
+
+    private void UpdateUsername() {
+        bool shouldShowUsername = (!isInvis.Value || this.GetTeam() == PlayerController.LocalInstance.GetPlayer().GetTeam());
+        usernameTextTransform.gameObject.SetActive(shouldShowUsername); //for invis
+        TMPro.TextMeshPro textMesh = usernameTextTransform.GetComponent<TMPro.TextMeshPro>();
+        textMesh.text = GetUser().username;
+        textMesh.color = GetUser().team == Team.BLUE ? UIManager.Instance.colors.textBlue : UIManager.Instance.colors.textRed;
+        usernameTextTransform.rotation = Quaternion.LookRotation( usernameTextTransform.position - Camera.main.transform.position );
+    }
+
     public float GetMoveSpeed()
     {
         return moveSpeed;
@@ -100,11 +117,14 @@ public class Player : NetworkBehaviour
         if(!flagSlot) {
             Debug.LogError("This player has no flag slot");
         }      
+
+        SpawnUsername();        
     }
 
     void Update()
     {
         UpdateInvisRenderer();
+        UpdateUsername();
 
         if(!IsServer) { return; }
         if(!GameManager.Instance.roundInProgress) { return; }
