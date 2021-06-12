@@ -54,7 +54,6 @@ public class Player : NetworkBehaviour
         WritePermission = NetworkVariablePermission.ServerOnly
     }, 100);
 
-
     NetworkVariableBool isInvis = new NetworkVariableBool(new NetworkVariableSettings{
         SendTickrate = -1,
         WritePermission = NetworkVariablePermission.ServerOnly
@@ -64,8 +63,7 @@ public class Player : NetworkBehaviour
         SendTickrate = -1,
         WritePermission = NetworkVariablePermission.ServerOnly
     }, Team.BLUE);
-    
-    
+        
     public float skill1CooldownTime = 0.0f;
     public float skill2CooldownTime = 0.0f;
     public float catchCooldownTime = 0.0f;
