@@ -66,7 +66,9 @@ public class SceneTransitionManager : MonoBehaviour
         if(scene.name == "MainMenu") {
             if(UserManager.Instance.GetUsernameFresh() != "") {
                 MenuManager.Instance.SetCurrentPage("Home");
-                Debug.Log("Set as home!");
+            }
+            else {
+                MenuManager.Instance.SetCurrentPage("SetUsername");
             }
         }
     }

@@ -32,7 +32,7 @@ public class UIManager : MonoBehaviour
 
     private SkillButton skill1Button;
     private SkillButton skill2Button;
-    private SkillButton catchButton;
+    private SkillButton catchButton;    
 
     // Start is called before the first frame update
     void Start()

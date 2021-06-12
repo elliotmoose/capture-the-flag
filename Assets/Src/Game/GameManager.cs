@@ -34,6 +34,7 @@ public class GameManager : NetworkBehaviour
     public bool roundInProgress = false;
 
     public GameEvent OnPlayerScored;
+    public GameEvent OnFlagCaptured;
     public GameEventInteraction OnPlayerJailed;
     public GameEventInteraction OnPlayerFreed;
     
@@ -133,6 +134,10 @@ public class GameManager : NetworkBehaviour
     public void ResetJail() {
         blueTeamJail.ReleaseAll();
         redTeamJail.ReleaseAll();
+    }
+    
+    public void FlagCapturedBy(Player player) {
+        if(OnFlagCaptured != null) OnFlagCaptured(player);
     }
     
     public void ScorePoint(Player player) {
