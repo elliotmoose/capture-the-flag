@@ -38,7 +38,10 @@ public class Flag : NetworkBehaviour
             this.transform.localRotation = Quaternion.identity;
             this.transform.localPosition = Vector3.zero;
             capturer = player;
+            
+            GameManager.Instance.FlagCapturedBy(player);
         }
+
     }
 
     public void SetTeam(Team team) {
