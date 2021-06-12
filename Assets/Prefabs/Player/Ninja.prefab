@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8943654398779282866}
   - component: {fileID: 6229995364191987960}
   - component: {fileID: 1666324728524610071}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -93,7 +93,7 @@ GameObject:
   - component: {fileID: 2555674862578714020}
   - component: {fileID: 7385792952171400482}
   - component: {fileID: 7858550082521472713}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: right_arm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -176,7 +176,7 @@ GameObject:
   - component: {fileID: 2802506147938880396}
   - component: {fileID: 3953803883147380814}
   - component: {fileID: 8965189738549646907}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: FlagSlot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -277,7 +277,7 @@ GameObject:
   - component: {fileID: 5268755935341011030}
   - component: {fileID: -5648035170470880803}
   - component: {fileID: 1691873224080354984}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Ninja
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -397,7 +397,6 @@ MonoBehaviour:
   moveDir: {x: 0, y: 0}
   faceAngle: 0
   sprinting: 0
-  usernamePrefab: {fileID: 0}
   curStamina:
     m_InternalValue: 100
   maxStamina:
@@ -471,7 +470,7 @@ GameObject:
   - component: {fileID: 7554100148154747168}
   - component: {fileID: 2656975003843022311}
   - component: {fileID: 1569104498215939051}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -552,7 +551,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8758331440175197885}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -588,7 +587,7 @@ GameObject:
   - component: {fileID: 1066622896663333273}
   - component: {fileID: 6773937770275644868}
   - component: {fileID: 8824744614789718766}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: left_arm
   m_TagString: Untagged
   m_Icon: {fileID: 0}

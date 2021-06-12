@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3877389349643536504}
   - component: {fileID: 3583462035105796695}
   - component: {fileID: 7718140745211870222}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 246375213395984949}
   - component: {fileID: 2327248493301786946}
   - component: {fileID: 8828503393427569664}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: left_arm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -176,7 +176,7 @@ GameObject:
   - component: {fileID: 830217762450974671}
   - component: {fileID: 4941613940888375602}
   - component: {fileID: 3193744984034516542}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -256,7 +256,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4608425740328375076}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -293,7 +293,7 @@ GameObject:
   - component: {fileID: 8195046466010780357}
   - component: {fileID: 6035806065888414608}
   - component: {fileID: 7983155447558019123}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: FlagSlot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -394,7 +394,7 @@ GameObject:
   - component: {fileID: 3352779329878644068}
   - component: {fileID: 2298966254864865441}
   - component: {fileID: 8264470574377572014}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Mage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -514,7 +514,6 @@ MonoBehaviour:
   moveDir: {x: 0, y: 0}
   faceAngle: 0
   sprinting: 0
-  usernamePrefab: {fileID: 0}
   curStamina:
     m_InternalValue: 100
   maxStamina:
@@ -588,7 +587,7 @@ GameObject:
   - component: {fileID: 8545996464869985889}
   - component: {fileID: 929400442474683465}
   - component: {fileID: 485092174032240819}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: right_arm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
