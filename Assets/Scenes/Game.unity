@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 53e67e5037a85b24d8be362eabead73a, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -898,7 +898,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 21512888}
-  m_LocalRotation: {x: 0.06789921, y: -0.81958634, z: 0.09934216, w: 0.56017774}
+  m_LocalRotation: {x: 0.067899205, y: -0.81958634, z: 0.09934217, w: 0.56017774}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -32146,7 +32146,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1183394280}
-  m_LocalRotation: {x: 0.06789921, y: -0.81958634, z: 0.09934215, w: 0.56017774}
+  m_LocalRotation: {x: 0.06789921, y: -0.81958634, z: 0.09934216, w: 0.56017774}
   m_LocalPosition: {x: 14.581394, y: 7.24, z: 5.6837864}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -42628,7 +42628,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!65 &1669835644
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -49232,8 +49232,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5f5ecc06df6df64fb4a4af6f8066086, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  autoStartHost: 1
-  character: 0
+  autoStartHost: 0
+  character: 1
   team: 1
 --- !u!1001 &1919001616
 PrefabInstance:

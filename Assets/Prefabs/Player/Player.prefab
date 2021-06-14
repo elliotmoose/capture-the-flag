@@ -395,6 +395,7 @@ GameObject:
   - component: {fileID: 4682214866918665150}
   - component: {fileID: 3606717322404090613}
   - component: {fileID: -8639053039359840742}
+  - component: {fileID: 4612563886510343300}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -602,6 +603,24 @@ MonoBehaviour:
   useLocalTransformOnly: 0
   ownerChangeIndicator: 1
   receivedStatesCounter: 0
+--- !u!143 &4612563886510343300
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8715549257419821114}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Height: 3.1
+  m_Radius: 1.13
+  m_SlopeLimit: 0
+  m_StepOffset: 0
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 1.1, z: 0}
 --- !u!1 &9015498420722952028
 GameObject:
   m_ObjectHideFlags: 0

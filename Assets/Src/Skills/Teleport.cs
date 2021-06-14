@@ -15,9 +15,9 @@ public class Teleport : Skill
 
     public override void UseSkill(Player player)
     {
-        Debug.Log(name + " skill is used");
-        Debug.Log(player.transform.position.ToString());
+        CharacterController cc = player.GetComponent<CharacterController>(); 
+        cc.enabled = false;
         player.transform.position += player.transform.forward * teleportDistance;
-        Debug.Log(player.transform.position.ToString());
+        cc.enabled = true;
     }
 }

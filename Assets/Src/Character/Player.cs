@@ -119,6 +119,11 @@ public class Player : NetworkBehaviour
         SpawnUsername();        
     }
 
+
+    void FixedUpdate() {
+        // GetComponent<Rigidbody>().MovePosition(Vector3.forward * Time.fixedDeltaTime);
+    }
+
     void Update()
     {
         UpdateInvisRenderer();
@@ -138,11 +143,13 @@ public class Player : NetworkBehaviour
             Vector3 positionDelta = Quaternion.Euler(0, moveDirAngle, 0) * Vector3.forward;
 
             if(isSprinting) {
-                transform.position += positionDelta.normalized * Time.deltaTime * moveSpeed * sprintMultiplier;
+                // transform.position += positionDelta.normalized * Time.deltaTime * moveSpeed * sprintMultiplier;
+                GetComponent<CharacterController>().SimpleMove(positionDelta.normalized * moveSpeed * sprintMultiplier);
                 curStamina.Value = Mathf.Max(0, curStamina.Value - Time.deltaTime * staminaBurnFactor);
             }
             else {
-                transform.position += positionDelta.normalized * Time.deltaTime * moveSpeed;
+                GetComponent<CharacterController>().SimpleMove(positionDelta.normalized * moveSpeed);
+                // transform.position += positionDelta.normalized * Time.deltaTime * moveSpeed;
             }
 
             // transform.position = new Vector3(transform.position.x, 0, transform.position.z);
