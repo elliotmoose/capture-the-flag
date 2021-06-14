@@ -12,8 +12,7 @@ public class CloneCatch : Catch
     public override void UseSkill(Player player)
     {
         base.UseSkill(player);
-        float radius = player.GetCatchRadius();
-        Collider[] hitColliders = Physics.OverlapSphere(player.transform.position, radius);
+        Collider[] hitColliders = Physics.OverlapSphere(player.transform.position, this.catchRadius);
 
         foreach (Collider c in hitColliders)
         {

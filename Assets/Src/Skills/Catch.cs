@@ -5,8 +5,10 @@ using MLAPI;
 
 public class Catch : Skill
 {
-    public Catch()
+    protected float catchRadius = 10;
+    public Catch(float catchRadius=8)
     {
+        this.catchRadius = catchRadius;
         cooldown = 1.0f;
         name = "Catch";
         
@@ -14,7 +16,7 @@ public class Catch : Skill
 
     public override void UseSkill(Player player)
     {
-        CatchEffect catchEffect = new CatchEffect(player);
+        CatchEffect catchEffect = new CatchEffect(player, catchRadius);
         player.TakeEffect(catchEffect);
     }
 }
@@ -27,10 +29,10 @@ public class CatchEffect : Effect
     private Renderer rend;
     private Color color;
     
-    public CatchEffect(Player _player) : base(_player)
+    public CatchEffect(Player _player, float radius) : base(_player)
     {
-        this.radius = _player.GetCatchRadius();
-        this.duration = 0.5f;
+        this.radius = radius;
+        this.duration = 0.2f;
         this.name = "CATCH_EFFECT";
         GameObject fieldObj = GameObject.Find("GameManager").GetComponent<PrefabsManager>().catchField;
         this.catchField = GameObject.Instantiate(fieldObj, _player.transform.Find("model").transform.position, Quaternion.identity);
