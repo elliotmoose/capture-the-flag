@@ -9,6 +9,5 @@ public class Thief : Player
         moveSpeed = 15;
         catchSkill = new CloneCatch();
         skills.Add(new Invisibility());
-
     }
 }

@@ -21,7 +21,6 @@ public class Catch : Skill
     }
 }
 
-
 public class CatchEffect : Effect
 {
     private float radius;
@@ -38,7 +37,7 @@ public class CatchEffect : Effect
         this.catchField = GameObject.Instantiate(fieldObj, _player.transform.Find("model").transform.position, Quaternion.identity);
         this.catchField.transform.parent = _player.transform;
         rend = this.catchField.GetComponent<Renderer>();
-        if (_player.team == Team.RED)
+        if (_player.GetTeam() == Team.RED)
         {
             color = new Color(243, 31, 0);
             rend.material.SetColor("_emission", color);

@@ -28,14 +28,14 @@ public class Reach : Skill
                 float current_angle = Vector3.Angle(player.transform.forward, target.transform.position - player.transform.position);
                 if (current_angle <= angle)
                 {
-                    if (player.team != target.team)
+                    if (player.GetTeam() != target.GetTeam())
                     {
                         if (target.IsCatchable())
                         {
                             GameManager.Instance.Imprison(target, player);
                         }
                     }
-                    else if (player.team == target.team)
+                    else if (player.GetTeam() == target.GetTeam())
                     {
                         GameManager.Instance.Release(target, player);
                     }

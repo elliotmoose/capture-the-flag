@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028355, g: 0.22571374, b: 0.30692255, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -310,7 +310,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 0
-    m_SensorSize: {x: 1.776119, y: 1}
+    m_SensorSize: {x: 1.7777778, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -587,7 +587,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 0
-    m_SensorSize: {x: 1.776119, y: 1}
+    m_SensorSize: {x: 1.7777778, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -1084,11 +1084,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac0b09e7857660247b1477e93731de29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &368176219 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8062280885767414519, guid: 9c819b117196a4f50b725bb9b3087a87, type: 3}
-  m_PrefabInstance: {fileID: 2040772768}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &426044748
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1427,9 +1422,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f95818bd912f45038e56e4c15a9f98d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  colors: {fileID: 0}
   staminaBar: {fileID: 1866401765}
   redTeamScore: {fileID: 1626562208}
   blueTeamScore: {fileID: 271153074}
+  countdownText: {fileID: 0}
+  gameoverPanel: {fileID: 0}
+  scoreboardRowsParent: {fileID: 0}
+  scoreboardWinningTeamText: {fileID: 0}
+  scoreboardHeaderRow: {fileID: 0}
+  playerIconTemplate: {fileID: 0}
 --- !u!114 &494272673
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1565,7 +1567,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 0
-    m_SensorSize: {x: 1.776119, y: 1}
+    m_SensorSize: {x: 1.7777778, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -1664,11 +1666,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 545671599}
   m_CullTransparentMesh: 1
---- !u!1 &577501604 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8062280885767414519, guid: 9c819b117196a4f50b725bb9b3087a87, type: 3}
-  m_PrefabInstance: {fileID: 1059420484}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &662289935
 GameObject:
   m_ObjectHideFlags: 0
@@ -1931,7 +1928,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 0
-    m_SensorSize: {x: 1.776119, y: 1}
+    m_SensorSize: {x: 1.7777778, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -2133,6 +2130,10 @@ MonoBehaviour:
   smoke: {fileID: 7145597933269217638, guid: 0157679236ada9e4ca70294df248874b, type: 3}
   catchField: {fileID: 1439356418933139104, guid: 6da2dcdb28fa99b4d8a542c7417c6792, type: 3}
   teleportField: {fileID: 4833554853100618946, guid: 7041dbb2a52bb0e43a7647a8fe5b54f0, type: 3}
+  warriorIcon: {fileID: 0}
+  mageIcon: {fileID: 0}
+  thiefIcon: {fileID: 0}
+  playerUsername: {fileID: 0}
 --- !u!114 &875773146
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2145,8 +2146,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ee4634fb3b0f445dacf39f5458fff67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxPlayersPerTeam: 3
-  autoStartHost: 1
+  roomSize:
+    m_InternalValue: 3
+  userControllerPrefab: {fileID: 0}
 --- !u!114 &875773147
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2159,14 +2161,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29f3881df9137477d9496b6347997e5e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  redTeamFlag: {fileID: 577501604}
-  blueTeamFlag: {fileID: 368176219}
+  playerControllerPrefab: {fileID: 0}
+  redTeamFlag: {fileID: 0}
+  blueTeamFlag: {fileID: 0}
   blueTeamJail: {fileID: 1111125443}
   redTeamJail: {fileID: 325140721}
   blueTeamScore:
     m_InternalValue: 0
   redTeamScore:
     m_InternalValue: 0
+  roundInProgress: 0
 --- !u!114 &875773148
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2196,7 +2200,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2edc998ef81a846ecade923865d196a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerPrefab: {fileID: 8715549257419821114, guid: 9cb4daa18f4b34bcfb909ca9cd4de466, type: 3}
+  magePrefab: {fileID: 0}
+  warriorPrefab: {fileID: 0}
+  thiefPrefab: {fileID: 0}
+  bowmanPrefab: {fileID: 0}
 --- !u!4 &875773150
 Transform:
   m_ObjectHideFlags: 0
@@ -2393,17 +2400,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 025f66f40915a492180c417c9e17c991, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spawnPos: {x: 0, y: 0, z: 0}
+  spawnDir: {x: 0, y: 0, z: 0, w: 0}
   flagSlot: {fileID: 2122534019}
   moveDir: {x: 0, y: 0}
   faceAngle: 0
   sprinting: 0
-  team: 1
-  ownerClientId:
-    m_InternalValue: 0
   curStamina:
     m_InternalValue: 100
   maxStamina:
     m_InternalValue: 100
+  skill1CooldownTime: 0
+  skill2CooldownTime: 0
+  catchCooldownTime: 0
 --- !u!54 &928025621
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2985,17 +2994,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 703d9232ed32841478a70476ba7f03ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spawnPos: {x: 0, y: 0, z: 0}
+  spawnDir: {x: 0, y: 0, z: 0, w: 0}
   flagSlot: {fileID: 0}
   moveDir: {x: 0, y: 0}
   faceAngle: 0
   sprinting: 0
-  team: 1
-  ownerClientId:
-    m_InternalValue: 0
   curStamina:
     m_InternalValue: 100
   maxStamina:
     m_InternalValue: 100
+  skill1CooldownTime: 0
+  skill2CooldownTime: 0
+  catchCooldownTime: 0
 --- !u!1001 &1261884932
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4217,6 +4228,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: -8756945646786874203, guid: 9cb4daa18f4b34bcfb909ca9cd4de466, type: 3}
+    - {fileID: 5889400617423039191, guid: 9cb4daa18f4b34bcfb909ca9cd4de466, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 9cb4daa18f4b34bcfb909ca9cd4de466, type: 3}
 --- !u!1 &1968849632 stripped
 GameObject:
@@ -4235,17 +4247,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b354a3fd1e872974e9c0d1141cdc7bae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spawnPos: {x: 0, y: 0, z: 0}
+  spawnDir: {x: 0, y: 0, z: 0, w: 0}
   flagSlot: {fileID: 0}
   moveDir: {x: 0, y: 0}
   faceAngle: 0
   sprinting: 0
-  team: 1
-  ownerClientId:
-    m_InternalValue: 0
   curStamina:
     m_InternalValue: 100
   maxStamina:
     m_InternalValue: 100
+  skill1CooldownTime: 0
+  skill2CooldownTime: 0
+  catchCooldownTime: 0
 --- !u!1 &2015205083
 GameObject:
   m_ObjectHideFlags: 0
@@ -4602,6 +4616,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   autoStartHost: 0
+  character: 0
+  team: 0
 --- !u!114 &2112304768
 MonoBehaviour:
   m_ObjectHideFlags: 0

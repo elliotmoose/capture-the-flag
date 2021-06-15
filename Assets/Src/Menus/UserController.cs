@@ -6,6 +6,8 @@ using MLAPI.Messaging;
 
 public class UserController : NetworkBehaviour
 {
+    public static UserController LocalInstance;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -18,19 +20,26 @@ public class UserController : NetworkBehaviour
         
     }
 
-    [ServerRpc]
-    void JoinTeamServerRpc(Team team) {
-        if(IsServer) {
-            ulong clientId = this.OwnerClientId;
-            RoomManager.Instance.JoinTeam(clientId, team);
+    public override void NetworkStart() {
+        //upon connecting, client tells server what their username is
+        if(IsLocalPlayer) {
+            LocalInstance = this;            
+            SetUsernameServerRpc(NetworkManager.Singleton.LocalClientId, UserManager.Instance.GetUsername());
         }
     }
+
+    [ServerRpc(RequireOwnership=false)]
+    public void JoinTeamServerRpc(ulong clientId, Team team) {
+        RoomManager.Instance.UserRequestJoinTeam(clientId, team);
+    }
     
-    [ServerRpc]
-    void SetUsernameServerRpc(string username) {
-        if(IsServer) {
-            ulong clientId = this.OwnerClientId;
-            RoomManager.Instance.SetUsername(clientId, username);
-        }
+    [ServerRpc(RequireOwnership=false)]
+    void SetUsernameServerRpc(ulong clientId, string username) {
+        RoomManager.Instance.UserRequestSetUsername(clientId, username);
+    }
+    
+    [ServerRpc(RequireOwnership=false)]
+    public void SelectCharacterServerRpc(ulong clientId, Character character) {
+        RoomManager.Instance.UserRequestSelectCharacter(clientId, character);
     }
 }

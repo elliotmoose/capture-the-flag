@@ -25,6 +25,10 @@ public class Jail : MonoBehaviour
         return this.jailed;
     }
 
+    public void ReleaseAll() {
+        jailed.Clear();
+    }
+
 
     // Start is called before the first frame update
     void Start()
@@ -43,7 +47,8 @@ public class Jail : MonoBehaviour
         foreach(Player player in jailed) {
             Vector3 jailToPlayer = (player.transform.position-jailCenter);
             if(jailToPlayer.magnitude > jailSize) {
-                player.transform.position = jailCenter + jailToPlayer*jailSize/jailToPlayer.magnitude;
+                Vector3 newPos = jailCenter + jailToPlayer.normalized*jailSize;
+                player.transform.position = new Vector3(newPos.x, player.transform.position.y, newPos.z);
             }
         }
     }

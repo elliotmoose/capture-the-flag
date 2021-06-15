@@ -6,14 +6,38 @@ using MLAPI.NetworkVariable;
 
 public class PrefabsManager : NetworkBehaviour
 {
+    public static PrefabsManager Instance;
     public GameObject smoke;
     public GameObject catchField;
     public GameObject teleportField;
+    public Sprite warriorIcon;
+    public Sprite mageIcon;
+    public Sprite thiefIcon;
+
+    public GameObject playerUsername;
+
+    void Awake() {
+        Instance = this;
+    }
+
+    public Sprite IconForCharacter(Character character) {
+        switch (character)
+        {
+            case Character.Warrior:
+                return warriorIcon;
+            case Character.Mage:
+                return mageIcon;
+            case Character.Thief:
+                return thiefIcon;
+            default: 
+                return warriorIcon;
+        }
+    }
 
     // Start is called before the first frame update
     void Start()
     {
-
+        
     }
 
     // Update is called once per frame
@@ -21,6 +45,4 @@ public class PrefabsManager : NetworkBehaviour
     {
         
     }
-
-
 }

@@ -6,7 +6,10 @@ using MLAPI;
 
 public class PlayerSpawner : NetworkBehaviour
 {
-    public GameObject playerPrefab;
+    public GameObject magePrefab;
+    public GameObject warriorPrefab;
+    public GameObject thiefPrefab;
+    public GameObject bowmanPrefab;
 
     public static PlayerSpawner Instance;
 
@@ -32,14 +35,47 @@ public class PlayerSpawner : NetworkBehaviour
         return players.Values.ToList<Player>();
     }
 
-    public GameObject SpawnPlayer(ulong playerId, Team team) {
+    public GameObject SpawnPlayer(User user, int index, int noOfPlayersPerTeam) {
         if(!IsServer) {return null;}
-        GameObject playerObj = GameObject.Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
+
+        GameObject characterPrefab;
+        
+        switch (user.character)
+        {
+            case Character.Warrior:
+                characterPrefab = warriorPrefab;
+                break;
+            case Character.Thief:
+                characterPrefab = thiefPrefab;
+                break;
+            case Character.Mage:
+                characterPrefab = magePrefab;
+                break;
+            case Character.Bowman:
+                characterPrefab = bowmanPrefab;
+                break;
+            default:
+                characterPrefab = warriorPrefab;
+                break;
+        }
+
+        Team team = user.team;
+        
+        float teamPosition = 100 * (team == Team.BLUE ? 1 : -1);     
+        float distanceBetweenPlayers = 7;   
+        float teamIndexPosition = -(noOfPlayersPerTeam-1) * distanceBetweenPlayers/2 + (index * distanceBetweenPlayers);
+        Vector3 spawnPosition = new Vector3(teamIndexPosition,0,teamPosition);
+        // Debug.Log($"{spawnPosition} {index}");
+
+        Quaternion faceDirection = Quaternion.Euler(0, team == Team.BLUE ? 180 : 0, 0);
+        GameObject playerObj = GameObject.Instantiate(characterPrefab, spawnPosition, faceDirection);
         Player player = playerObj.GetComponent<Player>();
-        player.ownerClientId.Value = playerId;
-        player.team = team; //TODO: check if team is set on clients
+        player.spawnPos = spawnPosition;
+        player.spawnDir = faceDirection;
+        player.SetUser(user);
+        player.SetTeam(team);
         playerObj.GetComponent<NetworkObject>().Spawn();
-        players[playerId] = player;
+        players[user.clientId] = player;
         return playerObj;
     }
 }

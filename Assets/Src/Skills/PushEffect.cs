@@ -36,7 +36,9 @@ public class PushEffect : Effect
     public override void UpdateEffect()
     {
         float progress = age / duration;
-        _target.transform.position = Vector3.Lerp(initialPos, finalPos, EaseOutCircular(progress));
+        Vector3 targetPosition = Vector3.Lerp(initialPos, finalPos, EaseOutQuadratic(progress));
+        Vector3 delta = (targetPosition - _target.transform.position);
+        _target.GetComponent<CharacterController>().Move(delta);
     }
 
     public override void OnEffectApplied()

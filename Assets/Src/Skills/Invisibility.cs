@@ -38,7 +38,7 @@ public class InvisEffect : Effect
         for (int i = 0; i < this.rends.Length; i++)
         {
             Renderer rend = rends[i];
-            if (_target.team == PlayerController.LocalInstance.GetPlayer().team)
+            if (_target.GetTeam() == PlayerController.LocalInstance.GetPlayer().GetTeam())
             {
                 // if same team, appear transparent
                 rend.material.SetFloat("_alphaValue", alphaValue);

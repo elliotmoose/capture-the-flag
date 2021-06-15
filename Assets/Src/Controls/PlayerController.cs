@@ -10,6 +10,7 @@ using Cinemachine;
 public class PlayerController : NetworkBehaviour 
 {   
     public static PlayerController LocalInstance;
+
     NetworkVariableBool sprinting = new NetworkVariableBool(new NetworkVariableSettings{
         WritePermission = NetworkVariablePermission.OwnerOnly
     });
@@ -24,6 +25,20 @@ public class PlayerController : NetworkBehaviour
         SendTickrate = 20,
     });
 
+    //skill cooldown displats
+    public NetworkVariableFloat skill1CooldownDisplay = new NetworkVariableFloat(new NetworkVariableSettings{
+        WritePermission = NetworkVariablePermission.OwnerOnly,
+        SendTickrate = 1,
+    });
+    public NetworkVariableFloat skill2CooldownDisplay = new NetworkVariableFloat(new NetworkVariableSettings{
+        WritePermission = NetworkVariablePermission.OwnerOnly,
+        SendTickrate = 1,
+    });
+    public NetworkVariableFloat catchCooldownDisplay = new NetworkVariableFloat(new NetworkVariableSettings{
+        WritePermission = NetworkVariablePermission.OwnerOnly,
+        SendTickrate = 1,
+    });
+
     public NetworkVariableULong playerObjNetId = new NetworkVariableULong(new NetworkVariableSettings{
         WritePermission = NetworkVariablePermission.ServerOnly,
         SendTickrate = 0,        
@@ -32,6 +47,19 @@ public class PlayerController : NetworkBehaviour
     float commandDurationThreshold = 0.1f;
     float timeSinceLastCommand = 0f;
     bool isStale = false;
+    // public User user;
+    private NetworkVariable<User> _user = new NetworkVariable<User>(new NetworkVariableSettings{
+        WritePermission = NetworkVariablePermission.ServerOnly,
+        SendTickrate = -1,
+    });
+
+    public User GetUser() {
+        return this._user.Value;
+    }
+
+    public void SetUser(User user) {
+        this._user.Value = user;
+    }
 
     public KeyCode SKILL1_KEY = KeyCode.Q;
     public KeyCode SKILL2_KEY = KeyCode.E;
@@ -42,6 +70,8 @@ public class PlayerController : NetworkBehaviour
         base.NetworkStart();        
         if(IsLocalPlayer) {
             LocalInstance = this;
+
+            
         }
     }
     
@@ -49,16 +79,8 @@ public class PlayerController : NetworkBehaviour
         if(IsServer) {
             moveDir.OnValueChanged += (Vector2 prevMoveDir, Vector2 newMoveDir)=>{
                 timeSinceLastCommand = 0;
-            };
-
-            //tell spawner to spawn
-            GameObject spawnedPlayerGO = PlayerSpawner.Instance.SpawnPlayer(GetComponent<NetworkObject>().OwnerClientId, Team.BLUE); 
-            playerObjNetId.Value = spawnedPlayerGO.GetComponent<NetworkObject>().NetworkObjectId;
-            Debug.Log("server spawn id:" + playerObjNetId.Value.ToString());
-        }        
-
-        Cursor.visible = false;
-       
+            };            
+        }                
     }
 
     // Update is called once per frame
@@ -79,6 +101,11 @@ public class PlayerController : NetworkBehaviour
                 player.moveDir = moveDir.Value;
                 player.faceAngle = faceAngle.Value;
                 player.sprinting = sprinting.Value;
+
+                //display cooldowns
+                skill1CooldownDisplay.Value = player.skill1CooldownTime;
+                skill2CooldownDisplay.Value = player.skill2CooldownTime;
+                catchCooldownDisplay.Value = player.catchCooldownTime;
             }
         }
     }
@@ -136,8 +163,17 @@ public class PlayerController : NetworkBehaviour
         }
     }
 
+    public void LinkPlayerReference(GameObject playerGameObject) {
+        if(!IsServer) {return;}
+        playerObjNetId.Value = playerGameObject.GetComponent<NetworkObject>().NetworkObjectId;
+    }    
+
     public Player GetPlayer()
     {
+        if(!NetworkSpawnManager.SpawnedObjects.ContainsKey(playerObjNetId.Value)) {
+            Debug.Log("Could not find player for this PlayerController");
+            return null;
+        }
         NetworkObject playerNetworkObj = NetworkSpawnManager.SpawnedObjects[playerObjNetId.Value];
         GameObject playerObj = playerNetworkObj.gameObject;
         if (playerObj)

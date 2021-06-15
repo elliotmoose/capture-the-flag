@@ -18,7 +18,7 @@ public class CatchSphere : NetworkBehaviour
 
         if (target != null)
         {
-            if (player.team != target.team)
+            if (player.GetTeam() != target.GetTeam())
             {
                 if (target.IsCatchable())
                 {
@@ -28,7 +28,7 @@ public class CatchSphere : NetworkBehaviour
                 //     player.GetJail().Imprison(player);
                 // }
             }
-            else if (player.team == target.team)
+            else if (player.GetTeam() == target.GetTeam())
             {
                 GameManager.Instance.Release(target, player);
             }
