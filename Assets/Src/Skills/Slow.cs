@@ -11,9 +11,8 @@ public class Slow : Skill
 
     public Slow()
     {
-        cooldown = 6.0f;
+        cooldown = 8.0f;
         name = "AOE Slow";
-
     }
 
     public override void UseSkill(Player player)

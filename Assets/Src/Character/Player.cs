@@ -21,7 +21,7 @@ public class Player : NetworkBehaviour
     public float faceAngle = 0;
     protected Renderer[] rends;
         
-    protected float moveSpeed = 18;
+    protected float moveSpeed = 15;
     protected float staminaBurnFactor = 30;
     protected float staminaRecoveryFactor = 20;
     protected bool isDisabled = false;
@@ -51,11 +51,11 @@ public class Player : NetworkBehaviour
         WritePermission = NetworkVariablePermission.ServerOnly
     }, 100);
 
-    NetworkVariableBool isInvis = new NetworkVariableBool(new NetworkVariableSettings{
+    private NetworkVariableBool _isInvis = new NetworkVariableBool(new NetworkVariableSettings{
         SendTickrate = -1,
         WritePermission = NetworkVariablePermission.ServerOnly
     }, false);
-    // protected bool isInvis = false;
+    
     private NetworkVariable<Team> _team = new NetworkVariable<Team>(new NetworkVariableSettings{
         SendTickrate = -1,
         WritePermission = NetworkVariablePermission.ServerOnly
@@ -88,13 +88,15 @@ public class Player : NetworkBehaviour
     }
 
     private void UpdateUsername() {
-        bool shouldShowUsername = (!isInvis.Value || this.GetTeam() == PlayerController.LocalInstance.GetPlayer().GetTeam());
+        bool isInvis = this.GetComponent<Animator>().GetBool("IsInvisible");
+        bool shouldShowUsername = (!isInvis || this.GetTeam() == PlayerController.LocalInstance.GetPlayer().GetTeam());
         usernameTextTransform.gameObject.SetActive(shouldShowUsername); //for invis
         TMPro.TextMeshPro textMesh = usernameTextTransform.GetComponent<TMPro.TextMeshPro>();
         textMesh.text = GetUser().username;
         textMesh.color = GetUser().team == Team.BLUE ? UIManager.Instance.colors.textBlue : UIManager.Instance.colors.textRed;
         usernameTextTransform.rotation = Quaternion.LookRotation( usernameTextTransform.position - Camera.main.transform.position );
-    }
+    }   
+
 
     public float GetMoveSpeed()
     {
@@ -116,6 +118,34 @@ public class Player : NetworkBehaviour
         SpawnUsername();        
     }
 
+    private bool _rendererSetupComplete = false;
+
+    void SetupRendererIfNeeded() {
+        if(!_rendererSetupComplete && PlayerController.LocalInstance != null && !GetUser().IsNull() && !PlayerController.LocalInstance.GetUser().IsNull()) {
+            Renderer[] rends = this.GetComponentsInChildren<Renderer>();
+            for (int i = 0; i < this.rends.Length; i++)
+            {
+                Renderer rend = rends[i];
+                if (this.GetTeam() == PlayerController.LocalInstance.GetPlayer().GetTeam())
+                {
+                    // if same team, appear transparent
+                    rend.material.SetFloat("_alphaValue", 0.3f);
+                }
+                else
+                {
+                    // if enemy team, appear invisible
+                    rend.material.SetFloat("_alphaValue", 0f);
+                }
+            }       
+
+            _rendererSetupComplete = true;
+            Debug.Log($"Renderer Initialised for player: {GetUser().username}");
+        }
+    }
+
+    public void SetIsInvis(bool isInvis) {
+        this._isInvis.Value = isInvis;
+    }
 
     void FixedUpdate() {
         // GetComponent<Rigidbody>().MovePosition(Vector3.forward * Time.fixedDeltaTime);
@@ -123,7 +153,7 @@ public class Player : NetworkBehaviour
 
     void Update()
     {
-        // UpdateInvisRenderer();
+        SetupRendererIfNeeded();
         UpdateUsername();
 
         if(!IsServer) { return; }
@@ -358,4 +388,28 @@ public class Player : NetworkBehaviour
         animator.SetFloat("VertMovement", 0);      
         animator.SetBool("IsMoving", false);         
     }
+
+    #region Animation Events
+    public delegate void PlayerAnimationEvent(string animationName);
+    public PlayerAnimationEvent OnAnimationStart;
+    public PlayerAnimationEvent OnAnimationCommit;
+    public PlayerAnimationEvent OnAnimationRelease;
+    public PlayerAnimationEvent OnAnimationEnd;
+
+    public void AnimationStart(string animationName) {
+        if (OnAnimationStart!=null) OnAnimationStart(animationName);
+    }
+
+    public void AnimationCommit(string animationName) {
+        if (OnAnimationCommit!=null) OnAnimationCommit(animationName);
+    }
+    
+    public void AnimationRelease(string animationName) {
+        if (OnAnimationRelease!=null) OnAnimationRelease(animationName);
+    }
+    
+    public void AnimationEnd(string animationName) {
+        if (OnAnimationEnd!=null) OnAnimationEnd(animationName);
+    }
+    #endregion
 }

@@ -17,10 +17,13 @@ public abstract class Effect
         this._target = target;
     }
 
+    protected virtual bool ShouldEffectEnd() {
+        return age > duration;
+    }
     public void Update()
     {
         UpdateCooldown();
-        if (age < duration)
+        if (!ShouldEffectEnd())
         {
             effectEnded = false;
             UpdateEffect();

@@ -189,8 +189,10 @@ public class UIManager : MonoBehaviour
         UpdatePlayerUI();
         if(PlayerController.LocalInstance != null) {
             Player player = PlayerController.LocalInstance.GetPlayer();
-            float stamina = player.curStamina.Value/player.maxStamina.Value;
-            staminaBar.fillAmount = stamina;
+            if(player != null) {
+                float stamina = player.curStamina.Value/player.maxStamina.Value;
+                staminaBar.fillAmount = stamina;
+            }
         }
 
         if(GameManager.Instance != null) {

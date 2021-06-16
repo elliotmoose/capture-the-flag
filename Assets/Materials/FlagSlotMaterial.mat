@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: FlagSlotMaterial
-  m_Shader: {fileID: -6465566751694194690, guid: 7980f2953e59fd34bac1f5ef08c691a6, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: 7f45b04ae19b9784382b841e23cc67ce, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -106,7 +106,7 @@ Material:
     - _WorkflowMode: 1
     - _ZWrite: 0
     - _alphaValue: 1
-    - _dissolved: 0
+    - _dissolved: -0.5
     - intensity: 4
     - thickness: 0.04
     m_Colors:
@@ -114,7 +114,10 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
+    - _direction: {r: 0, g: 1, b: 0, a: 0}
     - _playerColor: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
+    - glowColor: {r: 4.88875, g: 6.792453, b: 0.1708788, a: 0}
+    - playerColor: {r: 0.2830189, g: 0.2830189, b: 0.2830189, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &4433205851387334132
 MonoBehaviour:

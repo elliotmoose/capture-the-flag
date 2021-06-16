@@ -8,7 +8,7 @@ public class Invisibility : Skill
 
     public Invisibility()
     {
-        cooldown = 8.0f;
+        cooldown = 14.0f;
         name = "Invisibility";
     }
 
@@ -30,60 +30,60 @@ public class InvisEffect : Effect
         
         this.name = "INVIS_EFFECT";
         this.rends = _target.GetComponentsInChildren<Renderer>();
-
     }
 
     public override void OnEffectApplied()
-    {
-        for (int i = 0; i < this.rends.Length; i++)
-        {
-            Renderer rend = rends[i];
-            if (_target.GetTeam() == PlayerController.LocalInstance.GetPlayer().GetTeam())
-            {
-                // if same team, appear transparent
-                rend.material.SetFloat("_alphaValue", alphaValue);
-            }
-            else
-            {
-                // if enemy team, appear invisible
-                rend.material.SetFloat("_alphaValue", 0f);
-
-            }
-        }
-
+    {        
+        _target.GetComponent<Animator>().SetBool("IsInvisible", true);
+        Debug.Log("Inivisble start");
+        // for (int i = 0; i < this.rends.Length; i++)
+        // {
+        //     Renderer rend = rends[i];
+        //     if (_target.GetTeam() == PlayerController.LocalInstance.GetPlayer().GetTeam())
+        //     {
+        //         // if same team, appear transparent
+        //         rend.material.SetFloat("_alphaValue", alphaValue);
+        //     }
+        //     else
+        //     {
+        //         // if enemy team, appear invisible
+        //         rend.material.SetFloat("_alphaValue", 0f);
+        //     }
+        // }
     }
 
     public override void UpdateEffect()
     {
-        if (age <= animation_duration)
-        {
-            float progress = age / animation_duration;
+        // if (age <= animation_duration)
+        // {
+        //     float progress = age / animation_duration;
 
-            for (int i = 0; i < this.rends.Length; i++)
-            {
-                Renderer rend = rends[i];
-                rend.material.SetFloat("_dissolved", progress);
-            }
-        }
-        else if (age >= duration - animation_duration)
-        {
-            float progress = (age - (duration - animation_duration)) / animation_duration;
-            for (int i = 0; i < this.rends.Length; i++)
-            {
-                Renderer rend = rends[i];
-                rend.material.SetFloat("_dissolved", 1-progress);
-            }
-        }
+        //     for (int i = 0; i < this.rends.Length; i++)
+        //     {
+        //         Renderer rend = rends[i];
+        //         rend.material.SetFloat("_dissolved", progress);
+        //     }
+        // }
+        // else if (age >= duration - animation_duration)
+        // {
+        //     float progress = (age - (duration - animation_duration)) / animation_duration;
+        //     for (int i = 0; i < this.rends.Length; i++)
+        //     {
+        //         Renderer rend = rends[i];
+        //         rend.material.SetFloat("_dissolved", 1-progress);
+        //     }
+        // }
     }
 
 
     public override void OnEffectEnd()
-    {
-        for (int i = 0; i < this.rends.Length; i++)
-        {
-            Renderer rend = rends[i];
-            rend.material.SetFloat("_alphaValue", 1.0f);
-        }
+    {   
+        _target.GetComponent<Animator>().SetBool("IsInvisible", false);
+        // for (int i = 0; i < this.rends.Length; i++)
+        // {
+        //     Renderer rend = rends[i];
+        //     rend.material.SetFloat("_alphaValue", 1.0f);
+        // }
     }
 
 }

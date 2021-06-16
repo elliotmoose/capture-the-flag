@@ -20,4 +20,8 @@ public struct User : INetworkSerializable {
         serializer.Serialize(ref team);
         serializer.Serialize(ref character);
     }
+
+    public bool IsNull() {
+        return username == "" && clientId == 0;
+    }
 }

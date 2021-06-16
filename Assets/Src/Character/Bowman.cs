@@ -6,7 +6,9 @@ public class Bowman : Player
 {
     private void Awake()
     {
-        moveSpeed = 15;
+        moveSpeed = 18;
+        maxStamina.Value = 80;
+        curStamina.Value = 80;
         catchSkill = new Catch();
         skills.Add(new Smoke());
         skills.Add(new Reach());

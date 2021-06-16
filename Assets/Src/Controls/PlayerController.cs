@@ -69,9 +69,7 @@ public class PlayerController : NetworkBehaviour
     {
         base.NetworkStart();        
         if(IsLocalPlayer) {
-            LocalInstance = this;
-
-            
+            LocalInstance = this;            
         }
     }
     
