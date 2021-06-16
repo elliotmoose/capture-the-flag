@@ -25,7 +25,6 @@ public class Teleport : Skill
 
 public class TeleportEffect : Effect
 {
-    private GameObject teleport;
     private float teleportFactor;
     private Collider col;
     private Renderer[] rends;
@@ -38,16 +37,14 @@ public class TeleportEffect : Effect
     {
         this.duration = 1.2f;
         this.teleportFactor = teleportFactor;
-        this.name = "TELEPORT_EFFECT";
-        this.teleport = GameObject.Find("GameManager").GetComponent<PrefabsManager>().teleportField;
+        this.name = "TELEPORT_EFFECT";        
         this.col = _target.GetComponent<Collider>();
         this.rends = _target.GetComponentsInChildren<Renderer>();
         this.animator = _target.GetComponent<Animator>();
     }
 
     public override void OnEffectApplied()
-    {
-        GameObject.Instantiate(teleport, _target.transform.position, Quaternion.Euler(new Vector3(-90, 0, 0)));
+    {        
         _target.SetDisabled(true);
         col.enabled = false;
         
@@ -69,7 +66,7 @@ public class TeleportEffect : Effect
     public void OnAnimationRelease(string animationName) {
         if(animationName != animation) return;
         _target.transform.position += _target.transform.forward * teleportFactor;
-        GameObject.Instantiate(teleport, _target.transform.position, Quaternion.Euler(new Vector3(-90, 0, 0)));
+        _target.GetComponent<Smooth.SmoothSyncMLAPI>().teleportOwnedObjectFromOwner();
     }
 
     public void OnAnimationEnd(string animationName) {
