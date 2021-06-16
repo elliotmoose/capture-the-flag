@@ -22,7 +22,6 @@ public class Slow : Skill
         
         foreach (Collider c in hitColliders)
         {
-            
             Player target = c.gameObject.GetComponent<Player>();
                 
             if (target != null && player != target)

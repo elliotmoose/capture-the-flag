@@ -392,7 +392,6 @@ GameObject:
   - component: {fileID: 8158180437212963690}
   - component: {fileID: 5617067148386915242}
   - component: {fileID: 4682214866918665150}
-  - component: {fileID: 5889400617423039191}
   - component: {fileID: 3606717322404090613}
   - component: {fileID: -8639053039359840742}
   - component: {fileID: 4612563886510343300}
@@ -498,31 +497,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &5889400617423039191
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8715549257419821114}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b354a3fd1e872974e9c0d1141cdc7bae, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  spawnPos: {x: 0, y: 0, z: 0}
-  spawnDir: {x: 0, y: 0, z: 0, w: 0}
-  flagSlot: {fileID: 0}
-  moveDir: {x: 0, y: 0}
-  faceAngle: 0
-  sprinting: 0
-  curStamina:
-    m_InternalValue: 100
-  maxStamina:
-    m_InternalValue: 100
-  skill1CooldownTime: 0
-  skill2CooldownTime: 0
-  catchCooldownTime: 0
 --- !u!114 &3606717322404090613
 MonoBehaviour:
   m_ObjectHideFlags: 0

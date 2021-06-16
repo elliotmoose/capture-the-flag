@@ -1,6 +1,6 @@
 public enum Character {
-    Warrior = 0,
-    Mage = 1,
-    Thief = 2,
-    Bowman = 3
+    Berserker = 0,
+    Adept = 1,
+    Rogue = 2,
+    Lancer = 3
 }

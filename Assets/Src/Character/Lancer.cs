@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Bowman : Player
+public class Lancer : Player
 {
     private void Awake()
     {

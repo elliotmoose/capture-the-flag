@@ -44,21 +44,21 @@ public class CharacterSelectionManager : MonoBehaviour
     public void SelectWarrior()
     {
         HeroIndex = 0;
-        UserController.LocalInstance.SelectCharacterServerRpc(NetworkManager.Singleton.LocalClientId, Character.Warrior);
+        UserController.LocalInstance.SelectCharacterServerRpc(NetworkManager.Singleton.LocalClientId, Character.Berserker);
         ChangeHero();
     }
 
     public void SelectMage()
     {
         HeroIndex = 1;
-        UserController.LocalInstance.SelectCharacterServerRpc(NetworkManager.Singleton.LocalClientId, Character.Mage);
+        UserController.LocalInstance.SelectCharacterServerRpc(NetworkManager.Singleton.LocalClientId, Character.Adept);
         ChangeHero();
     }
 
     public void SelectNinja()
     {
         HeroIndex = 2;
-        UserController.LocalInstance.SelectCharacterServerRpc(NetworkManager.Singleton.LocalClientId, Character.Thief);
+        UserController.LocalInstance.SelectCharacterServerRpc(NetworkManager.Singleton.LocalClientId, Character.Rogue);
         ChangeHero();
     }
 

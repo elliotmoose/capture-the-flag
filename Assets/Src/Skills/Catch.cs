@@ -5,7 +5,7 @@ using MLAPI;
 
 public class Catch : Skill
 {
-    protected float catchRadius = 10;
+    protected float catchRadius = 8;
     public Catch(float catchRadius=8)
     {
         this.catchRadius = catchRadius;
@@ -33,8 +33,7 @@ public class CatchEffect : Effect
         this.radius = radius;
         this.duration = 0.2f;
         this.name = "CATCH_EFFECT";
-        GameObject fieldObj = GameObject.Find("GameManager").GetComponent<PrefabsManager>().catchField;
-        this.catchField = GameObject.Instantiate(fieldObj, _player.transform.Find("model").transform.position, Quaternion.identity);
+        this.catchField = GameObject.Instantiate(PrefabsManager.Instance.catchField, _player.transform.Find("model").transform.position, Quaternion.identity);
         this.catchField.transform.parent = _player.transform;
         rend = this.catchField.GetComponent<Renderer>();
         if (_player.GetTeam() == Team.RED)

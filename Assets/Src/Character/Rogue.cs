@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Thief : Player
+public class Rogue : Player
 {    
     private void Awake()
     {

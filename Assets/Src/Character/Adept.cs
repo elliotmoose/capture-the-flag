@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class Mage : Player
+public class Adept : Player
 {
     void Awake()
     {

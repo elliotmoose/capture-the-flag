@@ -6,7 +6,7 @@ public struct User : INetworkSerializable {
     public Team team;
     public Character character;
 
-    public User(ulong clientId, Team team, string username, Character character=Character.Warrior) {
+    public User(ulong clientId, Team team, string username, Character character=Character.Berserker) {
         this.clientId = clientId;
         this.team = team;
         this.username = username;

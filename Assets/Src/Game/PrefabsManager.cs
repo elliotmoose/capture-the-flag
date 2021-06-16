@@ -10,9 +10,10 @@ public class PrefabsManager : NetworkBehaviour
     public GameObject smoke;
     public GameObject catchField;
     public GameObject teleportField;
-    public Sprite warriorIcon;
-    public Sprite mageIcon;
-    public Sprite thiefIcon;
+    public Sprite berserkerIcon;
+    public Sprite adeptIcon;
+    public Sprite rogueIcon;
+    public Sprite lancerIcon;
 
     public GameObject playerUsername;
 
@@ -23,14 +24,16 @@ public class PrefabsManager : NetworkBehaviour
     public Sprite IconForCharacter(Character character) {
         switch (character)
         {
-            case Character.Warrior:
-                return warriorIcon;
-            case Character.Mage:
-                return mageIcon;
-            case Character.Thief:
-                return thiefIcon;
+            case Character.Berserker:
+                return berserkerIcon;
+            case Character.Adept:
+                return adeptIcon;
+            case Character.Rogue:
+                return rogueIcon;
+            case Character.Lancer:
+                return lancerIcon;
             default: 
-                return warriorIcon;
+                return berserkerIcon;
         }
     }
 

@@ -9763,10 +9763,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2edc998ef81a846ecade923865d196a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  magePrefab: {fileID: 8382036429028065265, guid: d31cb0926b6e8ca4b96b4d2a229bdf24, type: 3}
-  warriorPrefab: {fileID: 2353708130486342299, guid: eba2a4702c0058645a99cd0866aa90f6, type: 3}
-  thiefPrefab: {fileID: 2482793296607934278, guid: 9ad2283e1cd995c40a3d5bf453039022, type: 3}
-  bowmanPrefab: {fileID: 0}
+  adeptPrefab: {fileID: 9129700024982973364, guid: d749db18c9a8840b892227aa8cc92bbe, type: 3}
+  berserkerPrefab: {fileID: 3086753448720040265, guid: f058a2a1e2dd54c3f8b6b05cf9548dfc, type: 3}
+  roguePrefab: {fileID: 2731114782039628039, guid: 8c2ff678523f040908cee1512a374e5a, type: 3}
+  lancerPrefab: {fileID: 5767545232183299094, guid: 41a531846997a42f689806dd0252cae1, type: 3}
 --- !u!4 &368055227
 Transform:
   m_ObjectHideFlags: 0
@@ -9833,9 +9833,10 @@ MonoBehaviour:
   smoke: {fileID: 7145597933269217638, guid: 0157679236ada9e4ca70294df248874b, type: 3}
   catchField: {fileID: 1439356418933139104, guid: 6da2dcdb28fa99b4d8a542c7417c6792, type: 3}
   teleportField: {fileID: 4833554853100618946, guid: 7041dbb2a52bb0e43a7647a8fe5b54f0, type: 3}
-  warriorIcon: {fileID: 21300000, guid: d53f2076967484e7ca7865244cd941e1, type: 3}
-  mageIcon: {fileID: 21300000, guid: 2f7404c7474c9458698a640073285f7f, type: 3}
-  thiefIcon: {fileID: 21300000, guid: 3cfa2d9e712644bae8caf05aa8aaf10a, type: 3}
+  berserkerIcon: {fileID: 0}
+  adeptIcon: {fileID: 0}
+  rogueIcon: {fileID: 0}
+  lancerIcon: {fileID: 0}
   playerUsername: {fileID: 7223234545913753362, guid: 43b04c55078d74c0d8613dc3c0fe21c4, type: 3}
 --- !u!114 &368055231
 MonoBehaviour:
@@ -49174,11 +49175,13 @@ MonoBehaviour:
       PlayerPrefab: 0
     - Prefab: {fileID: 368055224}
       PlayerPrefab: 0
-    - Prefab: {fileID: 8382036429028065265, guid: d31cb0926b6e8ca4b96b4d2a229bdf24, type: 3}
+    - Prefab: {fileID: 9129700024982973364, guid: d749db18c9a8840b892227aa8cc92bbe, type: 3}
       PlayerPrefab: 0
-    - Prefab: {fileID: 2482793296607934278, guid: 9ad2283e1cd995c40a3d5bf453039022, type: 3}
+    - Prefab: {fileID: 3086753448720040265, guid: f058a2a1e2dd54c3f8b6b05cf9548dfc, type: 3}
       PlayerPrefab: 0
-    - Prefab: {fileID: 2353708130486342299, guid: eba2a4702c0058645a99cd0866aa90f6, type: 3}
+    - Prefab: {fileID: 5767545232183299094, guid: 41a531846997a42f689806dd0252cae1, type: 3}
+      PlayerPrefab: 0
+    - Prefab: {fileID: 2731114782039628039, guid: 8c2ff678523f040908cee1512a374e5a, type: 3}
       PlayerPrefab: 0
     PlayerPrefabHash:
       id: 0
@@ -49234,7 +49237,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5f5ecc06df6df64fb4a4af6f8066086, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  autoStartHost: 0
+  autoStartHost: 1
   character: 2
   team: 1
 --- !u!1001 &1919001616
