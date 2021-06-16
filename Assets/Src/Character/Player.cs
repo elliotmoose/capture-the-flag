@@ -50,11 +50,6 @@ public class Player : NetworkBehaviour
         SendTickrate = -1,
         WritePermission = NetworkVariablePermission.ServerOnly
     }, 100);
-
-    private NetworkVariableBool _isInvis = new NetworkVariableBool(new NetworkVariableSettings{
-        SendTickrate = -1,
-        WritePermission = NetworkVariablePermission.ServerOnly
-    }, false);
     
     private NetworkVariable<Team> _team = new NetworkVariable<Team>(new NetworkVariableSettings{
         SendTickrate = -1,
@@ -141,10 +136,6 @@ public class Player : NetworkBehaviour
             _rendererSetupComplete = true;
             Debug.Log($"Renderer Initialised for player: {GetUser().username}");
         }
-    }
-
-    public void SetIsInvis(bool isInvis) {
-        this._isInvis.Value = isInvis;
     }
 
     void FixedUpdate() {
@@ -288,44 +279,6 @@ public class Player : NetworkBehaviour
     {
         this.isDisabled = disabled;
     }
-    
-    // public void UpdateInvisRenderer() {
-    //     // check if player is invisible
-    //     if (isInvis.Value)
-    //     {
-    //         for (int i = 0; i < this.rends.Length; i++)
-    //         {
-    //             Renderer rend = rends[i];
-    //             if (this.GetTeam() == PlayerController.LocalInstance.GetPlayer().GetTeam())
-    //             {
-    //                 // if same team, appear transparent
-    //                 rend.material.color = new Color(rend.material.color.r, rend.material.color.g, rend.material.color.b, invisAlpha);
-    //             }
-    //             else
-    //             {
-    //                 // if enemy team, appear invisible
-    //                 rend.enabled = false;
-    //             }
-    //         }
-    //     }
-    //     else
-    //     {
-    //         for (int i = 0; i < this.rends.Length; i++)
-    //         {
-    //             Renderer rend = rends[i];
-
-    //             // revert invisible effect
-    //             if (this.GetTeam() == PlayerController.LocalInstance.GetPlayer().GetTeam())
-    //             {
-    //                 rend.material.color = new Color(rend.material.color.r, rend.material.color.g, rend.material.color.b, 1.0f);
-    //             }
-    //             else
-    //             {
-    //                 rend.enabled = true;
-    //             }
-    //         }
-    //     }
-    // }
 
     public bool IsInEnemyTerritory(){
         float z_pos = transform.position.z;
