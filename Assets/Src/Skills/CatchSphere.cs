@@ -3,17 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using MLAPI;
 
-public class CatchSphere : NetworkBehaviour
+public class CatchSphere : MonoBehaviour
 {
     private Player player;
 
     private void Start()
     {
-        player = transform.parent.GetComponent<Player>();
+        player = transform.GetComponentInParent<Player>();        
     }
 
     private void OnTriggerEnter(Collider other)
     {
+        // if(!NetworkManager.Singleton.IsServer) return;
+
         Player target = other.gameObject.GetComponent<Player>();
 
         if (target != null)

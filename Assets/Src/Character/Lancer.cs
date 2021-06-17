@@ -6,9 +6,11 @@ public class Lancer : Player
 {
     private void Awake()
     {
-        moveSpeed = 18;
-        maxStamina.Value = 80;
-        curStamina.Value = 80;
+        if(IsServer) {
+            moveSpeed = 18;
+            this.SetMaxStamina(80);
+        }
+        
         catchSkill = new Catch();
         skills.Add(new Smoke());
         skills.Add(new Reach());

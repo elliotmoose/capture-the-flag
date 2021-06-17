@@ -898,7 +898,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 21512888}
-  m_LocalRotation: {x: 0.067899205, y: -0.81958634, z: 0.09934217, w: 0.56017774}
+  m_LocalRotation: {x: 0.06789921, y: -0.81958634, z: 0.09934216, w: 0.56017774}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -9833,10 +9833,10 @@ MonoBehaviour:
   smoke: {fileID: 7145597933269217638, guid: 0157679236ada9e4ca70294df248874b, type: 3}
   catchField: {fileID: 1439356418933139104, guid: 6da2dcdb28fa99b4d8a542c7417c6792, type: 3}
   teleportField: {fileID: 4833554853100618946, guid: 7041dbb2a52bb0e43a7647a8fe5b54f0, type: 3}
-  berserkerIcon: {fileID: 0}
-  adeptIcon: {fileID: 0}
-  rogueIcon: {fileID: 0}
-  lancerIcon: {fileID: 0}
+  berserkerIcon: {fileID: 21300000, guid: d53f2076967484e7ca7865244cd941e1, type: 3}
+  adeptIcon: {fileID: 21300000, guid: 2f7404c7474c9458698a640073285f7f, type: 3}
+  rogueIcon: {fileID: 21300000, guid: 3cfa2d9e712644bae8caf05aa8aaf10a, type: 3}
+  lancerIcon: {fileID: 21300000, guid: b471dba027e0d4e98b5cf632ad6a349a, type: 3}
   playerUsername: {fileID: 7223234545913753362, guid: 43b04c55078d74c0d8613dc3c0fe21c4, type: 3}
 --- !u!114 &368055231
 MonoBehaviour:
@@ -32149,7 +32149,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1183394280}
-  m_LocalRotation: {x: 0.06789921, y: -0.81958634, z: 0.09934216, w: 0.56017774}
+  m_LocalRotation: {x: 0.06789921, y: -0.81958634, z: 0.09934215, w: 0.56017774}
   m_LocalPosition: {x: 14.581394, y: 7.24, z: 5.6837864}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -49237,9 +49237,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5f5ecc06df6df64fb4a4af6f8066086, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  autoStartHost: 1
-  character: 2
-  team: 1
+  autoStartHost: 0
+  character: 1
+  team: 0
 --- !u!1001 &1919001616
 PrefabInstance:
   m_ObjectHideFlags: 0

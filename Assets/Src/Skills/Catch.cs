@@ -5,18 +5,15 @@ using MLAPI;
 
 public class Catch : Skill
 {
-    protected float catchRadius = 8;
-    public Catch(float catchRadius=8)
+    public Catch()
     {
-        this.catchRadius = catchRadius;
         cooldown = 1.0f;
-        name = "Catch";
-        
+        name = "Catch";        
     }
 
     public override void UseSkill(Player player)
     {
-        CatchEffect catchEffect = new CatchEffect(player, catchRadius);
+        CatchEffect catchEffect = new CatchEffect(player, player.GetCatchRadius());
         player.TakeEffect(catchEffect);
     }
 }
@@ -28,42 +25,45 @@ public class CatchEffect : Effect
     private Renderer rend;
     private Color color;
     
+    private string animation = "Catch";
+    private bool finished = false;
     public CatchEffect(Player _player, float radius) : base(_player)
-    {
-        this.radius = radius;
+    {        
         this.duration = 0.2f;
         this.name = "CATCH_EFFECT";
-        this.catchField = GameObject.Instantiate(PrefabsManager.Instance.catchField, _player.transform.Find("model").transform.position, Quaternion.identity);
-        this.catchField.transform.parent = _player.transform;
-        rend = this.catchField.GetComponent<Renderer>();
-        if (_player.GetTeam() == Team.RED)
-        {
-            color = new Color(243, 31, 0);
-            rend.material.SetColor("_emission", color);
-        }
-        else
-        {
-            color = new Color(0, 225, 243);
-            rend.material.SetColor("_emission", color);
-        }
-        
+
+        _player.OnAnimationStart += OnAnimationStart;      
+        _player.OnAnimationEnd += OnAnimationEnd;      
+    }
+
+    public void OnAnimationStart(string animationName) {
+        if(animationName != animation) return;
+    }
+    
+    public void OnAnimationEnd(string animationName) {
+        if(animationName != animation) return;
+
+        _target.GetComponent<Animator>().SetBool("IsCatching", false);
+        finished = true;
+    }
+
+    protected override bool ShouldEffectEnd()
+    {
+        return finished;
     }
 
     public override void OnEffectApplied()
     {
-        this.catchField.GetComponent<NetworkObject>().Spawn();
+        _target.GetComponent<Animator>().SetBool("IsCatching", true);
     }
 
     public override void OnEffectEnd()
     {
-        PrefabsManager.Destroy(this.catchField);
+        
     }
 
     public override void UpdateEffect()
     {
-        float current_radius = this.radius / this.duration * this.age;
-        this.catchField.transform.localScale = new Vector3(current_radius, current_radius, current_radius);
-        float alpha = 1.0f - (this.age / this.duration);
-        rend.material.SetFloat("_alpha", alpha);
+        
     }
 }

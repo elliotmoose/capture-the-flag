@@ -37,22 +37,27 @@ public class Player : NetworkBehaviour
 
     //Network Variables
     NetworkVariable<User> _user = new NetworkVariable<User>(new NetworkVariableSettings{
-        SendTickrate = -1,
+        SendTickrate = 0,
         WritePermission = NetworkVariablePermission.ServerOnly
     });
 
-    public NetworkVariableFloat curStamina = new NetworkVariableFloat(new NetworkVariableSettings{
+    private NetworkVariableFloat _catchRadius = new NetworkVariableFloat(new NetworkVariableSettings{
+        SendTickrate = 0,
+        WritePermission = NetworkVariablePermission.ServerOnly
+    }, 8);
+    
+    private NetworkVariableFloat _curStamina = new NetworkVariableFloat(new NetworkVariableSettings{
         SendTickrate = 20,
         WritePermission = NetworkVariablePermission.ServerOnly
     }, 100);
     
-    public NetworkVariableFloat maxStamina = new NetworkVariableFloat(new NetworkVariableSettings{
-        SendTickrate = -1,
+    private NetworkVariableFloat _maxStamina = new NetworkVariableFloat(new NetworkVariableSettings{
+        SendTickrate = 0,
         WritePermission = NetworkVariablePermission.ServerOnly
     }, 100);
     
     private NetworkVariable<Team> _team = new NetworkVariable<Team>(new NetworkVariableSettings{
-        SendTickrate = -1,
+        SendTickrate = 0,
         WritePermission = NetworkVariablePermission.ServerOnly
     }, Team.BLUE);
         
@@ -74,6 +79,22 @@ public class Player : NetworkBehaviour
 
     public void SetUser(User user) {
         this._user.Value = user;
+    }
+
+    public float SetCatchRadius(float radius) {
+        return this._catchRadius.Value = radius;
+    }
+    public float GetCatchRadius() {
+        return this._catchRadius.Value;
+    }
+
+    public void SetMaxStamina(float maxStamina) {
+        this._curStamina.Value = _curStamina.Value/_maxStamina.Value*maxStamina;
+        this._maxStamina.Value = maxStamina;
+    }
+    
+    public float GetStaminaFraction() {
+        return _curStamina.Value/_maxStamina.Value;
     }
 
     private void SpawnUsername() {
@@ -116,7 +137,8 @@ public class Player : NetworkBehaviour
     private bool _rendererSetupComplete = false;
 
     void SetupRendererIfNeeded() {
-        if(!_rendererSetupComplete && PlayerController.LocalInstance != null && !GetUser().IsNull() && !PlayerController.LocalInstance.GetUser().IsNull()) {
+        if(!_rendererSetupComplete && PlayerController.LocalInstance != null && PlayerController.LocalInstance.GetPlayer() != null && !GetUser().IsNull() && !PlayerController.LocalInstance.GetUser().IsNull()) {
+            //SET RENDERER FOR INVISIBILTY
             Renderer[] rends = this.GetComponentsInChildren<Renderer>();
             for (int i = 0; i < this.rends.Length; i++)
             {
@@ -132,6 +154,9 @@ public class Player : NetworkBehaviour
                     rend.material.SetFloat("_alphaValue", 0f);
                 }
             }       
+
+            //SET RENDERER FOR CATCH
+            this.transform.Find("Catch/CatchField").GetComponent<Renderer>().material.SetColor("_emission", this.GetTeam() == Team.BLUE ? UIManager.Instance.colors.textBlue : UIManager.Instance.colors.textRed);
 
             _rendererSetupComplete = true;
             Debug.Log($"Renderer Initialised for player: {GetUser().username}");
@@ -151,7 +176,7 @@ public class Player : NetworkBehaviour
         if(!GameManager.Instance.roundInProgress) { return; }
 
         bool isMoving = (moveDir.magnitude > 0.01f && !isDisabled);
-        bool canSprint = (curStamina.Value > 0 && isMoving);
+        bool canSprint = (_curStamina.Value > 0 && isMoving);
         bool isSprinting = (canSprint && sprinting);
         this.transform.rotation = Quaternion.Euler(0, faceAngle, 0);
         //Debug.Log(curStamina);
@@ -163,7 +188,7 @@ public class Player : NetworkBehaviour
             if(isSprinting) {
                 // transform.position += positionDelta.normalized * Time.deltaTime * moveSpeed * sprintMultiplier;
                 GetComponent<CharacterController>().SimpleMove(positionDelta.normalized * moveSpeed * sprintMultiplier);
-                curStamina.Value = Mathf.Max(0, curStamina.Value - Time.deltaTime * staminaBurnFactor);
+                _curStamina.Value = Mathf.Max(0, _curStamina.Value - Time.deltaTime * staminaBurnFactor);
             }
             else {
                 GetComponent<CharacterController>().SimpleMove(positionDelta.normalized * moveSpeed);
@@ -175,7 +200,7 @@ public class Player : NetworkBehaviour
         
         //recover
         if(!sprinting && !isDisabled) {
-            curStamina.Value = Mathf.Clamp(curStamina.Value + Time.deltaTime * staminaRecoveryFactor, 0, maxStamina.Value);
+            _curStamina.Value = Mathf.Clamp(_curStamina.Value + Time.deltaTime * staminaRecoveryFactor, 0, _maxStamina.Value);
         }
 
         SetAnimationsSmooth(isMoving, isSprinting);
@@ -325,7 +350,7 @@ public class Player : NetworkBehaviour
         this.transform.rotation = spawnDir; 
         
         //reset stats
-        this.curStamina.Value = maxStamina.Value;
+        this._curStamina.Value = _maxStamina.Value;
 
         //reset effects
         for(int i=this.effects.Count-1; i>=0 && i < this.effects.Count; i++)
@@ -350,6 +375,8 @@ public class Player : NetworkBehaviour
     public PlayerAnimationEvent OnAnimationEnd;
 
     public void AnimationStart(string animationName) {
+        if(animationName == "Catch") this.transform.Find("Catch").localScale = Vector3.one * GetCatchRadius();
+        if(animationName == "Teleport") SpawnTeleportStartParticle();
         if (OnAnimationStart!=null) OnAnimationStart(animationName);
     }
 
@@ -362,7 +389,18 @@ public class Player : NetworkBehaviour
     }
     
     public void AnimationEnd(string animationName) {
+        if(animationName == "Teleport") SpawnTeleportEndParticle();
         if (OnAnimationEnd!=null) OnAnimationEnd(animationName);
+    }
+    #endregion
+
+    #region skill particle effect sync
+    void SpawnTeleportStartParticle() {
+        GameObject.Instantiate(PrefabsManager.Instance.teleportField, this.transform.position, Quaternion.Euler(new Vector3(-90, 0, 0)));
+    }
+    
+    void SpawnTeleportEndParticle() {
+        GameObject.Instantiate(PrefabsManager.Instance.teleportField, this.transform.position, Quaternion.Euler(new Vector3(-90, 0, 0)));
     }
     #endregion
 }

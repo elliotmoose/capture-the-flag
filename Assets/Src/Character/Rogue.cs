@@ -6,7 +6,10 @@ public class Rogue : Player
 {    
     private void Awake()
     {
-        moveSpeed = 15;
+        if(IsServer) {
+            moveSpeed = 15;
+        }
+        
         catchSkill = new CloneCatch();
         skills.Add(new Invisibility());
     }

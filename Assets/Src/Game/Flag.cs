@@ -9,7 +9,7 @@ public class Flag : NetworkBehaviour
     // public Team team = Team.BLUE;
     public NetworkVariable<Team> team = new NetworkVariable<Team>(new NetworkVariableSettings{
         WritePermission=NetworkVariablePermission.ServerOnly,
-        SendTickrate = -1
+        SendTickrate = 0
     });
 
     Renderer rendererComponent;

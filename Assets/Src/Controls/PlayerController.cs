@@ -50,7 +50,7 @@ public class PlayerController : NetworkBehaviour
     // public User user;
     private NetworkVariable<User> _user = new NetworkVariable<User>(new NetworkVariableSettings{
         WritePermission = NetworkVariablePermission.ServerOnly,
-        SendTickrate = -1,
+        SendTickrate = 0,
     });
 
     public User GetUser() {

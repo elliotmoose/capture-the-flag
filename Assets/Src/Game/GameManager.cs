@@ -21,15 +21,15 @@ public class GameManager : NetworkBehaviour
     public Jail redTeamJail;
     
     public NetworkVariableInt blueTeamScore = new NetworkVariableInt(new NetworkVariableSettings{
-        SendTickrate = -1,
+        SendTickrate = 0,
         WritePermission = NetworkVariablePermission.ServerOnly
     });
     public NetworkVariableInt redTeamScore = new NetworkVariableInt(new NetworkVariableSettings{
-        SendTickrate = -1,
+        SendTickrate = 0,
         WritePermission = NetworkVariablePermission.ServerOnly
     });
 
-    int winScore = 1;
+    int winScore = 15;
 
     public bool roundInProgress = false;
 

@@ -61,6 +61,13 @@ public class CharacterSelectionManager : MonoBehaviour
         UserController.LocalInstance.SelectCharacterServerRpc(NetworkManager.Singleton.LocalClientId, Character.Rogue);
         ChangeHero();
     }
+    
+    public void SelectLancer()
+    {
+        HeroIndex = 3;
+        UserController.LocalInstance.SelectCharacterServerRpc(NetworkManager.Singleton.LocalClientId, Character.Lancer);
+        ChangeHero();
+    }
 
     // Update is called once per frame
     void Update()

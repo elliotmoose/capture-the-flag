@@ -40,6 +40,7 @@ public class StatsManager : NetworkBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        if(!IsServer) return;
         //subscribe to game events
         GameManager.Instance.OnPlayerJailed += (Player playerJailed, Player playerCatcher)=>{
             User catcherUser = playerCatcher.GetUser();
@@ -61,6 +62,7 @@ public class StatsManager : NetworkBehaviour
     }
 
     void Update() {
+        if(!IsServer) return;
         //time in opponent territory
         List<Player> players = PlayerSpawner.Instance.GetAllPlayers();
         foreach(Player player in players) {

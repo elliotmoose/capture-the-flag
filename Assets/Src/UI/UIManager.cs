@@ -190,7 +190,7 @@ public class UIManager : MonoBehaviour
         if(PlayerController.LocalInstance != null) {
             Player player = PlayerController.LocalInstance.GetPlayer();
             if(player != null) {
-                float stamina = player.curStamina.Value/player.maxStamina.Value;
+                float stamina = player.GetStaminaFraction();
                 staminaBar.fillAmount = stamina;
             }
         }

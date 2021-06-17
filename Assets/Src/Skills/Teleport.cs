@@ -30,7 +30,6 @@ public class TeleportEffect : Effect
     private Renderer[] rends;
     private Animator animator;
     private string animation = "Teleport";
-    private float animation_duration = 0.4f;
     private bool finished = false;
 
     public TeleportEffect(Player _target, float teleportFactor) : base(_target)

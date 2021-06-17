@@ -21,8 +21,6 @@ public class Invisibility : Skill
 
 public class InvisEffect : Effect
 {
-    private float animation_duration = 0.5f;
-    private float alphaValue = 0.3f; // how transparent does your team see you
     public InvisEffect(Player _target, float duration) : base(_target)
     {
         this.duration = duration;
