@@ -74,6 +74,7 @@ public class PlayerSpawner : NetworkBehaviour
         player.spawnDir = faceDirection;
         player.SetUser(user);
         player.SetTeam(team);
+        player.gameObject.layer = (team == Team.RED ? 9 : 10);
         playerObj.GetComponent<NetworkObject>().Spawn();
         players[user.clientId] = player;
         return playerObj;

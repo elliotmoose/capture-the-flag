@@ -36,6 +36,12 @@ public abstract class Effect
         }
     }
 
+    public void FixedUpdate() {
+        if(!ShouldEffectEnd()) {
+            FixedUpdateEffect();
+        }
+    }
+
     public Player GetTarget()
     {
         return _target;
@@ -48,6 +54,7 @@ public abstract class Effect
 
     public virtual void OnEffectApplied() { }
     public virtual void UpdateEffect() { }
+    public virtual void FixedUpdateEffect() { }
     public virtual void OnEffectEnd() { }
 
 }

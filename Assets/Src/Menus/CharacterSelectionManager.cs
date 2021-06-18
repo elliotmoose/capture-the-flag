@@ -6,74 +6,36 @@ using MLAPI;
 public class CharacterSelectionManager : MonoBehaviour
 {
     [SerializeField]
-    GameObject[] Heroes;
-
-    [SerializeField]
-    GameObject SelectionScreen;
-
-    int HeroIndex;
+    GameObject[] Characters;
 
     // Start is called before the first frame update
     void Start()
     {
-        InstantiateHero();
-        ChangeHero();
+        
     }
 
-    public void InstantiateHero()
-    {
-        // GameObject go = GameObject.Instantiate(Heroes[HeroIndex], Vector3.zero, Quaternion.identity);
-        // go.GetComponent<Player>().enabled = false;
-    }
-
-    public void ChangeHero()
-    {
-        for (int i = 0; i < Heroes.Length; i++)
+    public void SelectCharacterAtIndex(int characterIndex) {
+        for (int i = 0; i < Characters.Length; i++)
         {
-            if (i == HeroIndex)
+            if (i == characterIndex)
             {
-                Heroes[i].gameObject.SetActive(true);
+                Characters[i].gameObject.SetActive(true);
             }
             else
             {
-                Heroes[i].gameObject.SetActive(false);
+                Characters[i].gameObject.SetActive(false);
             }
         }
-    }
 
-    public void SelectWarrior()
-    {
-        HeroIndex = 0;
-        UserController.LocalInstance.SelectCharacterServerRpc(NetworkManager.Singleton.LocalClientId, Character.Berserker);
-        ChangeHero();
-    }
-
-    public void SelectMage()
-    {
-        HeroIndex = 1;
-        UserController.LocalInstance.SelectCharacterServerRpc(NetworkManager.Singleton.LocalClientId, Character.Adept);
-        ChangeHero();
-    }
-
-    public void SelectNinja()
-    {
-        HeroIndex = 2;
-        UserController.LocalInstance.SelectCharacterServerRpc(NetworkManager.Singleton.LocalClientId, Character.Rogue);
-        ChangeHero();
-    }
-    
-    public void SelectLancer()
-    {
-        HeroIndex = 3;
-        UserController.LocalInstance.SelectCharacterServerRpc(NetworkManager.Singleton.LocalClientId, Character.Lancer);
-        ChangeHero();
+        Character[] characters = {Character.Berserker, Character.Adept, Character.Rogue, Character.Lancer};
+        UserController.LocalInstance.SelectCharacterServerRpc(NetworkManager.Singleton.LocalClientId, characters[characterIndex]);        
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(Heroes[HeroIndex] != null) {
-            Heroes[HeroIndex].transform.Rotate(0, -80*Time.deltaTime, 0, Space.World);
-        }
+        // if(Characters[HeroIndex] != null) {
+        //     Characters[HeroIndex].transform.Rotate(0, -80*Time.deltaTime, 0, Space.World);
+        // }
     }
 }
