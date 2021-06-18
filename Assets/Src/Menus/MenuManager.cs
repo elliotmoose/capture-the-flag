@@ -116,12 +116,11 @@ public class MenuManager : MonoBehaviour
         RoomManager roomManager = RoomManager.Instance;
 
         GenerateRoomPage(roomManager.roomSize.Value);
-
         
         List<User> blueTeamUsers = roomManager.FindUsersWithTeam(Team.BLUE);
         
         Color32 white = new Color32(255, 255, 255, 255);
-        Color32 gray = new Color32(159, 159, 159, 255);
+        Color32 gray = new Color32(159, 159, 159, 255);        
 
         for(int i=0; i<roomManager.roomSize.Value; i++) {            
             foreach(Team team in Team.GetValues(typeof(Team))) {
@@ -174,10 +173,10 @@ public class MenuManager : MonoBehaviour
         blueTemplate.GetComponentInChildren<Button>().onClick.AddListener(()=>{
             RequestJoinTeam(Team.BLUE, 0);            
         });
-        
+                
         for(int i=1; i<noOfPlayersPerTeam; i++) {
-            GameObject redPlayerButton = GameObject.Instantiate(redTemplate.gameObject, Vector3.zero, Quaternion.identity, redTeamPlayerRows.transform);
-            GameObject bluePlayerButton = GameObject.Instantiate(blueTemplate.gameObject, Vector3.zero, Quaternion.identity, blueTeamPlayerRows.transform);            
+            GameObject redPlayerButton = GameObject.Instantiate(redTemplate.gameObject, redTeamPlayerRows.transform);
+            GameObject bluePlayerButton = GameObject.Instantiate(blueTemplate.gameObject, blueTeamPlayerRows.transform);            
 
             int copy = i; //copy the index value because it passes by reference
             redPlayerButton.GetComponentInChildren<Button>().onClick.AddListener(()=>{

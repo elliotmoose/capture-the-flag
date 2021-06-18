@@ -146,7 +146,7 @@ public class RoomManager : NetworkBehaviour
 
     public List<User> FindUsersWithTeam(Team team) {
         List<User> users = new List<User>();
-
+        
         foreach(User user in roomUsers) {
             if(user.team == team) {
                 users.Add(user);
@@ -204,6 +204,7 @@ public class RoomManager : NetworkBehaviour
     public void CreateRoom() 
     {            
         NetworkManager.Singleton.StartHost();
+        roomUsers.Clear();
 
         if(NetworkManager.Singleton.IsHost) {
             Debug.Log($"Is Host with localClientId: {NetworkManager.Singleton.LocalClientId}");
@@ -223,7 +224,8 @@ public class RoomManager : NetworkBehaviour
     
     public void LeaveRoom() {
         if (NetworkManager.Singleton.IsHost) {
-            NetworkManager.Singleton.StopHost();
+            Debug.Log("== RoomManager: Stop Host");
+            NetworkManager.Singleton.StopHost();            
         }
         else if(NetworkManager.Singleton.IsClient) {
             NetworkManager.Singleton.StopClient();
