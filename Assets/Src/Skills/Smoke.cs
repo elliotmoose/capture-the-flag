@@ -23,25 +23,41 @@ public class Smoke : Skill
 
 public class SmokeEffect : Effect
 {
-    private GameObject smoke;
-
+    private string animation = "Smoke";
+    private bool finished = false;
 
     public SmokeEffect(Player _target, float duration) : base(_target)
     {
         this.duration = duration;
         this.name = "SMOKE_EFFECT";
-        GameObject smokeObj = GameObject.Find("GameManager").GetComponent<PrefabsManager>().smoke;
-        this.smoke = GameObject.Instantiate(smokeObj, _target.transform.position, Quaternion.identity);
+        _target.OnAnimationStart += OnAnimationStart;
+        _target.OnAnimationEnd += OnAnimationEnd;
     }
 
     public override void OnEffectApplied()
     {
-        this.smoke.GetComponent<NetworkObject>().Spawn();
+        _target.GetComponent<Animator>().SetBool("IsSmoke", true);
+    }
+    public void OnAnimationStart(string animationName)
+    {
+        if (animationName != animation) return;
+    }
+
+    public void OnAnimationEnd(string animationName)
+    {
+        if (animationName != animation) return;
+
+        _target.GetComponent<Animator>().SetBool("IsSmoke", false);
+        finished = true;
+    }
+    protected override bool ShouldEffectEnd()
+    {
+        return finished;
     }
 
     public override void OnEffectEnd()
     {
-        PrefabsManager.Destroy(this.smoke);
+
     }
 
 }

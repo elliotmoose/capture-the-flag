@@ -377,6 +377,7 @@ public class Player : NetworkBehaviour
     public void AnimationStart(string animationName) {
         if(animationName == "Catch") this.transform.Find("Catch").localScale = Vector3.one * GetCatchRadius();
         if(animationName == "Teleport") SpawnTeleportStartParticle();
+        if (animationName == "Smoke") SpawnSmokeParticle();
         if (OnAnimationStart!=null) OnAnimationStart(animationName);
     }
 
@@ -402,5 +403,11 @@ public class Player : NetworkBehaviour
     void SpawnTeleportEndParticle() {
         GameObject.Instantiate(PrefabsManager.Instance.teleportField, this.transform.position, Quaternion.Euler(new Vector3(-90, 0, 0)));
     }
+
+    void SpawnSmokeParticle()
+    {
+        GameObject.Instantiate(PrefabsManager.Instance.smoke, this.transform.position, Quaternion.identity);
+    }
+
     #endregion
 }

@@ -882,7 +882,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 0
-    m_SensorSize: {x: 1.7777778, y: 1}
+    m_SensorSize: {x: 1.7787353, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -898,7 +898,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 21512888}
-  m_LocalRotation: {x: 0.06789921, y: -0.81958634, z: 0.09934216, w: 0.56017774}
+  m_LocalRotation: {x: 0.067899205, y: -0.81958634, z: 0.09934217, w: 0.56017774}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -11952,7 +11952,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 1620, y: -750.16693}
+  m_AnchoredPosition: {x: 1620, y: -750.1669}
   m_SizeDelta: {x: 3240, y: 150}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &434846071
@@ -17781,7 +17781,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 0
-    m_SensorSize: {x: 1.7777778, y: 1}
+    m_SensorSize: {x: 1.7787353, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -26383,7 +26383,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 0
-    m_SensorSize: {x: 1.7777778, y: 1}
+    m_SensorSize: {x: 1.7787353, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -26839,7 +26839,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 0
-    m_SensorSize: {x: 1.7777778, y: 1}
+    m_SensorSize: {x: 1.7787353, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -32149,7 +32149,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1183394280}
-  m_LocalRotation: {x: 0.06789921, y: -0.81958634, z: 0.09934215, w: 0.56017774}
+  m_LocalRotation: {x: 0.06789921, y: -0.81958634, z: 0.09934216, w: 0.56017774}
   m_LocalPosition: {x: 14.581394, y: 7.24, z: 5.6837864}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -49237,8 +49237,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5f5ecc06df6df64fb4a4af6f8066086, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  autoStartHost: 0
-  character: 1
+  autoStartHost: 1
+  character: 0
   team: 0
 --- !u!1001 &1919001616
 PrefabInstance:
