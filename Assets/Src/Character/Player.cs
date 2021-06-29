@@ -168,19 +168,22 @@ public class Player : NetworkBehaviour
         FixedUpdateEffects();
     }
 
+    void LateUpdate() {
+        UpdateUsername();
+        if(!IsServer) { return; } //should the client rotation be fully accurate?
+        this.transform.rotation = Quaternion.Euler(0, faceAngle, 0);
+    }
+
     void Update()
     {
-        SetupRendererIfNeeded();
-        UpdateUsername();
+        SetupRendererIfNeeded();        
 
         if(!IsServer) { return; }
         if(!GameManager.Instance.roundInProgress) { return; }
 
         bool isMoving = (moveDir.magnitude > 0.01f && !isDisabled);
         bool canSprint = (_curStamina.Value > 0 && isMoving);
-        bool isSprinting = (canSprint && sprinting);
-        this.transform.rotation = Quaternion.Euler(0, faceAngle, 0);
-        //Debug.Log(curStamina);
+        bool isSprinting = (canSprint && sprinting);        
 
         if(isMoving) {                
             float moveDirAngle = Mathf.Atan2(moveDir.x, moveDir.y) * Mathf.Rad2Deg + faceAngle;
