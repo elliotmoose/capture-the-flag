@@ -15,6 +15,10 @@ public class PlayerController : NetworkBehaviour
         WritePermission = NetworkVariablePermission.OwnerOnly
     });
 
+    public bool GetSprinting() {
+        return sprinting.Value;
+    }
+
     NetworkVariableVector2 moveDir = new NetworkVariableVector2(new NetworkVariableSettings{
         WritePermission = NetworkVariablePermission.OwnerOnly,
         SendTickrate = 20,
