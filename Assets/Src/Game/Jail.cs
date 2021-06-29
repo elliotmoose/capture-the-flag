@@ -41,7 +41,7 @@ public class Jail : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void LateUpdate()
     {
         Vector3 jailCenter = this.transform.position;
         foreach(Player player in jailed) {

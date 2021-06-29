@@ -164,7 +164,8 @@ public class Player : NetworkBehaviour
     }
 
     void FixedUpdate() {
-        // GetComponent<Rigidbody>().MovePosition(Vector3.forward * Time.fixedDeltaTime);
+        if(!IsServer) return;
+        FixedUpdateEffects();
     }
 
     void Update()
@@ -286,6 +287,22 @@ public class Player : NetworkBehaviour
         {
             Effect effect = this.effects[i];
             effect.Update();
+            
+            if (effect.effectEnded)
+            {
+                effects.Remove(effect);
+            } 
+        }
+    }
+    
+    public void FixedUpdateEffects()
+    {        
+        if(!GameManager.Instance.roundInProgress) { return; }
+
+        for(int i=this.effects.Count-1; i>=0 && i<this.effects.Count; i++)
+        {
+            Effect effect = this.effects[i];
+            effect.FixedUpdate();
             
             if (effect.effectEnded)
             {

@@ -11,6 +11,7 @@ public class PushEffect : Effect
     public PushEffect(Player _target, Vector3 direction, float distance, float duration) : base(_target)
     {
         this.duration = duration;
+        this.direction = direction;
         this.name = "PUSH_EFFECT";
         initialPos = _target.transform.position;
         finalPos = initialPos + direction.normalized * distance;
@@ -33,12 +34,13 @@ public class PushEffect : Effect
         return y;
     }
 
-    public override void UpdateEffect()
+    public override void FixedUpdateEffect()
     {
         float progress = age / duration;
-        Vector3 targetPosition = Vector3.Lerp(initialPos, finalPos, EaseOutQuadratic(progress));
-        Vector3 delta = (targetPosition - _target.transform.position);
-        _target.GetComponent<CharacterController>().Move(delta);
+        // Vector3 targetPosition = Vector3.Lerp(initialPos, finalPos, EaseOutQuadratic(progress));
+        // Vector3 delta = (targetPosition - _target.transform.position);
+        float speed = 100f * EaseOutQuadratic(progress);
+        _target.GetComponent<CharacterController>().Move(this.direction.normalized * Time.fixedDeltaTime * speed);
     }
 
     public override void OnEffectApplied()
