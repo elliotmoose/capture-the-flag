@@ -36,10 +36,10 @@ public class PushEffect : Effect
 
     public override void FixedUpdateEffect()
     {
-        // float progress = age / duration;
+        float progress = age / duration;
         // Vector3 targetPosition = Vector3.Lerp(initialPos, finalPos, EaseOutQuadratic(progress));
         // Vector3 delta = (targetPosition - _target.transform.position);
-        float speed = 80f;
+        float speed = 100f * EaseOutQuadratic(progress);
         _target.GetComponent<CharacterController>().Move(this.direction.normalized * Time.fixedDeltaTime * speed);
     }
 
