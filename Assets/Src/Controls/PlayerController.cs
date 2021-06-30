@@ -118,7 +118,9 @@ public class PlayerController : NetworkBehaviour
         float vertical = Input.GetAxisRaw("Vertical");
         
         moveDir.Value = new Vector2(horizontal, vertical);
-        faceAngle.Value = Camera.main.transform.eulerAngles.y;
+        
+        faceAngle.Value += Input.GetAxis("Mouse X") * 15;
+        // faceAngle.Value = Camera.main.transform.eulerAngles.y;
         
         if(Input.GetMouseButtonDown(0)) {
             Debug.Log("Catch!");
@@ -163,6 +165,10 @@ public class PlayerController : NetworkBehaviour
                 player.CastSkillAtIndex(1);
             }
         }
+    }
+
+    public void ResetFaceAngle() {
+        faceAngle.Value = (GetUser().team == Team.BLUE ? 180 : 0);
     }
 
     public void LinkPlayerReference(GameObject playerGameObject) {

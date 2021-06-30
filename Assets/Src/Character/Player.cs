@@ -171,7 +171,6 @@ public class Player : NetworkBehaviour
     void LateUpdate() {
         UpdateUsername();
         if(!IsServer) { return; } //should the client rotation be fully accurate?
-        this.transform.rotation = Quaternion.Euler(0, faceAngle, 0);
     }
 
     void Update()
@@ -179,8 +178,8 @@ public class Player : NetworkBehaviour
         SetupRendererIfNeeded();        
 
         if(!IsServer) { return; }
+        this.transform.rotation = Quaternion.Euler(0, faceAngle, 0);
         if(!GameManager.Instance.roundInProgress) { return; }
-
         bool isMoving = (moveDir.magnitude > 0.01f && !isDisabled);
         bool canSprint = (_curStamina.Value > 0 && isMoving);
         bool isSprinting = (canSprint && sprinting);        

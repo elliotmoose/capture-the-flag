@@ -89,7 +89,7 @@ public class GameManager : NetworkBehaviour
 
     [ClientRpc]
     private void ResetPlayerCamerasClientRpc() {
-        PlayerCamera.Instance.ResetFaceDirection();
+        PlayerController.LocalInstance.ResetFaceAngle();
     }
 
     [ClientRpc]
