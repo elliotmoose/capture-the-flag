@@ -69,6 +69,40 @@ public class PlayerSpawner : NetworkBehaviour
 
         Quaternion faceDirection = Quaternion.Euler(0, team == Team.BLUE ? 180 : 0, 0);
         GameObject playerObj = GameObject.Instantiate(characterPrefab, spawnPosition, faceDirection);
+
+
+        // Assign the color of LocPoint to teams 
+
+        if (team == Team.BLUE)
+        {
+            Transform[] transforms = playerObj.GetComponentsInChildren<Transform>();
+            Debug.Log(transforms);
+
+            foreach (Transform t in transforms)
+            {
+                if (t.gameObject.name == "LocPoint")
+                {
+                    t.GetComponent<Renderer>().material.color = new Color(0, 0, 255);
+                    //Debug.Log("Found blue" + t);
+                }
+            }
+        }
+        else
+        {
+            Transform[] transforms = playerObj.GetComponentsInChildren<Transform>();
+            Debug.Log(transforms);
+
+            foreach (Transform t in transforms)
+            {
+                if (t.gameObject.name == "LocPoint")
+                {
+                    t.GetComponent<Renderer>().material.color = new Color(255, 0, 0);
+                    //Debug.Log("Found red" + t);
+                }
+            }
+        }
+
+
         Player player = playerObj.GetComponent<Player>();
         player.spawnPos = spawnPosition;
         player.spawnDir = faceDirection;
