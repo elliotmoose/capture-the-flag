@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using MLAPI;
 
 public class Jail : MonoBehaviour
 {    
@@ -9,12 +10,14 @@ public class Jail : MonoBehaviour
     float jailSize = 10; //jail radius
 
     public void Imprison(Player player) {
+        if(!NetworkManager.Singleton.IsServer) {return;}
         if(!jailed.Contains(player)) {
             jailed.Add(player);
         }
     }
     
     public void Release(Player player) {
+        if(!NetworkManager.Singleton.IsServer) {return;}
         if(jailed.Contains(player)) {
             jailed.Remove(player);
         }
@@ -43,6 +46,7 @@ public class Jail : MonoBehaviour
     // Update is called once per frame
     void LateUpdate()
     {
+        if(!NetworkManager.Singleton.IsServer) {return;}
         Vector3 jailCenter = this.transform.position;
         foreach(Player player in jailed) {
             Vector3 jailToPlayer = (player.transform.position-jailCenter);
@@ -51,5 +55,6 @@ public class Jail : MonoBehaviour
                 player.transform.position = new Vector3(newPos.x, player.transform.position.y, newPos.z);
             }
         }
+        
     }
 }
