@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - CinemachineCamera
+  - MinimapCam
   layers:
   - Default
   - TransparentFX
@@ -17,8 +18,8 @@ TagManager:
   - BlueZoneCollider
   - RedPlayer
   - BluePlayer
-  - 
-  - 
+  - CameraVFX
+  - Minimap
   - 
   - 
   - 
