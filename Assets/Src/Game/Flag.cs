@@ -24,7 +24,9 @@ public class Flag : NetworkBehaviour
     {
         rendererComponent.material.color = (GetTeam() == Team.BLUE) ? new Color32(34,148,197,255) : new Color32(166,56,56,255);
         rendererComponent.material.SetColor("_EmissionColor", (GetTeam() == Team.BLUE) ? new Color32(34,148,197,255) : new Color32(191,7,5,255));
+    }
 
+    void LateUpdate() {
         if(!IsServer) {return;}
         if(capturer) {
             this.transform.position = capturer.flagSlot.transform.position;

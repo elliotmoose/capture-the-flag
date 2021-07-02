@@ -5,7 +5,7 @@ using UnityEngine;
 public class EndZone : MonoBehaviour
 {
     public Team team = Team.BLUE;
-    float endZoneSize = 10;
+    // float endZoneSize = 11;
     // Start is called before the first frame update
     void Start()
     {
@@ -27,9 +27,17 @@ public class EndZone : MonoBehaviour
     // }
 
     void OnTriggerEnter(Collider hit) {
-        Flag flag = hit.gameObject.GetComponent<Flag>();
-        if(flag && flag.GetTeam() != team && flag.capturer != null) {
-            GameManager.Instance.ScorePoint(flag.capturer);
+
+        Player player = hit.gameObject.GetComponent<Player>();
+        if(!player) {return;}
+        bool redTeamShouldScore = (player.GetTeam() == Team.RED && team == Team.RED && GameManager.Instance.blueTeamFlag.capturer == player);
+        bool blueTeamShouldScore = (player.GetTeam() == Team.BLUE && team == Team.BLUE && GameManager.Instance.redTeamFlag.capturer == player);
+        if((redTeamShouldScore || blueTeamShouldScore)) {
+            GameManager.Instance.ScorePoint(player);
         }
+        // Flag flag = hit.gameObject.GetComponent<Flag>();
+        // if(flag && flag.GetTeam() != team && flag.capturer != null) {
+        //     GameManager.Instance.ScorePoint(flag.capturer);
+        // }
     }
 }

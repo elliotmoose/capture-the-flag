@@ -168,17 +168,13 @@ public class Player : NetworkBehaviour
         FixedUpdateEffects();
     }
 
-    void LateUpdate() {
-        UpdateUsername();
-        if(!IsServer) { return; } //should the client rotation be fully accurate?
-    }
-
     void Update()
     {
         SetupRendererIfNeeded();        
+        UpdateUsername();
+        this.transform.rotation = Quaternion.Euler(0, faceAngle, 0);
 
         if(!IsServer) { return; }
-        this.transform.rotation = Quaternion.Euler(0, faceAngle, 0);
         if(!GameManager.Instance.roundInProgress) { return; }
         bool isMoving = (moveDir.magnitude > 0.01f && !isDisabled);
         bool canSprint = (_curStamina.Value > 0 && isMoving);
