@@ -31889,7 +31889,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 984583209}
-  m_LocalRotation: {x: 0.21495858, y: 1.7348313e-15, z: -3.8184314e-16, w: 0.9766232}
+  m_LocalRotation: {x: 0.2149586, y: -0.000000014552819, z: 0.0000000032031326, w: 0.9766232}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -50757,6 +50757,26 @@ PrefabInstance:
       propertyPath: syncPosition
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3886766385546344591, guid: 9c819b117196a4f50b725bb9b3087a87, type: 3}
+      propertyPath: transformSource
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3886766385546344591, guid: 9c819b117196a4f50b725bb9b3087a87, type: 3}
+      propertyPath: isScaleCompressed
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3886766385546344591, guid: 9c819b117196a4f50b725bb9b3087a87, type: 3}
+      propertyPath: isPositionCompressed
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3886766385546344591, guid: 9c819b117196a4f50b725bb9b3087a87, type: 3}
+      propertyPath: isRotationCompressed
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3886766385546344591, guid: 9c819b117196a4f50b725bb9b3087a87, type: 3}
+      propertyPath: isVelocityCompressed
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8062280885767414518, guid: 9c819b117196a4f50b725bb9b3087a87, type: 3}
       propertyPath: m_RootOrder
       value: 8
@@ -62314,6 +62334,26 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3886766385546344591, guid: 9c819b117196a4f50b725bb9b3087a87, type: 3}
       propertyPath: syncPosition
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3886766385546344591, guid: 9c819b117196a4f50b725bb9b3087a87, type: 3}
+      propertyPath: transformSource
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3886766385546344591, guid: 9c819b117196a4f50b725bb9b3087a87, type: 3}
+      propertyPath: isScaleCompressed
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3886766385546344591, guid: 9c819b117196a4f50b725bb9b3087a87, type: 3}
+      propertyPath: isPositionCompressed
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3886766385546344591, guid: 9c819b117196a4f50b725bb9b3087a87, type: 3}
+      propertyPath: isRotationCompressed
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3886766385546344591, guid: 9c819b117196a4f50b725bb9b3087a87, type: 3}
+      propertyPath: isVelocityCompressed
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8062280885767414518, guid: 9c819b117196a4f50b725bb9b3087a87, type: 3}

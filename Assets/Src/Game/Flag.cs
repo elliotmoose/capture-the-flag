@@ -26,13 +26,14 @@ public class Flag : NetworkBehaviour
         rendererComponent.material.SetColor("_EmissionColor", (GetTeam() == Team.BLUE) ? new Color32(34,148,197,255) : new Color32(191,7,5,255));
     }
 
-    void LateUpdate() {
-        if(!IsServer) {return;}
-        if(capturer) {
-            this.transform.position = capturer.flagSlot.transform.position;
-            this.transform.rotation = capturer.flagSlot.transform.rotation;
-        }
-    }
+    // void LateUpdate() {
+    //     if(!IsServer) {return;}
+    //     Debug.Log("LATE UPDATE FLAG");
+    //     if(capturer) {
+    //         this.transform.position = capturer.flagSlot.transform.position;
+    //         this.transform.rotation = capturer.flagSlot.transform.rotation;
+    //     }
+    // }
 
     public Team GetTeam() {
         return team.Value;
@@ -43,9 +44,9 @@ public class Flag : NetworkBehaviour
         Player player = collider.gameObject.GetComponent<Player>();
         if(player != null && player.GetTeam() != GetTeam() && capturer == null) {
             Debug.Log($"{team} flag caught!");
-            // this.transform.SetParent(player.flagSlot.transform);
-            // this.transform.localRotation = Quaternion.identity;
-            // this.transform.localPosition = Vector3.zero;
+            this.transform.SetParent(player.flagSlot.transform);
+            this.transform.localRotation = Quaternion.identity;
+            this.transform.localPosition = Vector3.zero;
             capturer = player;
             
             GameManager.Instance.FlagCapturedBy(player);
@@ -61,7 +62,7 @@ public class Flag : NetworkBehaviour
     public void ResetPosition() {
         if(!IsServer) { return; }
         this.capturer = null;
-        // this.transform.SetParent(null);
+        this.transform.SetParent(null);
         this.transform.position = new Vector3(0,1.25f,120 * ((GetTeam() == Team.BLUE) ? 1 : -1));
         this.transform.rotation = Quaternion.identity;
     }

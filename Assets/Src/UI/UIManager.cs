@@ -107,7 +107,6 @@ public class UIManager : MonoBehaviour
         if(PlayerController.LocalInstance == null) return;
 
         User user = PlayerController.LocalInstance.GetUser();
-        Debug.Log($"Updating player UI for user: {user.username} {user.character}");
         Transform playerUI = this.transform.Find("PlayerUI");
         Transform passive = this.transform.Find("PlayerUI/Passive");
 

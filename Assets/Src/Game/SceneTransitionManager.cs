@@ -8,7 +8,7 @@ using MLAPI.SceneManagement;
 public class SceneTransitionManager : MonoBehaviour
 {
     public static SceneTransitionManager Instance;
-
+    public static bool cameFromMainMenu = false;
     void Awake() {
         Instance = this;
     }
@@ -64,6 +64,7 @@ public class SceneTransitionManager : MonoBehaviour
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         if(scene.name == "MainMenu") {
+            cameFromMainMenu = true;
             if(UserManager.Instance.GetUsernameFresh() != "") {
                 MenuManager.Instance.SetCurrentPage("Home");
             }
