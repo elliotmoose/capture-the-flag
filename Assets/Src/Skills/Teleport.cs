@@ -71,7 +71,7 @@ public class TeleportEffect : Effect
         Vector3 targetPos = this._target.transform.position;
         for(int i=testResolution; i>=0; i--) {
             targetPos = Vector3.Lerp(start, end, (float)i/(float)testResolution);
-            Vector3 vertOffset = Vector3.up*(characterController.radius + characterController.height/2);            \
+            Vector3 vertOffset = Vector3.up*(characterController.radius + characterController.height/2);            
             string ownZoneColliderLayer = (_target.GetTeam() == Team.BLUE ? "BlueZoneCollider" : "RedZoneCollider");
             Collider[] hits = Physics.OverlapCapsule(targetPos+vertOffset, targetPos+vertOffset, characterController.radius, LayerMask.GetMask(ownZoneColliderLayer, "Terrain"));
             bool validDestination = (hits.Length == 0);
