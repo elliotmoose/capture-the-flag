@@ -230,7 +230,7 @@ Transform:
   m_LocalScale: {x: 5, y: 5, z: 5}
   m_Children: []
   m_Father: {fileID: 6294791109381138747}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &4038340774104963562
 MeshFilter:
@@ -517,7 +517,6 @@ GameObject:
   - component: {fileID: 7609006731988850574}
   - component: {fileID: 8618782737254064447}
   - component: {fileID: 8158180437212963690}
-  - component: {fileID: 5617067148386915242}
   - component: {fileID: 4682214866918665150}
   - component: {fileID: 3606717322404090613}
   - component: {fileID: -8639053039359840742}
@@ -598,19 +597,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!65 &5617067148386915242
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8715549257419821114}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 2, y: 2, z: 1.5}
-  m_Center: {x: 0, y: 1.2, z: 0}
 --- !u!54 &4682214866918665150
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -693,7 +679,7 @@ MonoBehaviour:
   isAngularVelocityCompressed: 0
   automaticallyResetTime: 1
   isSmoothingAuthorityChanges: 0
-  transformSource: 1
+  transformSource: 0
   whenToUpdateTransform: 0
   sendRate: 30
   networkChannel: 
@@ -714,8 +700,8 @@ CharacterController:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Height: 3.1
-  m_Radius: 1.13
+  m_Height: 2.21
+  m_Radius: 1.14
   m_SlopeLimit: 0
   m_StepOffset: 0
   m_SkinWidth: 0.08

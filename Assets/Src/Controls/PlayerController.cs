@@ -10,6 +10,7 @@ using Cinemachine;
 public class PlayerController : NetworkBehaviour 
 {   
     public static PlayerController LocalInstance;
+    float MOUSE_SENSITIVITY = 15;
 
     NetworkVariableBool sprinting = new NetworkVariableBool(new NetworkVariableSettings{
         WritePermission = NetworkVariablePermission.OwnerOnly
@@ -48,9 +49,6 @@ public class PlayerController : NetworkBehaviour
         SendTickrate = 0,        
     });
 
-    float commandDurationThreshold = 0.1f;
-    float timeSinceLastCommand = 0f;
-    bool isStale = false;
     // public User user;
     private NetworkVariable<User> _user = new NetworkVariable<User>(new NetworkVariableSettings{
         WritePermission = NetworkVariablePermission.ServerOnly,
@@ -76,33 +74,29 @@ public class PlayerController : NetworkBehaviour
             LocalInstance = this;            
         }
     }
-    
-    void Start() {
-        if(IsServer) {
-            moveDir.OnValueChanged += (Vector2 prevMoveDir, Vector2 newMoveDir)=>{
-                timeSinceLastCommand = 0;
-            };            
-        }                
-    }
 
     // Update is called once per frame
     void Update()
     {   
         if(IsLocalPlayer) {
             ClientControls();
-        }
 
-        if(IsServer) {
-            timeSinceLastCommand += Time.deltaTime;
-            isStale = (timeSinceLastCommand > commandDurationThreshold); //if command hasn't come in, we mark as stale
-
-            //server should move player
-            // GameObject playerObj = GameObject.Find("player"+GetComponent<NetworkObject>().OwnerClientId.ToString());
             Player player = GetPlayer();
             if(player) {
                 player.moveDir = moveDir.Value;
                 player.faceAngle = faceAngle.Value;
                 player.sprinting = sprinting.Value;
+            }
+        }
+
+        if(IsServer) {
+            //server should move player
+            // GameObject playerObj = GameObject.Find("player"+GetComponent<NetworkObject>().OwnerClientId.ToString());
+            Player player = GetPlayer();
+            if(player) {
+                // player.moveDir = moveDir.Value;
+                // player.faceAngle = faceAngle.Value;
+                // player.sprinting = sprinting.Value;
 
                 //display cooldowns
                 skill1CooldownDisplay.Value = player.skill1CooldownTime;
@@ -119,7 +113,7 @@ public class PlayerController : NetworkBehaviour
         
         moveDir.Value = new Vector2(horizontal, vertical);
         
-        faceAngle.Value += Input.GetAxis("Mouse X") * 15;
+        faceAngle.Value += Input.GetAxis("Mouse X") * MOUSE_SENSITIVITY;
         // faceAngle.Value = Camera.main.transform.eulerAngles.y;
         
         if(Input.GetMouseButtonDown(0)) {

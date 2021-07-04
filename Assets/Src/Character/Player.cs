@@ -65,6 +65,10 @@ public class Player : NetworkBehaviour
     public float skill2CooldownTime = 0.0f;
     public float catchCooldownTime = 0.0f;
 
+    private bool isMoving => (moveDir.magnitude > 0.01f && !isDisabled);
+    private bool canSprint => (_curStamina.Value > 0 && isMoving);
+    private bool isSprinting => (canSprint && sprinting);  
+
     public Team GetTeam() {
         return _team.Value;
     }
@@ -112,7 +116,6 @@ public class Player : NetworkBehaviour
         textMesh.color = GetUser().team == Team.BLUE ? UIManager.Instance.colors.textBlue : UIManager.Instance.colors.textRed;
         usernameTextTransform.rotation = Quaternion.LookRotation( usernameTextTransform.position - Camera.main.transform.position );
     }   
-
 
     public float GetMoveSpeed()
     {
@@ -166,6 +169,30 @@ public class Player : NetworkBehaviour
     void FixedUpdate() {
         if(!IsServer) return;
         FixedUpdateEffects();
+        
+        if(IsOwner) {
+            if(!GameManager.Instance.roundInProgress) { return; }
+
+            if(isMoving) {                
+                float moveDirAngle = Mathf.Atan2(moveDir.x, moveDir.y) * Mathf.Rad2Deg + faceAngle;
+                Vector3 positionDelta = Quaternion.Euler(0, moveDirAngle, 0) * Vector3.forward;
+
+                if(isSprinting) {
+                    // transform.position += positionDelta.normalized * Time.deltaTime * moveSpeed * sprintMultiplier;
+                    GetComponent<CharacterController>().Move(positionDelta.normalized * moveSpeed * sprintMultiplier * Time.fixedDeltaTime);
+                }
+                else {
+                    GetComponent<CharacterController>().Move(positionDelta.normalized * moveSpeed * Time.fixedDeltaTime);
+                    // transform.position += positionDelta.normalized * Time.deltaTime * moveSpeed;
+                }
+                
+            }            
+            
+            //compensate y
+            // GetComponent<CharacterController>().Move(new Vector3(0,-this.transform.position.y,0));            
+        }
+
+
     }
 
     void Update()
@@ -173,38 +200,20 @@ public class Player : NetworkBehaviour
         SetupRendererIfNeeded();        
         UpdateUsername();
 
-        if(!IsServer) { return; }
-        this.transform.rotation = Quaternion.Euler(0, faceAngle, 0);
-        if(!GameManager.Instance.roundInProgress) { return; }
-        bool isMoving = (moveDir.magnitude > 0.01f && !isDisabled);
-        bool canSprint = (_curStamina.Value > 0 && isMoving);
-        bool isSprinting = (canSprint && sprinting);        
-
-        if(isMoving) {                
-            float moveDirAngle = Mathf.Atan2(moveDir.x, moveDir.y) * Mathf.Rad2Deg + faceAngle;
-            Vector3 positionDelta = Quaternion.Euler(0, moveDirAngle, 0) * Vector3.forward;
-
-            if(isSprinting) {
-                // transform.position += positionDelta.normalized * Time.deltaTime * moveSpeed * sprintMultiplier;
-                GetComponent<CharacterController>().SimpleMove(positionDelta.normalized * moveSpeed * sprintMultiplier);
-                _curStamina.Value = Mathf.Max(0, _curStamina.Value - Time.deltaTime * staminaBurnFactor);
-            }
-            else {
-                GetComponent<CharacterController>().SimpleMove(positionDelta.normalized * moveSpeed);
-                // transform.position += positionDelta.normalized * Time.deltaTime * moveSpeed;
-            }
-
-            // transform.position = new Vector3(transform.position.x, 0, transform.position.z);
-        }
-        
-        //recover
-        if(!sprinting && !isDisabled) {
-            _curStamina.Value = Mathf.Clamp(_curStamina.Value + Time.deltaTime * staminaRecoveryFactor, 0, _maxStamina.Value);
+        // if(!IsServer) { return; }
+        if(IsOwner) {
+            this.transform.rotation = Quaternion.Euler(0, faceAngle, 0);
+            
+            if(!GameManager.Instance.roundInProgress) { return; }
+          
+            SetAnimationsSmooth(isMoving, isSprinting);
         }
 
-        SetAnimationsSmooth(isMoving, isSprinting);
-        UpdateCooldowns(); //update cooldowns
-        UpdateEffects(); // update skill effects applied to player
+        if(IsServer) {      
+            UpdateStamina();
+            UpdateCooldowns(); //update cooldowns
+            UpdateEffects(); // update skill effects applied to player
+        }
     }
 
     public void Catch()
@@ -223,6 +232,20 @@ public class Player : NetworkBehaviour
 
     }
 
+    void UpdateStamina() {
+
+        //expend
+        if(isMoving && isSprinting) {
+            _curStamina.Value = Mathf.Max(0, _curStamina.Value - Time.deltaTime * staminaBurnFactor);
+        }
+
+        //recover
+        if (!sprinting && !isDisabled)
+        {
+            _curStamina.Value = Mathf.Clamp(_curStamina.Value + Time.deltaTime * staminaRecoveryFactor, 0, _maxStamina.Value);
+        }
+
+    }
     public void CastSkillAtIndex(int index) {
         if(!GameManager.Instance.roundInProgress) { return; }
 

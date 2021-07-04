@@ -62,9 +62,30 @@ public class TeleportEffect : Effect
         if(animationName != animation) return;
     }
     
+
+    private Vector3 GetTeleportDestination() {
+        int testResolution = 10;
+        Vector3 start = _target.transform.position;
+        Vector3 end = _target.transform.position + _target.transform.forward * teleportFactor;        
+        CharacterController characterController = _target.GetComponent<CharacterController>();
+        Vector3 targetPos = this._target.transform.position;
+        for(int i=testResolution; i>=0; i--) {
+            targetPos = Vector3.Lerp(start, end, (float)i/(float)testResolution);
+            Vector3 vertOffset = Vector3.up*(characterController.radius + characterController.height/2);            \
+            string ownZoneColliderLayer = (_target.GetTeam() == Team.BLUE ? "BlueZoneCollider" : "RedZoneCollider");
+            Collider[] hits = Physics.OverlapCapsule(targetPos+vertOffset, targetPos+vertOffset, characterController.radius, LayerMask.GetMask(ownZoneColliderLayer, "Terrain"));
+            bool validDestination = (hits.Length == 0);
+            if(validDestination) {
+                // Debug.Log("Found a no collision spot!!");
+                break;
+            }
+        }
+        
+        return targetPos;
+    }
     public void OnAnimationRelease(string animationName) {
         if(animationName != animation) return;
-        _target.transform.position += _target.transform.forward * teleportFactor;
+        _target.transform.position = GetTeleportDestination();
         _target.GetComponent<Smooth.SmoothSyncMLAPI>().teleportOwnedObjectFromOwner();
     }
 

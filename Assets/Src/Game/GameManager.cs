@@ -43,6 +43,7 @@ public class GameManager : NetworkBehaviour
         Debug.Log("== GameManager: Game Started!");
         UIManager.Instance.GenerateGameSummaryUI();
         SpawnPlayerControllers();     
+        SpawnFlags();
         StatsManager.Instance.Initialise(RoomManager.Instance.GetUsers());    
         ResetRound();
         BeginCountdownForRound();
@@ -213,11 +214,20 @@ public class GameManager : NetworkBehaviour
         }
     }
 
+    void SpawnFlags() {
+        redTeamFlag = GameObject.Instantiate(PrefabsManager.Instance.flag, Vector3.zero, Quaternion.identity).GetComponent<Flag>();
+        blueTeamFlag = GameObject.Instantiate(PrefabsManager.Instance.flag, Vector3.zero, Quaternion.identity).GetComponent<Flag>();
+        redTeamFlag.GetComponent<NetworkObject>().Spawn();
+        blueTeamFlag.GetComponent<NetworkObject>().Spawn();
+        redTeamFlag.GetComponent<Flag>().SetTeam(Team.RED);
+        blueTeamFlag.GetComponent<Flag>().SetTeam(Team.BLUE);
+        ResetFlags();
+    }
+
     void ResetFlags() {
         if(!IsServer) { return; }
-        redTeamFlag.GetComponent<Flag>().SetTeam(Team.RED);
+        
         redTeamFlag.GetComponent<Flag>().ResetPosition();
-        blueTeamFlag.GetComponent<Flag>().SetTeam(Team.BLUE);
         blueTeamFlag.GetComponent<Flag>().ResetPosition();
     }
 

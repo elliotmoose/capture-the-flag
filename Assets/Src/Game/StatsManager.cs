@@ -73,15 +73,20 @@ public class StatsManager : NetworkBehaviour
         }
 
         //time with flag
-        Player blueCapturer = GameManager.Instance.blueTeamFlag.capturer;
-        if(blueCapturer != null) {
-            User user = blueCapturer.GetUser();
-            stats[user.clientId] += new GameStat{timeWithFlag=Time.deltaTime};
+        if(GameManager.Instance.blueTeamFlag != null) {            
+            Player blueCapturer = GameManager.Instance.blueTeamFlag.capturer;
+            if(blueCapturer != null) {
+                User user = blueCapturer.GetUser();
+                stats[user.clientId] += new GameStat{timeWithFlag=Time.deltaTime};
+            }
         }
-        Player redCapturer = GameManager.Instance.redTeamFlag.capturer;
-        if(redCapturer != null) {
-            User user = redCapturer.GetUser();
-            stats[user.clientId] += new GameStat{timeWithFlag=Time.deltaTime};
+
+        if(GameManager.Instance.redTeamFlag != null) {
+            Player redCapturer = GameManager.Instance.redTeamFlag.capturer;
+            if(redCapturer != null) {
+                User user = redCapturer.GetUser();
+                stats[user.clientId] += new GameStat{timeWithFlag=Time.deltaTime};
+            }
         }
     }
 
