@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5801921133661448699}
   - component: {fileID: 5801921133658593043}
   - component: {fileID: 5801921133659547443}
-  - component: {fileID: 5801921133663847705}
+  - component: {fileID: 1859512898599776087}
   m_Layer: 0
   m_Name: glass_panel_1_corner
   m_TagString: Untagged
@@ -52,6 +52,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -83,7 +84,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &5801921133663847705
+--- !u!64 &1859512898599776087
 MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

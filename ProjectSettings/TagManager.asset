@@ -6,6 +6,7 @@ TagManager:
   tags:
   - CinemachineCamera
   - MinimapCam
+  - Terrain
   layers:
   - Default
   - TransparentFX
@@ -20,7 +21,7 @@ TagManager:
   - BluePlayer
   - CameraVFX
   - Minimap
-  - 
+  - Terrain
   - 
   - 
   - 

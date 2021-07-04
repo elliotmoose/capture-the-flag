@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 6236764285057530695}
   - component: {fileID: 6236764285054648631}
   - component: {fileID: 6236764285055289949}
-  - component: {fileID: 6236764285059984219}
   m_Layer: 0
   m_Name: Battery_big
   m_TagString: Untagged
@@ -52,6 +51,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -83,16 +83,3 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &6236764285059984219
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6236764285057807967}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 3.7767224, y: 3.879192, z: 4.161581}
-  m_Center: {x: 0.016551793, y: 1.939596, z: 0}
