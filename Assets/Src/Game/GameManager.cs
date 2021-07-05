@@ -65,7 +65,7 @@ public class GameManager : NetworkBehaviour
     }
 
     private void BeginCountdownForRound() {
-        roundInProgress = false;
+        SetRoundInProgress(false);
         StartCoroutine(RoundCountdown());
     }
 
@@ -77,7 +77,12 @@ public class GameManager : NetworkBehaviour
         CountdownClientRpc(1);
         yield return new WaitForSeconds(1);
         CountdownClientRpc(0);
-        roundInProgress = true;
+        SetRoundInProgress(true);
+    }
+
+    private void SetRoundInProgress(bool inProgress) {
+        roundInProgress = inProgress;
+        RoundStateUpdateClientRpc(inProgress);
     }
 
     #endregion
@@ -86,6 +91,11 @@ public class GameManager : NetworkBehaviour
     [ClientRpc]
     private void CountdownClientRpc(int count) {
         UIManager.Instance.DisplayCountdown(count);        
+    } 
+
+    [ClientRpc]
+    private void RoundStateUpdateClientRpc(bool state) {
+        roundInProgress = state;
     } 
 
     [ClientRpc]
@@ -172,7 +182,7 @@ public class GameManager : NetworkBehaviour
     }
 
     void GameOver(Team winningTeam) {
-        roundInProgress = false;
+        SetRoundInProgress(false);
         StatsManager.Instance.PublishStats();
         GameOverClientRpc(winningTeam);
     }

@@ -66,15 +66,16 @@ public class StatsManager : NetworkBehaviour
         //time in opponent territory
         List<Player> players = PlayerSpawner.Instance.GetAllPlayers();
         foreach(Player player in players) {
-            Jail targetJail = player.GetTeam() == Team.RED ? GameManager.Instance.blueTeamJail : GameManager.Instance.redTeamJail;
-            if(player.IsInEnemyTerritory() && !targetJail.GetJailedPlayers().Contains(player)) {
+            LocalPlayer localPlayer = player.GetComponent<LocalPlayer>();
+            Jail targetJail = localPlayer.team == Team.RED ? GameManager.Instance.blueTeamJail : GameManager.Instance.redTeamJail;
+            if(localPlayer.isInEnemyTerritory && !targetJail.GetJailedPlayers().Contains(player)) {
                 stats[player.GetUser().clientId] += new GameStat{timeInEnemyTerritory=Time.deltaTime};
             }
         }
 
         //time with flag
         if(GameManager.Instance.blueTeamFlag != null) {            
-            Player blueCapturer = GameManager.Instance.blueTeamFlag.capturer;
+            Player blueCapturer = GameManager.Instance.blueTeamFlag.capturer?.syncPlayer;
             if(blueCapturer != null) {
                 User user = blueCapturer.GetUser();
                 stats[user.clientId] += new GameStat{timeWithFlag=Time.deltaTime};
@@ -82,7 +83,7 @@ public class StatsManager : NetworkBehaviour
         }
 
         if(GameManager.Instance.redTeamFlag != null) {
-            Player redCapturer = GameManager.Instance.redTeamFlag.capturer;
+            Player redCapturer = GameManager.Instance.redTeamFlag.capturer?.syncPlayer;
             if(redCapturer != null) {
                 User user = redCapturer.GetUser();
                 stats[user.clientId] += new GameStat{timeWithFlag=Time.deltaTime};

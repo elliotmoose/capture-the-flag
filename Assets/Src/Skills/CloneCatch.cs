@@ -9,10 +9,10 @@ public class CloneCatch : Catch
         name = "Clone Catch";
     }
 
-    public override void UseSkill(Player player)
+    public override void UseSkill(LocalPlayer player)
     {
         base.UseSkill(player);
-        Collider[] hitColliders = Physics.OverlapSphere(player.transform.position, player.GetCatchRadius());
+        Collider[] hitColliders = Physics.OverlapSphere(player.transform.position, player.syncPlayer.GetCatchRadius());
 
         foreach (Collider c in hitColliders)
         {

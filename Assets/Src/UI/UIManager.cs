@@ -118,7 +118,7 @@ public class UIManager : MonoBehaviour
         skill2Button.curCooldown = PlayerController.LocalInstance.skill2CooldownDisplay.Value;
         catchButton.curCooldown = PlayerController.LocalInstance.catchCooldownDisplay.Value;
         
-        Player player = PlayerController.LocalInstance.GetPlayer();
+        LocalPlayer player = PlayerController.LocalInstance.GetPlayer();
         if(player != null) {
             skill1Button.maxCooldown = player.skills[0].cooldown;
             if(player.skills.Count > 1) {
@@ -187,7 +187,7 @@ public class UIManager : MonoBehaviour
     {
         UpdatePlayerUI();
         if(PlayerController.LocalInstance != null) {
-            Player player = PlayerController.LocalInstance.GetPlayer();
+            Player player = PlayerController.LocalInstance.GetPlayer().syncPlayer;
             if(player != null) {
                 float stamina = player.GetStaminaFraction();
                 staminaBar.fillAmount = stamina;

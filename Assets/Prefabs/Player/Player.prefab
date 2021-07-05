@@ -523,7 +523,7 @@ GameObject:
   - component: {fileID: 4612563886510343300}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -627,10 +627,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnPos: {x: 0, y: 0, z: 0}
   spawnDir: {x: 0, y: 0, z: 0, w: 0}
-  flagSlot: {fileID: 5182581902123499094}
-  moveDir: {x: 0, y: 0}
-  faceAngle: 0
-  sprinting: 0
   skill1CooldownTime: 0
   skill2CooldownTime: 0
   catchCooldownTime: 0

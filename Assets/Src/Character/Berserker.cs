@@ -2,14 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Berserker : Player
+public class Berserker : LocalPlayer
 {
     void Awake()
     {
         if(IsServer) {
-            moveSpeed = 15.0f;
-            this.SetMaxStamina(130);            
+            this.syncPlayer.SetMaxStamina(130);            
         }
+        
+        moveSpeed = 15.0f;
         catchSkill = new Catch();
         skills.Add(new Boost());
         skills.Add(new Knockback());

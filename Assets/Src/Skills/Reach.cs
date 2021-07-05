@@ -15,30 +15,20 @@ public class Reach : Skill
         name = "Extended Reach";
 
     }
-    public override void UseSkill(Player player)
+    public override void UseSkill(LocalPlayer localPlayer)
     {
-        Collider[] hitColliders = Physics.OverlapSphere(player.transform.position, distance);
+        Collider[] hitColliders = Physics.OverlapSphere(localPlayer.transform.position, distance);
 
         foreach (Collider c in hitColliders)
         {
-            Player target = c.gameObject.GetComponent<Player>();
+            LocalPlayer target = c.gameObject.GetComponent<LocalPlayer>();
 
             if (target != null)
             {
-                float current_angle = Vector3.Angle(player.transform.forward, target.transform.position - player.transform.position);
+                float current_angle = Vector3.Angle(localPlayer.transform.forward, target.transform.position - localPlayer.transform.position);
                 if (current_angle <= angle)
                 {
-                    if (player.GetTeam() != target.GetTeam())
-                    {
-                        if (target.IsCatchable())
-                        {
-                            GameManager.Instance.Imprison(target, player);
-                        }
-                    }
-                    else if (player.GetTeam() == target.GetTeam())
-                    {
-                        GameManager.Instance.Release(target, player);
-                    }
+                    target.Contact(localPlayer);
                 }
                 
             }

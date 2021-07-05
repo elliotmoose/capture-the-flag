@@ -8,7 +8,7 @@ public class PushEffect : Effect
     private Vector3 finalPos;
     private Vector3 direction;
 
-    public PushEffect(Player _target, Vector3 direction, float distance, float duration) : base(_target)
+    public PushEffect(LocalPlayer _target, Vector3 direction, float distance, float duration) : base(_target)
     {
         this.duration = duration;
         this.direction = direction;

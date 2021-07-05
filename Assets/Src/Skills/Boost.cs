@@ -13,7 +13,7 @@ public class Boost : Skill
         name = "Boost";
     }
 
-    public override void UseSkill(Player player)
+    public override void UseSkill(LocalPlayer player)
     {
         Debug.Log(name + " skill is used");
         BoostEffect effect = new BoostEffect(player, player.transform.forward, distance, timeTaken);
@@ -28,7 +28,7 @@ public class BoostEffect : PushEffect
     private string animation = "Boost";
     private bool finished = false;
 
-    public BoostEffect(Player _target, Vector3 direction, float distance, float duration) : base(_target, direction, distance, duration)
+    public BoostEffect(LocalPlayer _target, Vector3 direction, float distance, float duration) : base(_target, direction, distance, duration)
     {
         this.name = "BOOST_EFFECT";
         _target.OnAnimationStart += OnAnimationStart;

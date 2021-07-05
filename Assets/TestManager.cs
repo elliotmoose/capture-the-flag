@@ -42,11 +42,11 @@ public class TestManager : MonoBehaviour
     }
 
     void Update() {
+        if(!isHost || gameStarted) {return;}
         if(SceneTransitionManager.cameFromMainMenu && autoStartConnection) {
             Debug.LogWarning("Auto start host was enabled, but came from main menu. Ignoring...");
             return;
         }
-        if(!isHost || gameStarted) {return;}
         if(twoPlayer && RoomManager.Instance.roomUsers.Count == 2) {
             GameManager.Instance.StartGame();
             gameStarted = true;

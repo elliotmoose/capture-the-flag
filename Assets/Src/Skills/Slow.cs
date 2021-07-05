@@ -15,22 +15,21 @@ public class Slow : Skill
         name = "AOE Slow";
     }
 
-    public override void UseSkill(Player player)
+    public override void UseSkill(LocalPlayer player)
     {
         Debug.Log(name + " skill is used");
         Collider[] hitColliders = Physics.OverlapSphere(player.transform.position, radius);
         
         foreach (Collider c in hitColliders)
         {
-            Player target = c.gameObject.GetComponent<Player>();
+            LocalPlayer target = c.gameObject.GetComponent<LocalPlayer>();
                 
             if (target != null && player != target)
             {
-                SlowEffect effect = new SlowEffect(target, percentageDecrease, duration);
-                target.TakeEffect(effect);
-            }
-
-            
+                target.TakeNetworkEffect(EffectType.Slow);
+                // SlowEffect effect = new SlowEffect(target, percentageDecrease, duration);
+                // target.TakeEffect(effect);
+            }            
         }
     }
 }
@@ -40,7 +39,7 @@ public class SlowEffect : Effect
 {
     public float percentageDecrease = 0;
 
-    public SlowEffect(Player _target, float percentageDecrease, float duration) :base(_target)
+    public SlowEffect(LocalPlayer _target, float percentageDecrease, float duration) :base(_target)
     {
         this.percentageDecrease = percentageDecrease; // float > 1.0f
         this.duration = duration;
@@ -50,8 +49,7 @@ public class SlowEffect : Effect
     public override void OnEffectApplied()
     {
         float newSpeed = _target.GetMoveSpeed() / percentageDecrease;
-        _target.SetMoveSpeed(newSpeed);
-        
+        _target.SetMoveSpeed(newSpeed);        
     }
 
     public override void OnEffectEnd()

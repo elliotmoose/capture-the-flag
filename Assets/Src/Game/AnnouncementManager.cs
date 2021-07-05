@@ -75,14 +75,14 @@ public class AnnouncementManager : NetworkBehaviour
 
     [ClientRpc] 
     void AnnounceFlagCapturedClientRpc(Team playerTeam) {
-        Player localPlayer = PlayerController.LocalInstance.GetPlayer();
+        Player localPlayer = PlayerController.LocalInstance.GetPlayer().syncPlayer;
         bool isMyFlag = (playerTeam != localPlayer.GetTeam());
         announcements.Enqueue(new Announcement{content=isMyFlag ? "Your flag has been captured by the enemy!" : "Your team has captured the enemy flag!"});
     }
     
     [ClientRpc] 
     void AnnouncePlayerCapturedClientRpc(User user) {
-        Player localPlayer = PlayerController.LocalInstance.GetPlayer();
+        Player localPlayer = PlayerController.LocalInstance.GetPlayer().syncPlayer;
         bool isMyTeammate = (user.team == localPlayer.GetTeam());
         string playerString = isMyTeammate ? "Ally" : "Enemy";
         announcements.Enqueue(new Announcement{content=$"{playerString} put in jail!"});
@@ -92,7 +92,7 @@ public class AnnouncementManager : NetworkBehaviour
     [ClientRpc] 
     void AnnouncePlayerFreedClientRpc(User user) {
         //only announce to teammates
-        if(user.team != PlayerController.LocalInstance.GetPlayer().GetTeam()) return;
+        if(user.team != PlayerController.LocalInstance.GetPlayer().team) return;
         // announcements.Enqueue(new Announcement{content=$"{user.username} has been freed!"});
         announcements.Enqueue(new Announcement{content=$"Ally has been freed!"});
     }

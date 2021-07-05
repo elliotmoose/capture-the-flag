@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using MLAPI;
 using MLAPI.NetworkVariable;
+using MLAPI.Messaging;
+
 public class Flag : NetworkBehaviour
 {
-    public Player capturer;
+    public LocalPlayer capturer;
     // public Team team = Team.BLUE;
     public NetworkVariable<Team> team = new NetworkVariable<Team>(new NetworkVariableSettings{
         WritePermission=NetworkVariablePermission.ServerOnly,
@@ -39,19 +41,41 @@ public class Flag : NetworkBehaviour
         return team.Value;
     }
     void OnTriggerEnter(Collider collider) {
-        if(!IsServer) { return; }
+        // if(!IsServer) { return; }
 
-        Player player = collider.gameObject.GetComponent<Player>();
-        if(player != null && player.GetTeam() != GetTeam() && capturer == null) {
-            Debug.Log($"{team} flag caught!");
-            this.transform.SetParent(player.flagSlot.transform);
-            this.transform.localRotation = Quaternion.identity;
-            this.transform.localPosition = Vector3.zero;
-            capturer = player;
-            
-            GameManager.Instance.FlagCapturedBy(player);
+        LocalPlayer localPlayer = collider.gameObject.GetComponent<LocalPlayer>();
+        if(localPlayer == null) return;
+        bool isDifferentTeam = (localPlayer.team != this.GetTeam());
+        bool isAvailableForCapture = (capturer == null);
+        if(isDifferentTeam && isAvailableForCapture && localPlayer.IsOwner) {
+            CapturedServerRpc(localPlayer.OwnerClientId);
         }
 
+        // if(player != null && player.GetTeam() != GetTeam() && capturer == null) {
+        //     Debug.Log($"{team} flag caught!");
+        //     this.transform.SetParent(player.flagSlot.transform);
+        //     this.transform.localRotation = Quaternion.identity;
+        //     this.transform.localPosition = Vector3.zero;
+        //     capturer = player;
+            
+        //     GameManager.Instance.FlagCapturedBy(player);
+        // }
+    }
+
+    [ServerRpc]
+    private void CapturedServerRpc(ulong byClientId) {
+        LocalPlayer player = LocalPlayer.WithClientId(byClientId);
+        GameManager.Instance.FlagCapturedBy(player.syncPlayer);
+        CapturedClientRpc(byClientId);
+    }
+
+    [ClientRpc]
+    private void CapturedClientRpc(ulong byClientId) {
+        LocalPlayer player = LocalPlayer.WithClientId(byClientId);
+        this.transform.SetParent(player.flagSlot.transform);
+        this.transform.localRotation = Quaternion.identity;
+        this.transform.localPosition = Vector3.zero;
+        capturer = player;        
     }
 
     public void SetTeam(Team team) {

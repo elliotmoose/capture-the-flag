@@ -81,18 +81,26 @@ public class PlayerController : NetworkBehaviour
         if(IsLocalPlayer) {
             ClientControls();
 
-            Player player = GetPlayer();
+            LocalPlayer player = GetPlayer();
             if(player) {
-                player.moveDir = moveDir.Value;
-                player.faceAngle = faceAngle.Value;
+                float horizontal = Input.GetAxisRaw("Horizontal");
+                float vertical = Input.GetAxisRaw("Vertical");
+                
+                player.moveDir = new Vector2(horizontal, vertical);
+                
+                player.faceAngle += Input.GetAxis("Mouse X") * MOUSE_SENSITIVITY;
+                // player.moveDir = moveDir.Value;
+                // player.faceAngle = faceAngle.Value;
                 player.sprinting = sprinting.Value;
+
+                // Debug.Log(player.faceAngle);
             }
         }
 
         if(IsServer) {
             //server should move player
             // GameObject playerObj = GameObject.Find("player"+GetComponent<NetworkObject>().OwnerClientId.ToString());
-            Player player = GetPlayer();
+            LocalPlayer player = GetPlayer();
             if(player) {
                 // player.moveDir = moveDir.Value;
                 // player.faceAngle = faceAngle.Value;
@@ -108,12 +116,12 @@ public class PlayerController : NetworkBehaviour
 
     void ClientControls() {
         //movement
-        float horizontal = Input.GetAxisRaw("Horizontal");
-        float vertical = Input.GetAxisRaw("Vertical");
+        // float horizontal = Input.GetAxisRaw("Horizontal");
+        // float vertical = Input.GetAxisRaw("Vertical");
         
-        moveDir.Value = new Vector2(horizontal, vertical);
+        // moveDir.Value = new Vector2(horizontal, vertical);
         
-        faceAngle.Value += Input.GetAxis("Mouse X") * MOUSE_SENSITIVITY;
+        // faceAngle.Value += Input.GetAxis("Mouse X") * MOUSE_SENSITIVITY;
         // faceAngle.Value = Camera.main.transform.eulerAngles.y;
         
         if(Input.GetMouseButtonDown(0)) {
@@ -133,7 +141,7 @@ public class PlayerController : NetworkBehaviour
     [ServerRpc]
     void CatchServerRpc() {
         if(IsServer) {            
-            Player player = GetPlayer();
+            LocalPlayer player = GetPlayer();
             if (player)
             {
                 player.Catch();
@@ -144,7 +152,7 @@ public class PlayerController : NetworkBehaviour
     [ServerRpc]
     void Skill1ServerRpc() {
         if(IsServer) {
-            Player player = GetPlayer();
+            LocalPlayer player = GetPlayer();
             if(player) {
                 player.CastSkillAtIndex(0);
             }
@@ -154,7 +162,7 @@ public class PlayerController : NetworkBehaviour
     [ServerRpc]
     void Skill2ServerRpc() {
         if(IsServer) {
-            Player player = GetPlayer();
+            LocalPlayer player = GetPlayer();
             if(player) {
                 player.CastSkillAtIndex(1);
             }
@@ -170,21 +178,22 @@ public class PlayerController : NetworkBehaviour
         playerObjNetId.Value = playerGameObject.GetComponent<NetworkObject>().NetworkObjectId;
     }    
 
-    public Player GetPlayer()
+    public LocalPlayer GetPlayer()
     {
-        if(!NetworkSpawnManager.SpawnedObjects.ContainsKey(playerObjNetId.Value)) {
-            Debug.Log("Could not find player for this PlayerController");
-            return null;
-        }
-        NetworkObject playerNetworkObj = NetworkSpawnManager.SpawnedObjects[playerObjNetId.Value];
-        GameObject playerObj = playerNetworkObj.gameObject;
-        if (playerObj)
-        {
-            return playerObj.GetComponent<Player>();
-        }
-        else
-        {
-            return null;
-        }
+        return LocalPlayer.WithClientId(this.OwnerClientId);
+        // if(!NetworkSpawnManager.SpawnedObjects.ContainsKey(playerObjNetId.Value)) {
+        //     Debug.Log("Could not find player for this PlayerController");
+        //     return null;
+        // }
+        // NetworkObject playerNetworkObj = NetworkSpawnManager.SpawnedObjects[playerObjNetId.Value];
+        // GameObject playerObj = playerNetworkObj.gameObject;
+        // if (playerObj)
+        // {
+        //     return playerObj.GetComponent<LocalPlayer>();
+        // }
+        // else
+        // {
+        //     return null;
+        // }
     }
 }

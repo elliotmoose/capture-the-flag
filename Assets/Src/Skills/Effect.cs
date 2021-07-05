@@ -10,9 +10,9 @@ public abstract class Effect
     public bool effectEnded = false;
     public string name;
 
-    protected Player _target;
+    protected LocalPlayer _target;
 
-    public Effect(Player target)
+    public Effect(LocalPlayer target)
     {
         this._target = target;
     }
@@ -42,7 +42,7 @@ public abstract class Effect
         }
     }
 
-    public Player GetTarget()
+    public LocalPlayer GetTarget()
     {
         return _target;
     }

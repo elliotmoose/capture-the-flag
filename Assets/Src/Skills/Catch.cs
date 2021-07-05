@@ -11,10 +11,10 @@ public class Catch : Skill
         name = "Catch";        
     }
 
-    public override void UseSkill(Player player)
+    public override void UseSkill(LocalPlayer caster)
     {
-        CatchEffect catchEffect = new CatchEffect(player, player.GetCatchRadius());
-        player.TakeEffect(catchEffect);
+        CatchEffect catchEffect = new CatchEffect(caster, caster.syncPlayer.GetCatchRadius());
+        caster.TakeEffect(catchEffect);
     }
 }
 
@@ -27,7 +27,7 @@ public class CatchEffect : Effect
     
     private string animation = "Catch";
     private bool finished = false;
-    public CatchEffect(Player _player, float radius) : base(_player)
+    public CatchEffect(LocalPlayer _player, float radius) : base(_player)
     {        
         this.duration = 0.2f;
         this.name = "CATCH_EFFECT";
