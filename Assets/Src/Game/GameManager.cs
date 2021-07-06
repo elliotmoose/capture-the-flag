@@ -55,8 +55,9 @@ public class GameManager : NetworkBehaviour
     }
 
     void ResetPlayerPositions() {
+        if(!IsServer) {return;}
         foreach(Player player in PlayerSpawner.Instance.GetAllPlayers()) {
-            player.ResetForRound();
+            player.DispatchResetForRound();
         }
 
         ResetPlayerCamerasClientRpc();
@@ -198,10 +199,8 @@ public class GameManager : NetworkBehaviour
     }
 
     void ResetFlags() {
-        if(!IsServer) { return; }
-        
-        redTeamFlag.GetComponent<Flag>().ResetPosition();
-        blueTeamFlag.GetComponent<Flag>().ResetPosition();
+        redTeamFlag.GetComponent<Flag>().DispatchResetPosition();
+        blueTeamFlag.GetComponent<Flag>().DispatchResetPosition();
     }
 
     #endregion

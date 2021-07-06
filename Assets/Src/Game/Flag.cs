@@ -40,14 +40,14 @@ public class Flag : NetworkBehaviour
     public Team GetTeam() {
         return team.Value;
     }
-    void OnTriggerEnter(Collider collider) {
-        // if(!IsServer) { return; }
 
+    void OnTriggerEnter(Collider collider) {        
+        if(!IsServer) { return; }
         LocalPlayer localPlayer = collider.gameObject.GetComponent<LocalPlayer>();
         if(localPlayer == null) return;
         bool isDifferentTeam = (localPlayer.team != this.GetTeam());
         bool isAvailableForCapture = (capturer == null);
-        if(isDifferentTeam && isAvailableForCapture && localPlayer.IsOwner) {
+        if(isDifferentTeam && isAvailableForCapture) {
             CapturedServerRpc(localPlayer.OwnerClientId);
         }
 
@@ -75,7 +75,7 @@ public class Flag : NetworkBehaviour
         this.transform.SetParent(player.flagSlot.transform);
         this.transform.localRotation = Quaternion.identity;
         this.transform.localPosition = Vector3.zero;
-        capturer = player;        
+        capturer = player;
     }
 
     public void SetTeam(Team team) {
@@ -83,8 +83,13 @@ public class Flag : NetworkBehaviour
         this.team.Value = team;        
     }
 
-    public void ResetPosition() {
-        if(!IsServer) { return; }
+    public void DispatchResetPosition() {
+        if(!IsServer) return;
+        ResetPositionClientRpc();
+    }
+    
+    [ClientRpc]
+    public void ResetPositionClientRpc() {
         this.capturer = null;
         this.transform.SetParent(null);
         this.transform.position = new Vector3(0,1.25f,120 * ((GetTeam() == Team.BLUE) ? 1 : -1));

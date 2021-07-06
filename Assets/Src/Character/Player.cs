@@ -79,7 +79,7 @@ public class Player : NetworkBehaviour
         
     }
 
-    public void ResetForRound() {
+    public void DispatchResetForRound() {
         ResetForRoundClientRpc();
     }
 
@@ -101,7 +101,7 @@ public class Player : NetworkBehaviour
     public void ServerContact(Player by) {
         if(!IsServer) return; //contact happens on server only
         if(by.OwnerClientId == this.OwnerClientId) return; //cannot contact self
-        
+
         if (this.team != by.team)
         {
             if (localPlayer.isCatchable)
