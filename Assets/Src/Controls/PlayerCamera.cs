@@ -32,16 +32,14 @@ public class PlayerCamera : MonoBehaviour
         PlayerController playerController = localPlayerObject.GetComponent<PlayerController>();
         if(!playerController) return;
 
-        ulong playerGameObjectNetId = playerController.playerObjNetId.Value;
-        if(playerGameObjectNetId != 0) {
-            CinemachineVirtualCamera camera = GameObject.FindGameObjectWithTag("CinemachineCamera").GetComponent<CinemachineVirtualCamera>(); 
-            // CinemachineFreeLook camera = GameObject.FindGameObjectWithTag("CinemachineCamera").GetComponent<CinemachineFreeLook>(); 
-            target = NetworkSpawnManager.SpawnedObjects[playerGameObjectNetId].gameObject;
-            camera.LookAt = target.transform;
-            camera.Follow = target.transform;
-
-            Team playerTeam = playerController.GetUser().team;
-        }
+        CinemachineVirtualCamera camera = GameObject.FindGameObjectWithTag("CinemachineCamera").GetComponent<CinemachineVirtualCamera>(); 
+        // CinemachineFreeLook camera = GameObject.FindGameObjectWithTag("CinemachineCamera").GetComponent<CinemachineFreeLook>(); 
+        // target = NetworkSpawnManager.SpawnedObjects[playerGameObjectNetId].gameObject;
+        LocalPlayer localPlayer = playerController.GetPlayer();
+        if(!localPlayer) return;
+        target = localPlayer.gameObject;
+        camera.LookAt = target.transform;
+        camera.Follow = target.transform;
     }
 
     void UpdateVFX() {

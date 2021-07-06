@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using MLAPI;
 
 public class Reach : Skill
 {
@@ -16,7 +17,7 @@ public class Reach : Skill
 
     }
     public override void UseSkill(LocalPlayer localPlayer)
-    {
+    {        
         Collider[] hitColliders = Physics.OverlapSphere(localPlayer.transform.position, distance);
 
         foreach (Collider c in hitColliders)
@@ -28,9 +29,8 @@ public class Reach : Skill
                 float current_angle = Vector3.Angle(localPlayer.transform.forward, target.transform.position - localPlayer.transform.position);
                 if (current_angle <= angle)
                 {
-                    target.Contact(localPlayer);
-                }
-                
+                    target.ClientContact(localPlayer);
+                }                
             }
 
         }

@@ -67,8 +67,7 @@ public class StatsManager : NetworkBehaviour
         List<Player> players = PlayerSpawner.Instance.GetAllPlayers();
         foreach(Player player in players) {
             LocalPlayer localPlayer = player.GetComponent<LocalPlayer>();
-            Jail targetJail = localPlayer.team == Team.RED ? GameManager.Instance.blueTeamJail : GameManager.Instance.redTeamJail;
-            if(localPlayer.isInEnemyTerritory && !targetJail.GetJailedPlayers().Contains(player)) {
+            if(localPlayer.isInEnemyTerritory && !localPlayer.isJailed) {
                 stats[player.GetUser().clientId] += new GameStat{timeInEnemyTerritory=Time.deltaTime};
             }
         }

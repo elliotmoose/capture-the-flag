@@ -26,7 +26,7 @@ public class Slow : Skill
                 
             if (target != null && player != target)
             {
-                target.TakeNetworkEffect(EffectType.Slow);
+                target.TakeNetworkEffect(EffectType.Slow, player.OwnerClientId);
                 // SlowEffect effect = new SlowEffect(target, percentageDecrease, duration);
                 // target.TakeEffect(effect);
             }            

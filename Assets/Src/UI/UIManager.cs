@@ -113,18 +113,20 @@ public class UIManager : MonoBehaviour
         Transform character = this.transform.Find("PlayerUI/Character");
         character.GetComponent<Image>().sprite = PrefabsManager.Instance.IconForCharacter(user.character);
         character.GetComponent<Image>().color = new Color32(255,255,255,255);
-        
-        skill1Button.curCooldown = PlayerController.LocalInstance.skill1CooldownDisplay.Value;
-        skill2Button.curCooldown = PlayerController.LocalInstance.skill2CooldownDisplay.Value;
-        catchButton.curCooldown = PlayerController.LocalInstance.catchCooldownDisplay.Value;
-        
-        LocalPlayer player = PlayerController.LocalInstance.GetPlayer();
-        if(player != null) {
-            skill1Button.maxCooldown = player.skills[0].cooldown;
-            if(player.skills.Count > 1) {
-                skill2Button.maxCooldown = player.skills[1].cooldown;
+
+        LocalPlayer localPlayer = PlayerController.LocalInstance.GetPlayer();
+                
+        if(localPlayer != null) {
+            skill1Button.curCooldown = localPlayer.skill1CooldownTime;
+            skill2Button.curCooldown = localPlayer.skill2CooldownTime;
+            catchButton.curCooldown = localPlayer.catchCooldownTime;
+
+            skill1Button.maxCooldown = localPlayer.skills[0].cooldown;
+            if(localPlayer.skills.Count > 1) {
+                skill2Button.maxCooldown = localPlayer.skills[1].cooldown;
             }
-            catchButton.maxCooldown = player.catchSkill.cooldown;
+
+            catchButton.maxCooldown = localPlayer.catchSkill.cooldown;
         }
     }
 
@@ -187,9 +189,9 @@ public class UIManager : MonoBehaviour
     {
         UpdatePlayerUI();
         if(PlayerController.LocalInstance != null) {
-            Player player = PlayerController.LocalInstance.GetPlayer().syncPlayer;
-            if(player != null) {
-                float stamina = player.GetStaminaFraction();
+            LocalPlayer localPlayer = PlayerController.LocalInstance.GetPlayer();
+            if(localPlayer != null) {
+                float stamina = localPlayer.GetStaminaFraction();
                 staminaBar.fillAmount = stamina;
             }
         }

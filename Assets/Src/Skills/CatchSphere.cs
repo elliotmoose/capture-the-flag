@@ -5,20 +5,22 @@ using MLAPI;
 
 public class CatchSphere : MonoBehaviour
 {
-    private LocalPlayer player;
-
     private void Start()
     {
-        player = transform.GetComponentInParent<LocalPlayer>();        
+        
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        LocalPlayer target = other.gameObject.GetComponent<LocalPlayer>();
+        //we only check for contact on the server
+        if(!NetworkManager.Singleton.IsServer) return;
+
+        Player caster = transform.GetComponentInParent<Player>();
+        Player target = other.gameObject.GetComponent<Player>();
 
         if (target != null)
         {
-            target.Contact(player);
+            target.ServerContact(caster);
         }
     }
 }

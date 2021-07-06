@@ -30,7 +30,7 @@ public class Knockback : Skill
                 float currentDistance = direction.magnitude;
                 float knockbackDistance = finalDistance - currentDistance;
 
-                target.TakeNetworkEffect(EffectType.Knockback);
+                target.TakeNetworkEffect(EffectType.Knockback, player.OwnerClientId);
                 // PushEffect effect = new PushEffect(target, direction, knockbackDistance, timeTaken);
                 // target.TakeEffect(effect);
             }

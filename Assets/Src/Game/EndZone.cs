@@ -28,12 +28,13 @@ public class EndZone : MonoBehaviour
 
     void OnTriggerEnter(Collider hit) {
 
-        Player player = hit.gameObject.GetComponent<Player>();
-        if(!player) {return;}
-        bool redTeamShouldScore = (player.GetTeam() == Team.RED && team == Team.RED && GameManager.Instance.blueTeamFlag.capturer == player);
-        bool blueTeamShouldScore = (player.GetTeam() == Team.BLUE && team == Team.BLUE && GameManager.Instance.redTeamFlag.capturer == player);
+        LocalPlayer localPlayer = hit.gameObject.GetComponent<LocalPlayer>();
+        if(!localPlayer) {return;}
+        bool redTeamShouldScore = (localPlayer.team == Team.RED && team == Team.RED && GameManager.Instance.blueTeamFlag.capturer == localPlayer);
+        bool blueTeamShouldScore = (localPlayer.team == Team.BLUE && team == Team.BLUE && GameManager.Instance.redTeamFlag.capturer == localPlayer);
         if((redTeamShouldScore || blueTeamShouldScore)) {
-            GameManager.Instance.ScorePoint(player);
+            GameManager.Instance.ScorePoint(localPlayer.syncPlayer);
+            Debug.LogWarning("TODO: change score to server");
         }
         // Flag flag = hit.gameObject.GetComponent<Flag>();
         // if(flag && flag.GetTeam() != team && flag.capturer != null) {

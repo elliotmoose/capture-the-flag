@@ -26,11 +26,11 @@ public class LocalPlayer : NetworkBehaviour
     public bool sprinting = false;
 
     //player states
-    public bool isOwner = false;
     public Player syncPlayer => GetComponent<Player>();
     public bool isDisabled = false;  
+    public bool isJailed => syncPlayer.isJailed;  
     private bool isMoving => (moveDir.magnitude > 0.01f && !isDisabled);
-    private bool canSprint => (syncPlayer.GetStaminaFraction() > 0 && isMoving);
+    private bool canSprint => (GetStaminaFraction() > 0 && isMoving);
     private bool isSprinting => (canSprint && sprinting);
     public bool isInEnemyTerritory {
         get {
@@ -88,6 +88,16 @@ public class LocalPlayer : NetworkBehaviour
     {
         this.moveSpeed = newSpeed;
     }
+
+     public void SetMaxStamina(float maxStamina) {
+        this.curStamina = curStamina/maxStamina*maxStamina;
+        this.maxStamina = maxStamina;
+    }
+    
+    public float GetStaminaFraction() {
+        return curStamina/maxStamina;
+    }
+
     #endregion
     void Start()
     {
@@ -201,8 +211,6 @@ public class LocalPlayer : NetworkBehaviour
 
     void Update()
     {        
-        //test 
-        isOwner = IsOwner;
         ClientsSetupRendererIfNeeded();        
         ClientsUpdateUsername();
         if(!IsOwner) return;
@@ -214,6 +222,19 @@ public class LocalPlayer : NetworkBehaviour
         UpdateStamina();
         UpdateCooldowns(); //update cooldowns
         UpdateEffects(); // update skill effects applied to player
+    }
+
+    void LateUpdate()
+    {
+        if(IsOwner && isJailed) {
+            Jail jail = JailManager.Instance.JailForPlayerOfTeam(team);
+            Vector3 jailCenter = jail.transform.position;
+            Vector3 jailToPlayer = (this.transform.position-jailCenter);
+            if(jailToPlayer.magnitude > jail.jailSize) {
+                Vector3 newPos = jailCenter + jailToPlayer.normalized*jail.jailSize;
+                this.transform.position = new Vector3(newPos.x, this.transform.position.y, newPos.z);
+            }
+        }
     }
 
     public void SetDisabled(bool disabled)
@@ -397,22 +418,39 @@ public class LocalPlayer : NetworkBehaviour
 
     #region Local-Network Interface
 
-    public void TakeNetworkEffect(EffectType effectType) {
-        syncPlayer.TakeNetworkEffect(effectType);
+    public void TakeNetworkEffect(EffectType effectType, ulong byClientId) {
+        syncPlayer.TakeNetworkEffect(effectType, byClientId);
+    }    
+    
+    public void ClientContact(LocalPlayer by) {
+        syncPlayer.ClientContact(by.OwnerClientId);
     }
 
-    public void Contact(LocalPlayer by) {
-        if (this.team != by.team)
+    #endregion
+
+    #region Network-Local Interface
+    
+    public void ResetForRound() {
+        //reset position
+        this.transform.position = syncPlayer.spawnPos;
+        this.transform.rotation = syncPlayer.spawnDir; 
+        
+        //reset stats
+        this.curStamina = this.maxStamina;
+
+        //reset effects
+        for(int i=this.effects.Count-1; i>=0 && i < this.effects.Count; i++)
         {
-            if (isCatchable)
-            {
-                syncPlayer.Imprison(by.syncPlayer);
-            }
+            Effect effect = this.effects[i];
+            effect.OnEffectEnd();
         }
-        else //same team
-        {
-            syncPlayer.Release(by.syncPlayer);            
-        }
+        this.effects.Clear(); 
+
+        //reset animation 
+        Animator animator = GetComponent<Animator>();
+        animator.SetFloat("HorMovement", 0);
+        animator.SetFloat("VertMovement", 0);      
+        animator.SetBool("IsMoving", false);         
     }
 
     #endregion

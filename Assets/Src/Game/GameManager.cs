@@ -16,9 +16,6 @@ public class GameManager : NetworkBehaviour
 
     public Flag redTeamFlag;
     public Flag blueTeamFlag;
-
-    public Jail blueTeamJail;
-    public Jail redTeamJail;
     
     public NetworkVariableInt blueTeamScore = new NetworkVariableInt(new NetworkVariableSettings{
         SendTickrate = 0,
@@ -54,6 +51,7 @@ public class GameManager : NetworkBehaviour
         if(!IsServer) {return;}
         ResetFlags();
         ResetPlayerPositions();
+        JailManager.Instance.ReleaseAll();
     }
 
     void ResetPlayerPositions() {
@@ -111,48 +109,13 @@ public class GameManager : NetworkBehaviour
 
     #endregion
 
-    #region Server Game Methods
-    public void Imprison(Player player, Player imprisonedBy) {        
-        if(player.GetTeam() == imprisonedBy.GetTeam()) {
-            Debug.LogError("Cannot be imprisoned by player of same team");
-            return;
-        }
-
-        if(player.GetTeam() == Team.BLUE) {
-            if(!redTeamJail.GetJailedPlayers().Contains(player)) {
-                redTeamJail.Imprison(player);
-                if(OnPlayerJailed != null) OnPlayerJailed(player, imprisonedBy);
-            }
-        }
-        else {
-            if(!blueTeamJail.GetJailedPlayers().Contains(player)) {
-                blueTeamJail.Imprison(player);
-                if(OnPlayerJailed != null) OnPlayerJailed(player, imprisonedBy);
-            }
-        }
-    }
-
-    public void Release(Player player, Player releasedBy) {
-        Jail targetJail = player.GetTeam() == Team.RED ? blueTeamJail : redTeamJail;
-        // only release if player is not jailed themselves
-        if (!targetJail.GetJailedPlayers().Contains(releasedBy) && targetJail.GetJailedPlayers().Contains(player))
-        {
-            if(OnPlayerFreed != null) OnPlayerFreed(player, releasedBy);
-            targetJail.Release(player);
-        }
-    }
-
-    public void ResetJail() {
-        blueTeamJail.ReleaseAll();
-        redTeamJail.ReleaseAll();
-    }
-    
+    #region Game Methods
     public void FlagCapturedBy(Player player) {
         if(OnFlagCaptured != null) OnFlagCaptured(player);
     }
     
     public void ScorePoint(Player player) {
-        if(!IsServer) {return;}
+        // if(!IsServer) {return;}
 
         if(OnPlayerScored != null) OnPlayerScored(player);
 
@@ -213,7 +176,7 @@ public class GameManager : NetworkBehaviour
             GameObject spawnedPlayerGO = PlayerSpawner.Instance.SpawnPlayer(user, playerIndex, roomSize); 
 
             //link
-            playerController.LinkPlayerReference(spawnedPlayerGO);            
+            // playerController.LinkPlayerReference(spawnedPlayerGO);            
 
             if(user.team == Team.BLUE) {
                 blueTeamIndex += 1;
