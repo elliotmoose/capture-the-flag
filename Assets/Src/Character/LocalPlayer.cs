@@ -29,6 +29,7 @@ public class LocalPlayer : NetworkBehaviour
     public Player syncPlayer => GetComponent<Player>();
     public bool isDisabled = false;  
     public bool isJailed => syncPlayer.isJailed;  
+    private bool _transportedToJail = false;
     private bool isMoving => (moveDir.magnitude > 0.01f && !isDisabled);
     private bool canSprint => (GetStaminaFraction() > 0 && isMoving);
     private bool isSprinting => (canSprint && sprinting);
@@ -226,13 +227,25 @@ public class LocalPlayer : NetworkBehaviour
 
     void LateUpdate()
     {
+        UpdatePositionIfJailed();
+    }
+
+    private void UpdatePositionIfJailed() {
+        if(!isJailed) _transportedToJail = false; //reset. This is for the purpose of telling smoothsync to teleport to center
         if(IsOwner && isJailed) {
             Jail jail = JailManager.Instance.JailForPlayerOfTeam(team);
             Vector3 jailCenter = jail.transform.position;
-            Vector3 jailToPlayer = (this.transform.position-jailCenter);
-            if(jailToPlayer.magnitude > jail.jailSize) {
-                Vector3 newPos = jailCenter + jailToPlayer.normalized*jail.jailSize;
-                this.transform.position = new Vector3(newPos.x, this.transform.position.y, newPos.z);
+            if(!_transportedToJail) {
+                this.transform.position = jailCenter;
+                this.GetComponent<Smooth.SmoothSyncMLAPI>().teleportOwnedObjectFromOwner();
+                _transportedToJail = true;
+            }
+            else {
+                Vector3 jailToPlayer = (this.transform.position-jailCenter);
+                if(jailToPlayer.magnitude > jail.jailSize) {
+                    Vector3 newPos = jailCenter + jailToPlayer.normalized*jail.jailSize;
+                    this.transform.position = new Vector3(newPos.x, this.transform.position.y, newPos.z);
+                }
             }
         }
     }
@@ -434,6 +447,7 @@ public class LocalPlayer : NetworkBehaviour
         //reset position
         this.transform.position = syncPlayer.spawnPos;
         this.transform.rotation = syncPlayer.spawnRot; 
+        this.GetComponent<Smooth.SmoothSyncMLAPI>().teleportOwnedObjectFromOwner();
         
         //reset stats
         this.curStamina = this.maxStamina;

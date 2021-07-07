@@ -193,13 +193,7 @@ public class Player : NetworkBehaviour
         if(!IsServer) return;
         if(!isJailed) {
             _isJailed.Value = true;
-
-            if(this.team == by.team) {
-                Debug.LogError("Cannot be imprisoned by player of same team");
-                return;
-            }
-
-            Debug.LogWarning("TODO: Trigger Game Instance OnPlayerJailed event");
+            GameManager.Instance.TriggerOnPlayerJailed(this, by);
         }
     }
 
@@ -208,8 +202,7 @@ public class Player : NetworkBehaviour
         if(!IsServer) return;
         if(isJailed) {
             _isJailed.Value = false;
-            
-            Debug.LogWarning("TODO: Trigger GameManager.Instance.OnPlayerFreed");
+            GameManager.Instance.TriggerOnPlayerFreed(this, by);
         }
     }
 }

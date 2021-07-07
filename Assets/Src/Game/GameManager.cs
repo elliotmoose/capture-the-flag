@@ -30,10 +30,10 @@ public class GameManager : NetworkBehaviour
 
     public bool roundInProgress = false;
 
-    public GameEvent OnPlayerScored;
-    public GameEvent OnFlagCaptured;
-    public GameEventInteraction OnPlayerJailed;
-    public GameEventInteraction OnPlayerFreed;
+    public event GameEvent OnPlayerScored;
+    public event GameEvent OnFlagCaptured;
+    public event GameEventInteraction OnPlayerJailed;
+    public event GameEventInteraction OnPlayerFreed;
     
     public void StartGame() {        
         if(!IsServer) { return; }
@@ -201,8 +201,20 @@ public class GameManager : NetworkBehaviour
         redTeamFlag.GetComponent<Flag>().DispatchResetPosition();
         blueTeamFlag.GetComponent<Flag>().DispatchResetPosition();
     }
+    #endregion
+
+    #region Event Triggers
+
+    public void TriggerOnPlayerJailed(Player playerJailed, Player playerCatcher) {
+        if(OnPlayerJailed!=null) OnPlayerJailed(playerJailed, playerCatcher);
+    }
+    
+    public void TriggerOnPlayerFreed(Player playerFreed, Player playerFreedBy) {
+        if(OnPlayerFreed!=null) OnPlayerFreed(playerFreed, playerFreedBy);
+    }
 
     #endregion
+
     void Awake() {
         if(Instance != null) {
             throw new System.Exception("More than one GameManager exists");
