@@ -3,11 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Reach : Skill
-{
-
-    private float distance = 10.0f; // distance reach extends to
-    private float angle = 10.0f; // angle margin allowed
-    
+{   
 
     public Reach()
     {
@@ -17,32 +13,32 @@ public class Reach : Skill
     }
     public override void UseSkill(Player player)
     {
-        Collider[] hitColliders = Physics.OverlapSphere(player.transform.position, distance);
-
-        foreach (Collider c in hitColliders)
-        {
-            Player target = c.gameObject.GetComponent<Player>();
-
-            if (target != null)
-            {
-                float current_angle = Vector3.Angle(player.transform.forward, target.transform.position - player.transform.position);
-                if (current_angle <= angle)
-                {
-                    if (player.GetTeam() != target.GetTeam())
-                    {
-                        if (target.IsCatchable())
-                        {
-                            GameManager.Instance.Imprison(target, player);
-                        }
-                    }
-                    else if (player.GetTeam() == target.GetTeam())
-                    {
-                        GameManager.Instance.Release(target, player);
-                    }
-                }
-                
-            }
-
-        }
+        
+        ReachEffect reachEffect = new ReachEffect(player);
+        player.TakeEffect(reachEffect);
     }
+}
+
+public class ReachEffect : Effect
+{
+    private string animation = "Reach";
+    private bool finished = false;
+
+    public ReachEffect(Player _target) : base(_target)
+    {
+        this.name = "REACH_EFFECT";
+        this.duration = 1.0f;
+        
+    }
+
+    public override void OnEffectApplied()
+    {
+        _target.GetComponent<Animator>().SetBool("IsReach", true);
+    }
+
+    public override void OnEffectEnd()
+    {
+        _target.GetComponent<Animator>().SetBool("IsReach", false);
+    }
+
 }
