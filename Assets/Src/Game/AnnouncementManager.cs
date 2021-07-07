@@ -84,17 +84,19 @@ public class AnnouncementManager : NetworkBehaviour
     void AnnouncePlayerCapturedClientRpc(User user) {
         Player localPlayer = PlayerController.LocalInstance.GetPlayer().syncPlayer;
         bool isMyTeammate = (user.team == localPlayer.GetTeam());
-        string playerString = isMyTeammate ? "Ally" : "Enemy";
+        bool isMe = (localPlayer.OwnerClientId == NetworkManager.Singleton.LocalClientId);
+        string playerString = isMe ? "You have been" : (isMyTeammate ? "Ally" : "Enemy");
         announcements.Enqueue(new Announcement{content=$"{playerString} put in jail!"});
-        // announcements.Enqueue(new Announcement{content=$"{user.username} has been captured!"});
     }
     
     [ClientRpc] 
     void AnnouncePlayerFreedClientRpc(User user) {
         //only announce to teammates
         if(user.team != PlayerController.LocalInstance.GetPlayer().team) return;
-        // announcements.Enqueue(new Announcement{content=$"{user.username} has been freed!"});
-        announcements.Enqueue(new Announcement{content=$"Ally has been freed!"});
+        Player localPlayer = PlayerController.LocalInstance.GetPlayer().syncPlayer;
+        bool isMe = (localPlayer.OwnerClientId == NetworkManager.Singleton.LocalClientId);
+        string announcementString = (isMe ? "You have" : "Ally has") + "been freed!";
+        announcements.Enqueue(new Announcement{content=announcementString});
     }
 
     void DisplayAnnouncement(Announcement announcement) {
