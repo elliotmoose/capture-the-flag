@@ -52,11 +52,10 @@ public class GameManager : NetworkBehaviour
     void ResetRound() {
         if(!IsServer) {return;}
         ResetFlags();
-        ResetPlayerPositions();
-        JailManager.Instance.ReleaseAll();
+        ResetPlayersForRound();
     }
 
-    void ResetPlayerPositions() {
+    void ResetPlayersForRound() {
         if(!IsServer) {return;}
         foreach(Player player in PlayerSpawner.Instance.GetAllPlayers()) {
             player.DispatchResetForRound();

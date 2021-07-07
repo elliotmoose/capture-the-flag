@@ -17,8 +17,4 @@ public class JailManager : NetworkBehaviour
     public Jail JailForPlayerOfTeam(Team team) {
         return team == Team.BLUE ? redTeamJail : blueTeamJail;
     }
-
-    public void ReleaseAll() {
-
-    }
 }

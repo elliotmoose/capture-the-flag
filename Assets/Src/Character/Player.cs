@@ -117,6 +117,7 @@ public class Player : NetworkBehaviour
     [ClientRpc]
     private void ResetForRoundClientRpc() {
         localPlayer.ResetForRound();
+        _isJailed.Value = false;
     }
     
     public void ClientContact(ulong byClientId) {
