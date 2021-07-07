@@ -4,7 +4,8 @@ using UnityEngine;
 using MLAPI;
 
 public class Catch : Skill
-{
+{   
+    LocalPlayer caster;
     public Catch()
     {
         cooldown = 1.0f;
@@ -13,57 +14,21 @@ public class Catch : Skill
 
     public override void UseSkill(LocalPlayer caster)
     {
-        CatchEffect catchEffect = new CatchEffect(caster, caster.syncPlayer.GetCatchRadius());
-        caster.TakeEffect(catchEffect);
-    }
-}
-
-public class CatchEffect : Effect
-{
-    private float radius;
-    private GameObject catchField;
-    private Renderer rend;
-    private Color color;
-    
-    private string animation = "Catch";
-    private bool finished = false;
-    public CatchEffect(LocalPlayer _player, float radius) : base(_player)
-    {        
-        this.duration = 0.2f;
-        this.name = "CATCH_EFFECT";
-
-        _player.OnAnimationStart += OnAnimationStart;      
-        _player.OnAnimationEnd += OnAnimationEnd;      
+        this.caster = caster;
+        caster.GetComponent<Animator>().SetBool("IsCatching", true);
+        caster.OnAnimationStart += OnAnimationStart;      
+        caster.OnAnimationEnd += OnAnimationEnd;      
     }
 
     public void OnAnimationStart(string animationName) {
-        if(animationName != animation) return;
+        if(animationName != name) return;
+        caster.transform.Find("Catch").localScale = Vector3.one * caster.syncPlayer.GetCatchRadius();
     }
     
     public void OnAnimationEnd(string animationName) {
-        if(animationName != animation) return;
-
-        _target.GetComponent<Animator>().SetBool("IsCatching", false);
-        finished = true;
-    }
-
-    protected override bool ShouldEffectEnd()
-    {
-        return finished;
-    }
-
-    public override void OnEffectApplied()
-    {
-        _target.GetComponent<Animator>().SetBool("IsCatching", true);
-    }
-
-    public override void OnEffectEnd()
-    {
-        
-    }
-
-    public override void UpdateEffect()
-    {
-        
+        if(animationName != name) return;
+        caster.GetComponent<Animator>().SetBool("IsCatching", false);
+        caster.OnAnimationStart -= OnAnimationStart;      
+        caster.OnAnimationEnd -= OnAnimationEnd;      
     }
 }

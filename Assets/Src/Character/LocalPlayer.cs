@@ -398,8 +398,7 @@ public class LocalPlayer : NetworkBehaviour
     public PlayerAnimationEvent OnAnimationRelease;
     public PlayerAnimationEvent OnAnimationEnd;
 
-    public void AnimationStart(string animationName) {
-        if(animationName == "Catch") this.transform.Find("Catch").localScale = Vector3.one * syncPlayer.GetCatchRadius();
+    public void AnimationStart(string animationName) {        
         if(animationName == "Teleport") SpawnTeleportStartParticle();
         if (animationName == "Smoke") SpawnSmokeParticle();
         if (OnAnimationStart!=null) OnAnimationStart(animationName);
