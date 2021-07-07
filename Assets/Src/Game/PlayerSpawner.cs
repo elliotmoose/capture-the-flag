@@ -105,7 +105,7 @@ public class PlayerSpawner : NetworkBehaviour
 
         Player player = playerObj.GetComponent<Player>();
         player.spawnPos = spawnPosition;
-        player.spawnDir = faceDirection;
+        player.spawnRot = faceDirection;
         player.SetUser(user);
         player.SetTeam(team);        
         // playerObj.GetComponent<NetworkObject>().SpawnAsPlayerObject(user.clientId);

@@ -8,8 +8,35 @@ using MLAPI.Messaging;
 
 public class Player : NetworkBehaviour
 {
-    public Vector3 spawnPos;
-    public Quaternion spawnDir;
+    public Vector3 spawnPos {
+        get {
+            return _spawnPos.Value;
+        }
+
+        set { 
+            _spawnPos.Value = value;
+        }
+    }
+    
+    public Quaternion spawnRot {
+        get {
+            return _spawnRot.Value;
+        }
+
+        set { 
+            _spawnRot.Value = value;
+        }
+    }
+
+    private NetworkVariableVector3 _spawnPos = new NetworkVariableVector3(new NetworkVariableSettings{
+        SendTickrate=0,
+        WritePermission=NetworkVariablePermission.ServerOnly
+    });
+    
+    private NetworkVariableQuaternion _spawnRot = new NetworkVariableQuaternion(new NetworkVariableSettings{
+        SendTickrate=0,
+        WritePermission=NetworkVariablePermission.ServerOnly
+    });
     
     public LocalPlayer localPlayer => this.GetComponent<LocalPlayer>();
 
@@ -38,6 +65,8 @@ public class Player : NetworkBehaviour
 
     public Team team => _team.Value;
 
+
+    #region Getter Setters
     public Team GetTeam() {
         return _team.Value;
     }
@@ -53,6 +82,8 @@ public class Player : NetworkBehaviour
     public void SetUser(User user) {
         this._user.Value = user;
     }
+
+    #endregion
 
     void OnEnable() {
         this._team.OnValueChanged += OnTeamChange;

@@ -116,8 +116,7 @@ public class GameManager : NetworkBehaviour
     }
     
     public void ScorePoint(Player player) {
-        // if(!IsServer) {return;}
-
+        if(!IsServer) {return;}
         if(OnPlayerScored != null) OnPlayerScored(player);
 
         Team team = player.GetTeam();

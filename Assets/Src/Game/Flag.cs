@@ -28,45 +28,20 @@ public class Flag : NetworkBehaviour
         rendererComponent.material.SetColor("_EmissionColor", (GetTeam() == Team.BLUE) ? new Color32(34,148,197,255) : new Color32(191,7,5,255));
     }
 
-    // void LateUpdate() {
-    //     if(!IsServer) {return;}
-    //     Debug.Log("LATE UPDATE FLAG");
-    //     if(capturer) {
-    //         this.transform.position = capturer.flagSlot.transform.position;
-    //         this.transform.rotation = capturer.flagSlot.transform.rotation;
-    //     }
-    // }
-
     public Team GetTeam() {
         return team.Value;
     }
 
     void OnTriggerEnter(Collider collider) {        
         if(!IsServer) { return; }
-        LocalPlayer localPlayer = collider.gameObject.GetComponent<LocalPlayer>();
-        if(localPlayer == null) return;
-        bool isDifferentTeam = (localPlayer.team != this.GetTeam());
+        Player player = collider.gameObject.GetComponent<Player>();
+        if(player == null) return;
+        bool isDifferentTeam = (player.team != this.GetTeam());
         bool isAvailableForCapture = (capturer == null);
         if(isDifferentTeam && isAvailableForCapture) {
-            CapturedServerRpc(localPlayer.OwnerClientId);
+            GameManager.Instance.FlagCapturedBy(player);
+            CapturedClientRpc(player.OwnerClientId);
         }
-
-        // if(player != null && player.GetTeam() != GetTeam() && capturer == null) {
-        //     Debug.Log($"{team} flag caught!");
-        //     this.transform.SetParent(player.flagSlot.transform);
-        //     this.transform.localRotation = Quaternion.identity;
-        //     this.transform.localPosition = Vector3.zero;
-        //     capturer = player;
-            
-        //     GameManager.Instance.FlagCapturedBy(player);
-        // }
-    }
-
-    [ServerRpc]
-    private void CapturedServerRpc(ulong byClientId) {
-        LocalPlayer player = LocalPlayer.WithClientId(byClientId);
-        GameManager.Instance.FlagCapturedBy(player.syncPlayer);
-        CapturedClientRpc(byClientId);
     }
 
     [ClientRpc]

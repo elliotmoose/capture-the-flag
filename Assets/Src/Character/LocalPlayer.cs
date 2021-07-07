@@ -433,7 +433,7 @@ public class LocalPlayer : NetworkBehaviour
     public void ResetForRound() {
         //reset position
         this.transform.position = syncPlayer.spawnPos;
-        this.transform.rotation = syncPlayer.spawnDir; 
+        this.transform.rotation = syncPlayer.spawnRot; 
         
         //reset stats
         this.curStamina = this.maxStamina;
