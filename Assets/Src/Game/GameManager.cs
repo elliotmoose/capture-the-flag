@@ -220,6 +220,23 @@ public class GameManager : NetworkBehaviour
 
     public void TriggerOnPlayerJailed(Player playerJailed, Player playerCatcher) {
         if(OnPlayerJailed!=null) OnPlayerJailed(playerJailed, playerCatcher);
+
+        //check if any free players
+        List<LocalPlayer> jailedPlayerAllies = LocalPlayer.PlayersFromTeam(playerJailed.team);
+
+        bool shouldContinueRound = false;
+        foreach(LocalPlayer ally in jailedPlayerAllies) {
+            if(!ally.isJailed) {
+                //as long as one ally is not jailed, the round continues
+                shouldContinueRound = true;
+                break;        
+            }
+        }
+
+        if(!shouldContinueRound) {
+            //end round
+            ScorePoint(playerCatcher);
+        }        
     }
     
     public void TriggerOnPlayerFreed(Player playerFreed, Player playerFreedBy) {

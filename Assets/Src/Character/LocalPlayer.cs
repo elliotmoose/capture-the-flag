@@ -486,4 +486,30 @@ public class LocalPlayer : NetworkBehaviour
         return null;
     }
 
+    public static List<LocalPlayer> AllPlayers() {
+        GameObject[] playerGOs = GameObject.FindGameObjectsWithTag("Player");
+        List<LocalPlayer> players = new List<LocalPlayer>();
+
+        foreach(GameObject playerGO in playerGOs) {
+            LocalPlayer localPlayer = playerGO.GetComponent<LocalPlayer>();
+            players.Add(localPlayer);
+        }
+
+        return players;
+    }
+    
+    public static List<LocalPlayer> PlayersFromTeam(Team team) {
+        GameObject[] playerGOs = GameObject.FindGameObjectsWithTag("Player");
+        List<LocalPlayer> players = new List<LocalPlayer>();
+
+        foreach(GameObject playerGO in playerGOs) {
+            LocalPlayer localPlayer = playerGO.GetComponent<LocalPlayer>();
+            if(team == localPlayer.team) {
+                players.Add(localPlayer);
+            }
+        }
+
+        return players;
+    }
+
 }
