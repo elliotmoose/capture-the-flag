@@ -33,7 +33,6 @@ public class PlayerCamera : MonoBehaviour
         if(!playerController) return;
 
         CinemachineVirtualCamera camera = GameObject.FindGameObjectWithTag("CinemachineCamera").GetComponent<CinemachineVirtualCamera>(); 
-        // CinemachineFreeLook camera = GameObject.FindGameObjectWithTag("CinemachineCamera").GetComponent<CinemachineFreeLook>(); 
         // target = NetworkSpawnManager.SpawnedObjects[playerGameObjectNetId].gameObject;
         LocalPlayer localPlayer = playerController.GetPlayer();
         if(!localPlayer) return;

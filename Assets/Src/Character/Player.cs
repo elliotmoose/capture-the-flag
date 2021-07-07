@@ -118,7 +118,6 @@ public class Player : NetworkBehaviour
     private void ResetForRoundClientRpc() {
         localPlayer.ResetForRound();
     }
-
     
     public void ClientContact(ulong byClientId) {
         ContactServerRpc(byClientId);

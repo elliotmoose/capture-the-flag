@@ -26,9 +26,10 @@ public class GameManager : NetworkBehaviour
         WritePermission = NetworkVariablePermission.ServerOnly
     });
 
-    int winScore = 15;
+    int winScore = 1;
 
     public bool roundInProgress = false;
+    public bool gameInProgress = false;
 
     public event GameEvent OnPlayerScored;
     public event GameEvent OnFlagCaptured;
@@ -44,6 +45,7 @@ public class GameManager : NetworkBehaviour
         StatsManager.Instance.Initialise(RoomManager.Instance.GetUsers());    
         ResetRound();
         BeginCountdownForRound();
+        SetGameInProgress(true);
     }
 
     #region Round methods
@@ -83,6 +85,11 @@ public class GameManager : NetworkBehaviour
         roundInProgress = inProgress;
         RoundStateUpdateClientRpc(inProgress);
     }
+    
+    private void SetGameInProgress(bool inProgress) {
+        gameInProgress = inProgress;
+        GameStateUpdateClientRpc(inProgress);
+    }
 
     #endregion
 
@@ -95,6 +102,11 @@ public class GameManager : NetworkBehaviour
     [ClientRpc]
     private void RoundStateUpdateClientRpc(bool state) {
         roundInProgress = state;
+    } 
+    
+    [ClientRpc]
+    private void GameStateUpdateClientRpc(bool state) {
+        gameInProgress = state;
     } 
 
     [ClientRpc]
@@ -148,6 +160,7 @@ public class GameManager : NetworkBehaviour
         SetRoundInProgress(false);
         StatsManager.Instance.PublishStats();
         GameOverClientRpc(winningTeam);
+        SetGameInProgress(false);
     }
 
     void SpawnPlayerControllers() {

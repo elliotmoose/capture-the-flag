@@ -176,7 +176,7 @@ public class UIManager : MonoBehaviour
     }
 
     public void FreezeCamera() {
-        CinemachineFreeLook camera = GameObject.FindGameObjectWithTag("CinemachineCamera").GetComponent<CinemachineFreeLook>();
+        CinemachineVirtualCamera camera = GameObject.FindGameObjectWithTag("CinemachineCamera").GetComponent<CinemachineVirtualCamera>();
         camera.enabled = false;
 
         //show mouse

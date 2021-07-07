@@ -212,11 +212,13 @@ public class LocalPlayer : NetworkBehaviour
 
     void Update()
     {        
+        if(!GameManager.Instance.gameInProgress) { return; }
         ClientsSetupRendererIfNeeded();        
         ClientsUpdateUsername();
-        if(!IsOwner) return;
-        this.transform.rotation = Quaternion.Euler(0, faceAngle, 0);
         
+        if(!IsOwner) return;
+        
+        this.transform.rotation = Quaternion.Euler(0, faceAngle, 0);
         if(!GameManager.Instance.roundInProgress) { return; }
         
         SetAnimationsSmooth(isMoving, isSprinting);
@@ -228,6 +230,7 @@ public class LocalPlayer : NetworkBehaviour
     void LateUpdate()
     {
         UpdatePositionIfJailed();
+        this.transform.position = new Vector3(this.transform.position.x, 0, this.transform.position.z);
     }
 
     private void UpdatePositionIfJailed() {
@@ -258,6 +261,7 @@ public class LocalPlayer : NetworkBehaviour
 
     public void TakeEffect(Effect effect)
     {
+        if(!IsOwner) return;
         if(!GameManager.Instance.roundInProgress) { return; }
 
         Effect existingEffect = this.effects.Find((thisEffect) =>
@@ -444,6 +448,7 @@ public class LocalPlayer : NetworkBehaviour
     #region Network-Local Interface
     
     public void ResetForRound() {
+        if(!IsOwner) return; 
         //reset position
         this.transform.position = syncPlayer.spawnPos;
         this.transform.rotation = syncPlayer.spawnRot; 
