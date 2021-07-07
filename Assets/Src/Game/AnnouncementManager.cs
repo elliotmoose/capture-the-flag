@@ -82,9 +82,10 @@ public class AnnouncementManager : NetworkBehaviour
     
     [ClientRpc] 
     void AnnouncePlayerCapturedClientRpc(User user) {
+        //my player
         Player localPlayer = PlayerController.LocalInstance.GetPlayer().syncPlayer;
-        bool isMyTeammate = (user.team == localPlayer.GetTeam());
-        bool isMe = (localPlayer.OwnerClientId == NetworkManager.Singleton.LocalClientId);
+        bool isMyTeammate = (user.team == localPlayer.team);
+        bool isMe = (user.clientId == localPlayer.OwnerClientId);
         string playerString = isMe ? "You have been" : (isMyTeammate ? "Ally" : "Enemy");
         announcements.Enqueue(new Announcement{content=$"{playerString} put in jail!"});
     }
@@ -94,7 +95,7 @@ public class AnnouncementManager : NetworkBehaviour
         //only announce to teammates
         if(user.team != PlayerController.LocalInstance.GetPlayer().team) return;
         Player localPlayer = PlayerController.LocalInstance.GetPlayer().syncPlayer;
-        bool isMe = (localPlayer.OwnerClientId == NetworkManager.Singleton.LocalClientId);
+        bool isMe = (user.clientId == localPlayer.OwnerClientId);
         string announcementString = (isMe ? "You have" : "Ally has") + "been freed!";
         announcements.Enqueue(new Announcement{content=announcementString});
     }
