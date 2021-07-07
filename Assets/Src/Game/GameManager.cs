@@ -8,6 +8,14 @@ using MLAPI.Messaging;
 public delegate void GameEvent(Player player);
 public delegate void GameEventInteraction(Player receiver, Player giver);
 
+public enum GameServerState {
+    SERVER_INIT, //init stats, generate summary ui for host player
+    SPAWNING, //spawn players and flags
+    RESETTING, //reset player positions, effects, flag positions
+    COUNTDOWN, //countdown
+    PLAY,
+    SCORESCREEN
+}
 public class GameManager : NetworkBehaviour
 {
     public static GameManager Instance;
@@ -35,33 +43,37 @@ public class GameManager : NetworkBehaviour
     public event GameEvent OnFlagCaptured;
     public event GameEventInteraction OnPlayerJailed;
     public event GameEventInteraction OnPlayerFreed;
+
+    GameServerState serverState = GameServerState.SERVER_INIT;
     
+    //Spawn PlayerControllers (spawns players) -> Spawn flags -> (INSERT SANITY CHECK FOR PLAYER SPAWN) )Reset Positions 
     public void StartGame() {        
         if(!IsServer) { return; }
         Debug.Log("== GameManager: Game Started!");
         UIManager.Instance.GenerateGameSummaryUI();
-        SpawnPlayerControllers();     
-        SpawnFlags();
         StatsManager.Instance.Initialise(RoomManager.Instance.GetUsers());    
-        ResetRound();
-        BeginCountdownForRound();
+
+        SpawnPlayerControllers();
+   
         SetGameInProgress(true);
+        ResetRoundClientRpc();
+        BeginCountdownForRound();        
     }
 
-    #region Round methods
-    void ResetRound() {
-        if(!IsServer) {return;}
-        ResetFlags();
-        ResetPlayersForRound();
-    }
-
-    void ResetPlayersForRound() {
-        if(!IsServer) {return;}
-        foreach(Player player in PlayerSpawner.Instance.GetAllPlayers()) {
-            player.DispatchResetForRound();
+    [ClientRpc]
+    private void ResetRoundClientRpc() {
+        //player positions
+        foreach(LocalPlayer localPlayer in LocalPlayer.AllPlayers()) {
+            localPlayer.ResetForRound();
         }
+        
+        PlayerController.LocalInstance.ResetFaceAngle();
 
-        ResetPlayerCamerasClientRpc();
+        //flag positions
+        redTeamFlag.GetComponent<Flag>().SetTeam(Team.RED);
+        blueTeamFlag.GetComponent<Flag>().SetTeam(Team.BLUE);    
+        redTeamFlag.GetComponent<Flag>().ResetPosition();
+        blueTeamFlag.GetComponent<Flag>().ResetPosition();
     }
 
     private void BeginCountdownForRound() {
@@ -90,9 +102,8 @@ public class GameManager : NetworkBehaviour
         GameStateUpdateClientRpc(inProgress);
     }
 
-    #endregion
-
     #region Client RPCS
+
     [ClientRpc]
     private void CountdownClientRpc(int count) {
         UIManager.Instance.DisplayCountdown(count);        
@@ -107,11 +118,6 @@ public class GameManager : NetworkBehaviour
     private void GameStateUpdateClientRpc(bool state) {
         gameInProgress = state;
     } 
-
-    [ClientRpc]
-    private void ResetPlayerCamerasClientRpc() {
-        PlayerController.LocalInstance.ResetFaceAngle();
-    }
 
     [ClientRpc]
     private void GameOverClientRpc(Team winningTeam) {
@@ -145,7 +151,7 @@ public class GameManager : NetworkBehaviour
             GameOver(Team.RED);
         }
         else {
-            ResetRound();
+            ResetRoundClientRpc();
             BeginCountdownForRound();
         }
     }
@@ -199,20 +205,15 @@ public class GameManager : NetworkBehaviour
         }
     }
 
-    void SpawnFlags() {
-        redTeamFlag = GameObject.Instantiate(PrefabsManager.Instance.flag, Vector3.zero, Quaternion.identity).GetComponent<Flag>();
-        blueTeamFlag = GameObject.Instantiate(PrefabsManager.Instance.flag, Vector3.zero, Quaternion.identity).GetComponent<Flag>();
-        redTeamFlag.GetComponent<NetworkObject>().Spawn();
-        blueTeamFlag.GetComponent<NetworkObject>().Spawn();
-        redTeamFlag.GetComponent<Flag>().SetTeam(Team.RED);
-        blueTeamFlag.GetComponent<Flag>().SetTeam(Team.BLUE);
-        ResetFlags();
-    }
+    // void SpawnFlags() {
+    //     redTeamFlag = GameObject.Instantiate(PrefabsManager.Instance.flag, Vector3.zero, Quaternion.identity).GetComponent<Flag>();
+    //     blueTeamFlag = GameObject.Instantiate(PrefabsManager.Instance.flag, Vector3.zero, Quaternion.identity).GetComponent<Flag>();
+    //     redTeamFlag.GetComponent<NetworkObject>().Spawn();
+    //     blueTeamFlag.GetComponent<NetworkObject>().Spawn();
+    //     redTeamFlag.GetComponent<Flag>().SetTeam(Team.RED);
+    //     blueTeamFlag.GetComponent<Flag>().SetTeam(Team.BLUE);        
+    // }
 
-    void ResetFlags() {
-        redTeamFlag.GetComponent<Flag>().DispatchResetPosition();
-        blueTeamFlag.GetComponent<Flag>().DispatchResetPosition();
-    }
     #endregion
 
     #region Event Triggers

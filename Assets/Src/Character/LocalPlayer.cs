@@ -28,7 +28,7 @@ public class LocalPlayer : NetworkBehaviour
     //player states
     public Player syncPlayer => GetComponent<Player>();
     public bool isDisabled = false;  
-    public bool isJailed => syncPlayer.isJailed;  
+    public bool isJailed = false;  
     private bool _transportedToJail = false;
     private bool isMoving => (moveDir.magnitude > 0.01f && !isDisabled);
     private bool canSprint => (GetStaminaFraction() > 0 && isMoving);
@@ -454,7 +454,8 @@ public class LocalPlayer : NetworkBehaviour
         //reset position
         this.transform.position = syncPlayer.spawnPos;
         this.transform.rotation = syncPlayer.spawnRot; 
-        this.GetComponent<Smooth.SmoothSyncMLAPI>().teleportOwnedObjectFromOwner();
+        // this.GetComponent<Smooth.SmoothSyncMLAPI>().teleportOwnedObjectFromOwner();
+        this.isJailed = false;
         
         //reset stats
         this.curStamina = this.maxStamina;

@@ -57,14 +57,8 @@ public class Flag : NetworkBehaviour
         if(!IsServer) { return; }
         this.team.Value = team;        
     }
-
-    public void DispatchResetPosition() {
-        if(!IsServer) return;
-        ResetPositionClientRpc();
-    }
     
-    [ClientRpc]
-    public void ResetPositionClientRpc() {
+    public void ResetPosition() {
         this.capturer = null;
         this.transform.SetParent(null);
         this.transform.position = new Vector3(0,1.25f,120 * ((GetTeam() == Team.BLUE) ? 1 : -1));

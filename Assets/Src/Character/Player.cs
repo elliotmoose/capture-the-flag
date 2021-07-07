@@ -46,13 +46,6 @@ public class Player : NetworkBehaviour
         WritePermission = NetworkVariablePermission.ServerOnly
     });
 
-    private NetworkVariableBool _isJailed = new NetworkVariableBool(new NetworkVariableSettings{
-        SendTickrate = 0,
-        WritePermission = NetworkVariablePermission.ServerOnly
-    });
-
-    public bool isJailed => _isJailed.Value;
-
     private NetworkVariableFloat _catchRadius = new NetworkVariableFloat(new NetworkVariableSettings{
         SendTickrate = 0,
         WritePermission = NetworkVariablePermission.ServerOnly
@@ -110,42 +103,6 @@ public class Player : NetworkBehaviour
         
     }
 
-    public void DispatchResetForRound() {
-        ResetForRoundClientRpc();
-        _isJailed.Value = false;
-    }
-
-    [ClientRpc]
-    private void ResetForRoundClientRpc() {
-        localPlayer.ResetForRound();        
-    }
-    
-    public void ClientContact(ulong byClientId) {
-        ContactServerRpc(byClientId);
-    }
-
-    [ServerRpc(RequireOwnership=false)]
-    public void ContactServerRpc(ulong byClientId) {        
-        ServerContact(LocalPlayer.WithClientId(byClientId).syncPlayer);
-    }
-
-    public void ServerContact(Player by) {
-        if(!IsServer) return; //contact happens on server only
-        if(by.OwnerClientId == this.OwnerClientId) return; //cannot contact self
-
-        if (this.team != by.team)
-        {
-            if (localPlayer.isCatchable)
-            {
-                this.ServerImprison(by);
-            }
-        }
-        else //same team
-        {
-            this.ServerRelease(by);
-        }
-    }
-
     
     /// <summary>
     /// This is called locally, by the triggering client
@@ -175,8 +132,8 @@ public class Player : NetworkBehaviour
                 LocalPlayer appliedByLocalPlayer = LocalPlayer.WithClientId(byClientId);
                 Vector3 direction = this.transform.position - appliedByLocalPlayer.transform.position;
                 float currentDistance = direction.magnitude;
-                float finalDistance = 18f;
-                float timeTaken = 0.25f;
+                float finalDistance = 15f;
+                float timeTaken = 0.3f;
                 float knockbackDistance = finalDistance - currentDistance;
                 PushEffect effect = new PushEffect(localPlayer, direction, knockbackDistance, timeTaken);
                 localPlayer.TakeEffect(effect);
@@ -188,21 +145,59 @@ public class Player : NetworkBehaviour
         }
     }
 
+
+    
+    public void ClientContact(ulong byClientId) {
+        ContactServerRpc(byClientId);
+    }
+
+    [ServerRpc(RequireOwnership=false)]
+    public void ContactServerRpc(ulong byClientId) {        
+        ServerContact(LocalPlayer.WithClientId(byClientId).syncPlayer);
+    }
+
+    public void ServerContact(Player by) {
+        if(!IsServer) return; //contact happens on server only
+        if(by.OwnerClientId == this.OwnerClientId) return; //cannot contact self
+
+        if (this.team != by.team)
+        {
+            if (localPlayer.isCatchable)
+            {
+                this.ServerImprison(by);
+            }
+        }
+        else //same team
+        {
+            this.ServerRelease(by);
+        }
+    }
+    
     //onserver
     public void ServerImprison(Player by) {
         if(!IsServer) return;
-        if(!isJailed) {
-            _isJailed.Value = true;
+        if(!localPlayer.isJailed) {
+            ImprisonClientRpc();
             GameManager.Instance.TriggerOnPlayerJailed(this, by);
         }
+    }
+
+    [ClientRpc]
+    private void ImprisonClientRpc() {
+        localPlayer.isJailed = true;
     }
 
     //onserver
     public void ServerRelease(Player by) {
         if(!IsServer) return;
-        if(isJailed) {
-            _isJailed.Value = false;
+        if(localPlayer.isJailed) {
+            ReleaseClientRpc();
             GameManager.Instance.TriggerOnPlayerFreed(this, by);
         }
+    }
+
+    [ClientRpc]
+    private void ReleaseClientRpc() {
+        localPlayer.isJailed = false;
     }
 }
