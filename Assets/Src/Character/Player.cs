@@ -112,12 +112,12 @@ public class Player : NetworkBehaviour
 
     public void DispatchResetForRound() {
         ResetForRoundClientRpc();
+        _isJailed.Value = false;
     }
 
     [ClientRpc]
     private void ResetForRoundClientRpc() {
-        localPlayer.ResetForRound();
-        _isJailed.Value = false;
+        localPlayer.ResetForRound();        
     }
     
     public void ClientContact(ulong byClientId) {
@@ -175,8 +175,8 @@ public class Player : NetworkBehaviour
                 LocalPlayer appliedByLocalPlayer = LocalPlayer.WithClientId(byClientId);
                 Vector3 direction = this.transform.position - appliedByLocalPlayer.transform.position;
                 float currentDistance = direction.magnitude;
-                float finalDistance = 15f;
-                float timeTaken = 0.3f;
+                float finalDistance = 18f;
+                float timeTaken = 0.25f;
                 float knockbackDistance = finalDistance - currentDistance;
                 PushEffect effect = new PushEffect(localPlayer, direction, knockbackDistance, timeTaken);
                 localPlayer.TakeEffect(effect);
