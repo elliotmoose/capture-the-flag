@@ -144,15 +144,13 @@ public class Player : NetworkBehaviour
                 break;
         }
     }
-
-
     
     public void ClientContact(ulong byClientId) {
         ContactServerRpc(byClientId);
     }
 
     [ServerRpc(RequireOwnership=false)]
-    public void ContactServerRpc(ulong byClientId) {        
+    private void ContactServerRpc(ulong byClientId) {        
         ServerContact(LocalPlayer.WithClientId(byClientId).syncPlayer);
     }
 
@@ -162,7 +160,7 @@ public class Player : NetworkBehaviour
 
         if (this.team != by.team)
         {
-            if (localPlayer.isCatchable)
+            if (this.localPlayer.isCatchable && !by.localPlayer.isJailed)
             {
                 this.ServerImprison(by);
             }

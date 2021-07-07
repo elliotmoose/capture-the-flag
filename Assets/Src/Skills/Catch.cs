@@ -21,8 +21,7 @@ public class Catch : Skill
     }
 
     public void OnAnimationStart(string animationName) {
-        if(animationName != name) return;
-        caster.transform.Find("Catch").localScale = Vector3.one * caster.syncPlayer.GetCatchRadius();
+        if(animationName != name) return;        
     }
     
     public void OnAnimationEnd(string animationName) {

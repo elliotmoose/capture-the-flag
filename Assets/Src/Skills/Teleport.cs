@@ -6,11 +6,11 @@ using MLAPI;
 // Teleport skill
 public class Teleport : Skill
 {
-    private float teleportFactor = 25.0f;
+    private float teleportFactor = 30.0f;
 
     public Teleport()
     {
-        cooldown = 6.0f;
+        cooldown = 7.0f;
         name = "Teleport";
     }
 

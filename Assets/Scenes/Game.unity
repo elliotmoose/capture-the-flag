@@ -15264,8 +15264,6 @@ MonoBehaviour:
     m_InternalValue: 0
   redTeamScore:
     m_InternalValue: 0
-  roundInProgress: 0
-  gameInProgress: 0
 --- !u!114 &368055229
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -33344,8 +33342,8 @@ MonoBehaviour:
   m_StreamingVersion: 20170927
   m_Priority: 11
   m_StandbyUpdate: 2
-  m_LookAt: {fileID: 0}
-  m_Follow: {fileID: 0}
+  m_LookAt: {fileID: 1374153674}
+  m_Follow: {fileID: 1374153674}
   m_Lens:
     FieldOfView: 40
     OrthographicSize: 10
@@ -33371,8 +33369,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 980312012}
-  m_LocalRotation: {x: -0, y: 0.9956629, z: -0.09303406, w: 0}
-  m_LocalPosition: {x: 0, y: 7.84, z: 18.3}
+  m_LocalRotation: {x: 0.09303406, y: -0, z: -0, w: 0.9956629}
+  m_LocalPosition: {x: 0, y: 7.34, z: -18.3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1294739026}
@@ -39308,8 +39306,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1183394280}
-  m_LocalRotation: {x: -0, y: 0.9956629, z: -0.09303406, w: 0}
-  m_LocalPosition: {x: 0, y: 7.84, z: 18.3}
+  m_LocalRotation: {x: 0.09303406, y: -0, z: -0, w: 0.9956629}
+  m_LocalPosition: {x: 0, y: 7.34, z: -18.3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1286725973}
@@ -41775,7 +41773,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd6043bde05a7fc4cba197d06915c1e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Damping: {x: 0, y: 0.5, z: 0}
+  Damping: {x: 0, y: 0, z: 0}
   ShoulderOffset: {x: 0.5, y: -5.2, z: 0}
   VerticalArmLength: 13.04
   CameraSide: 0.5
@@ -57882,7 +57880,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   autoStartConnection: 1
-  twoPlayer: 1
+  twoPlayer: 0
   isHost: 1
   character: 1
 --- !u!1001 &1919001616

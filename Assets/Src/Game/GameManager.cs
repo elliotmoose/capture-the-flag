@@ -8,9 +8,11 @@ using MLAPI.Messaging;
 public delegate void GameEvent(Player player);
 public delegate void GameEventInteraction(Player receiver, Player giver);
 
-public enum GameServerState {
-    SERVER_INIT, //init stats, generate summary ui for host player
+public enum GameState {
+    AWAITING_CONNECTIONS,
+    INIT_GAME_SERVER, //init stats, generate summary ui for host player
     SPAWNING, //spawn players and flags
+    AWAIT_SPAWN_CONFIRMATION, //spawn players and flags
     RESETTING, //reset player positions, effects, flag positions
     COUNTDOWN, //countdown
     PLAY,
@@ -36,28 +38,26 @@ public class GameManager : NetworkBehaviour
 
     int winScore = 15;
 
-    public bool roundInProgress = false;
-    public bool gameInProgress = false;
+    // public bool roundInProgress = false;
+    // public bool gameInProgress = false;
+
+    public bool roundInProgress => clientState == (GameState.PLAY);
+    public bool gameInProgress => (clientState >= GameState.RESETTING) && (clientState != GameState.SCORESCREEN);
 
     public event GameEvent OnPlayerScored;
     public event GameEvent OnFlagCaptured;
     public event GameEventInteraction OnPlayerJailed;
     public event GameEventInteraction OnPlayerFreed;
 
-    GameServerState serverState = GameServerState.SERVER_INIT;
+    GameState serverState = GameState.AWAITING_CONNECTIONS;
+    GameState clientState = GameState.AWAITING_CONNECTIONS;
+    int countdown = 3;
+    float curCountdownTimer = 0;
     
     //Spawn PlayerControllers (spawns players) -> Spawn flags -> (INSERT SANITY CHECK FOR PLAYER SPAWN) )Reset Positions 
     public void StartGame() {        
-        if(!IsServer) { return; }
-        Debug.Log("== GameManager: Game Started!");
-        UIManager.Instance.GenerateGameSummaryUI();
-        StatsManager.Instance.Initialise(RoomManager.Instance.GetUsers());    
-
-        SpawnPlayerControllers();
-   
-        SetGameInProgress(true);
-        ResetRoundClientRpc();
-        BeginCountdownForRound();        
+        if(!IsServer) { return; }    
+        UpdateGameServerState(GameState.INIT_GAME_SERVER);           
     }
 
     [ClientRpc]
@@ -76,11 +76,6 @@ public class GameManager : NetworkBehaviour
         blueTeamFlag.GetComponent<Flag>().ResetPosition();
     }
 
-    private void BeginCountdownForRound() {
-        SetRoundInProgress(false);
-        StartCoroutine(RoundCountdown());
-    }
-
     private IEnumerator RoundCountdown() {
         CountdownClientRpc(3);
         yield return new WaitForSeconds(1);
@@ -89,17 +84,7 @@ public class GameManager : NetworkBehaviour
         CountdownClientRpc(1);
         yield return new WaitForSeconds(1);
         CountdownClientRpc(0);
-        SetRoundInProgress(true);
-    }
-
-    private void SetRoundInProgress(bool inProgress) {
-        roundInProgress = inProgress;
-        RoundStateUpdateClientRpc(inProgress);
-    }
-    
-    private void SetGameInProgress(bool inProgress) {
-        gameInProgress = inProgress;
-        GameStateUpdateClientRpc(inProgress);
+        UpdateGameServerState(GameState.PLAY);
     }
 
     #region Client RPCS
@@ -108,15 +93,14 @@ public class GameManager : NetworkBehaviour
     private void CountdownClientRpc(int count) {
         UIManager.Instance.DisplayCountdown(count);        
     } 
-
-    [ClientRpc]
-    private void RoundStateUpdateClientRpc(bool state) {
-        roundInProgress = state;
-    } 
     
+    private void UpdateGameServerState(GameState state) {
+        serverState = state;
+        UpdateClientGameStateClientRpc(state);
+    }
     [ClientRpc]
-    private void GameStateUpdateClientRpc(bool state) {
-        gameInProgress = state;
+    private void UpdateClientGameStateClientRpc(GameState state) {
+        clientState = state;
     } 
 
     [ClientRpc]
@@ -152,20 +136,71 @@ public class GameManager : NetworkBehaviour
         }
         else {
             ResetRoundClientRpc();
-            BeginCountdownForRound();
+            UpdateGameServerState(GameState.RESETTING);
         }
     }
     // Update is called once per frame
     void Update()
     {
-        
+        if(!IsServer) return;
+
+        switch (serverState)
+        {
+            case GameState.AWAITING_CONNECTIONS:
+                break;
+            case GameState.INIT_GAME_SERVER:
+                Debug.Log("== GameManager: Initialising Server");
+                UIManager.Instance.GenerateGameSummaryUI();
+                StatsManager.Instance.Initialise(RoomManager.Instance.GetUsers());  
+                UpdateGameServerState(GameState.SPAWNING);
+                break;
+            case GameState.SPAWNING:
+                Debug.Log("== GameManager: Spawning Players");
+                SpawnPlayerControllers();
+                UpdateGameServerState(GameState.AWAIT_SPAWN_CONFIRMATION);
+                break;
+            case GameState.AWAIT_SPAWN_CONFIRMATION:
+                Debug.Log("== GameManager: Awaiting Confirmation...");
+                bool clientConfirmationsReceived = true;
+                Debug.LogWarning("Check for client confirmations");
+                if(clientConfirmationsReceived) {
+                    Debug.Log("== GameManager: Confirmation received!");
+                    UpdateGameServerState(GameState.RESETTING);
+                }
+                break;
+            case GameState.RESETTING:
+                Debug.Log("== GameManager: Resetting Round");
+                ResetRoundClientRpc();
+                countdown = 3;
+                UpdateGameServerState(GameState.COUNTDOWN);
+                break;
+            case GameState.COUNTDOWN:
+                Debug.Log("== GameManager: Counting Down...");
+                curCountdownTimer -= Time.deltaTime;
+                if(curCountdownTimer <= 0) {
+                    CountdownClientRpc(countdown);        
+                    countdown -= 1;
+                    curCountdownTimer = 1;
+                }
+
+                if(countdown == -1) {
+                    CountdownClientRpc(0);
+                    UpdateGameServerState(GameState.PLAY);
+                }
+
+                break;
+            case GameState.PLAY:
+                Debug.Log("== GameManager: IN PLAY");
+                break;
+            default:
+                break;
+        }
     }
 
     void GameOver(Team winningTeam) {
-        SetRoundInProgress(false);
+        UpdateGameServerState(GameState.SCORESCREEN);
         StatsManager.Instance.PublishStats();
         GameOverClientRpc(winningTeam);
-        SetGameInProgress(false);
     }
 
     void SpawnPlayerControllers() {

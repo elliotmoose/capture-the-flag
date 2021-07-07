@@ -140,7 +140,7 @@ public class LocalPlayer : NetworkBehaviour
             this.transform.Find("Catch/CatchField").GetComponent<Renderer>().material.SetColor("_emission", this.team == Team.BLUE ? UIManager.Instance.colors.textBlue : UIManager.Instance.colors.textRed);
 
             _rendererSetupComplete = true;
-            Debug.Log($"Renderer Initialised for player: {syncPlayer.GetUser().username}");
+            // Debug.Log($"Renderer Initialised for player: {syncPlayer.GetUser().username}");
         }
     }
 
@@ -400,6 +400,7 @@ public class LocalPlayer : NetworkBehaviour
 
     public void AnimationStart(string animationName) {        
         if(animationName == "Teleport") SpawnTeleportStartParticle();
+        if (animationName == "Catch") this.transform.Find("Catch").localScale = Vector3.one * syncPlayer.GetCatchRadius(); //we need this to be here so that it is replicated across all
         if (animationName == "Smoke") SpawnSmokeParticle();
         if (OnAnimationStart!=null) OnAnimationStart(animationName);
     }
