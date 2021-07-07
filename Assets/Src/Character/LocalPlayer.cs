@@ -272,8 +272,10 @@ public class LocalPlayer : NetworkBehaviour
         // if same effect already exists on player, replace it with newer one
         if (existingEffect != null)
         {
-            this.effects.Remove(existingEffect);
-            this.effects.Add(effect);
+            // existingEffect.OnEffectEnd();
+            // this.effects.Remove(existingEffect);
+            // this.effects.Add(effect);
+            Debug.Log(effect.name + " cannot be stacked!!!!");
             return;
         }
         effect.OnEffectApplied();
@@ -458,7 +460,7 @@ public class LocalPlayer : NetworkBehaviour
         this.curStamina = this.maxStamina;
 
         //reset effects
-        for(int i=this.effects.Count-1; i>=0 && i < this.effects.Count; i++)
+        for(int i=this.effects.Count-1; i>=0 && i < this.effects.Count; i--)
         {
             Effect effect = this.effects[i];
             effect.OnEffectEnd();

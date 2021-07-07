@@ -18,7 +18,7 @@ public abstract class Effect
     }
 
     protected virtual bool ShouldEffectEnd() {
-        return age > duration;
+        return age >= duration;
     }
     public void Update()
     {
@@ -31,8 +31,8 @@ public abstract class Effect
         }
         else
         {
-            effectEnded = true;
             OnEffectEnd();
+            effectEnded = true;
         }
     }
 
