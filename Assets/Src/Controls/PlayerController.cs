@@ -10,7 +10,7 @@ using Cinemachine;
 public class PlayerController : NetworkBehaviour 
 {   
     public static PlayerController LocalInstance;
-    float MOUSE_SENSITIVITY = 15;
+    float MOUSE_SENSITIVITY = 13;
 
     // public User user;
     private NetworkVariable<User> _user = new NetworkVariable<User>(new NetworkVariableSettings{
