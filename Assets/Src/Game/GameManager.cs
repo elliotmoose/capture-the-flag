@@ -57,7 +57,7 @@ public class GameManager : NetworkBehaviour
     //Spawn PlayerControllers (spawns players) -> Spawn flags -> (INSERT SANITY CHECK FOR PLAYER SPAWN) )Reset Positions 
     public void StartGame() {        
         if(!IsServer) { return; }    
-        UpdateGameServerState(GameState.INIT_GAME_SERVER);           
+        ServerUpdateGameState(GameState.INIT_GAME_SERVER);           
     }
 
     [ClientRpc]
@@ -84,7 +84,7 @@ public class GameManager : NetworkBehaviour
         CountdownClientRpc(1);
         yield return new WaitForSeconds(1);
         CountdownClientRpc(0);
-        UpdateGameServerState(GameState.PLAY);
+        ServerUpdateGameState(GameState.PLAY);
     }
 
     #region Client RPCS
@@ -94,12 +94,12 @@ public class GameManager : NetworkBehaviour
         UIManager.Instance.DisplayCountdown(count);        
     } 
     
-    private void UpdateGameServerState(GameState state) {
+    private void ServerUpdateGameState(GameState state) {
         serverState = state;
-        UpdateClientGameStateClientRpc(state);
+        UpdateGameStateClientRpc(state);
     }
     [ClientRpc]
-    private void UpdateClientGameStateClientRpc(GameState state) {
+    private void UpdateGameStateClientRpc(GameState state) {
         clientState = state;
     } 
 
@@ -136,7 +136,7 @@ public class GameManager : NetworkBehaviour
         }
         else {
             ResetRoundClientRpc();
-            UpdateGameServerState(GameState.RESETTING);
+            ServerUpdateGameState(GameState.RESETTING);
         }
     }
     // Update is called once per frame
@@ -152,12 +152,12 @@ public class GameManager : NetworkBehaviour
                 Debug.Log("== GameManager: Initialising Server");
                 UIManager.Instance.GenerateGameSummaryUI();
                 StatsManager.Instance.Initialise(RoomManager.Instance.GetUsers());  
-                UpdateGameServerState(GameState.SPAWNING);
+                ServerUpdateGameState(GameState.SPAWNING);
                 break;
             case GameState.SPAWNING:
                 Debug.Log("== GameManager: Spawning Players");
                 SpawnPlayerControllers();
-                UpdateGameServerState(GameState.AWAIT_SPAWN_CONFIRMATION);
+                ServerUpdateGameState(GameState.AWAIT_SPAWN_CONFIRMATION);
                 break;
             case GameState.AWAIT_SPAWN_CONFIRMATION:
                 Debug.Log("== GameManager: Awaiting Confirmation...");
@@ -165,14 +165,14 @@ public class GameManager : NetworkBehaviour
                 Debug.LogWarning("Check for client confirmations");
                 if(clientConfirmationsReceived) {
                     Debug.Log("== GameManager: Confirmation received!");
-                    UpdateGameServerState(GameState.RESETTING);
+                    ServerUpdateGameState(GameState.RESETTING);
                 }
                 break;
             case GameState.RESETTING:
                 Debug.Log("== GameManager: Resetting Round");
                 ResetRoundClientRpc();
                 countdown = 3;
-                UpdateGameServerState(GameState.COUNTDOWN);
+                ServerUpdateGameState(GameState.COUNTDOWN);
                 break;
             case GameState.COUNTDOWN:
                 Debug.Log("== GameManager: Counting Down...");
@@ -185,7 +185,7 @@ public class GameManager : NetworkBehaviour
 
                 if(countdown == -1) {
                     CountdownClientRpc(0);
-                    UpdateGameServerState(GameState.PLAY);
+                    ServerUpdateGameState(GameState.PLAY);
                 }
 
                 break;
@@ -198,7 +198,7 @@ public class GameManager : NetworkBehaviour
     }
 
     void GameOver(Team winningTeam) {
-        UpdateGameServerState(GameState.SCORESCREEN);
+        ServerUpdateGameState(GameState.SCORESCREEN);
         StatsManager.Instance.PublishStats();
         GameOverClientRpc(winningTeam);
     }

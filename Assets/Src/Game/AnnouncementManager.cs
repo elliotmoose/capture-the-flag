@@ -75,28 +75,28 @@ public class AnnouncementManager : NetworkBehaviour
 
     [ClientRpc] 
     void AnnounceFlagCapturedClientRpc(Team playerTeam) {
-        Player localPlayer = PlayerController.LocalInstance.GetPlayer().syncPlayer;
-        bool isMyFlag = (playerTeam != localPlayer.GetTeam());
+        LocalPlayer thisClientPlayer = PlayerController.LocalInstance.GetPlayer();
+        bool isMyFlag = (playerTeam != thisClientPlayer.team);
         announcements.Enqueue(new Announcement{content=isMyFlag ? "Your flag has been captured by the enemy!" : "Your team has captured the enemy flag!"});
     }
     
     [ClientRpc] 
-    void AnnouncePlayerCapturedClientRpc(User user) {
+    void AnnouncePlayerCapturedClientRpc(User capturedUser) {
         //my player
-        Player localPlayer = PlayerController.LocalInstance.GetPlayer().syncPlayer;
-        bool isMyTeammate = (user.team == localPlayer.team);
-        bool isMe = (user.clientId == localPlayer.OwnerClientId);
+        LocalPlayer thisClientPlayer = PlayerController.LocalInstance.GetPlayer();
+        bool isMyTeammate = (capturedUser.team == thisClientPlayer.team);
+        bool isMe = (capturedUser.clientId == thisClientPlayer.OwnerClientId);
         string playerString = isMe ? "You have been" : (isMyTeammate ? "Ally" : "Enemy");
         announcements.Enqueue(new Announcement{content=$"{playerString} put in jail!"});
     }
     
     [ClientRpc] 
-    void AnnouncePlayerFreedClientRpc(User user) {
+    void AnnouncePlayerFreedClientRpc(User freedUser) {
         //only announce to teammates
-        if(user.team != PlayerController.LocalInstance.GetPlayer().team) return;
-        Player localPlayer = PlayerController.LocalInstance.GetPlayer().syncPlayer;
-        bool isMe = (user.clientId == localPlayer.OwnerClientId);
-        string announcementString = (isMe ? "You have" : "Ally has") + "been freed!";
+        LocalPlayer thisClientPlayer = PlayerController.LocalInstance.GetPlayer();
+        if(freedUser.team != thisClientPlayer.team) return;
+        bool isMe = (freedUser.clientId == thisClientPlayer.OwnerClientId);
+        string announcementString = (isMe ? "You have" : "Ally has") + " been freed!";
         announcements.Enqueue(new Announcement{content=announcementString});
     }
 
