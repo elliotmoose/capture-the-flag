@@ -26,7 +26,7 @@ public class GameManager : NetworkBehaviour
         WritePermission = NetworkVariablePermission.ServerOnly
     });
 
-    int winScore = 1;
+    int winScore = 15;
 
     public bool roundInProgress = false;
     public bool gameInProgress = false;
