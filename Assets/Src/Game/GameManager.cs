@@ -197,6 +197,7 @@ public class GameManager : NetworkBehaviour
                 case GameState.TRIGGER_RESET:
                     // Debug.Log("== GameManager (Server): Resetting Round");                          
                     curResetTimer = resetTimeout;
+                    // ClientResetRoundClientRpc();
                     ServerUpdateGameState(GameState.AWAIT_RESET);                    
                     break;
                 case GameState.AWAIT_RESET:

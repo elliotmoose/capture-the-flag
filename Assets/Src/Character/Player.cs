@@ -196,14 +196,16 @@ public class Player : NetworkBehaviour
     
     //onserver
     public void ServerImprison(Player by) {
-        if(!IsServer) return;        
-        localPlayer.isJailed = true; //server needs to register this immediately
-        GameManager.Instance.TriggerOnPlayerJailed(this, by);
+        if(!IsServer) return;
+        localPlayer.isJailed = true; //server needs to register this immediately, in order to end the round
+        GameManager.Instance.TriggerOnPlayerJailed(this, by); //IMPORTANT: we trigger event to check if round ends. If this wins the round, game is no longer in progress, so no need to imprison
+        if(!GameManager.Instance.roundInProgress) return;
         ImprisonClientRpc();
     }
 
     [ClientRpc]
     private void ImprisonClientRpc() {
+        if(!GameManager.Instance.roundInProgress) return;
         Debug.Log("IMPRISONED"  + gameObject.name);
         localPlayer.isJailed = true;
     }
@@ -213,11 +215,13 @@ public class Player : NetworkBehaviour
         if(!IsServer) return;
         localPlayer.isJailed = false; //server needs to register this immediately
         GameManager.Instance.TriggerOnPlayerFreed(this, by);
+        if(!GameManager.Instance.roundInProgress) return;
         ReleaseClientRpc();
     }
 
     [ClientRpc]
     private void ReleaseClientRpc() {
+        if(!GameManager.Instance.roundInProgress) return;
         localPlayer.isJailed = false;
     }
 }
