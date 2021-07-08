@@ -6,6 +6,7 @@ using MLAPI;
 public class Catch : Skill
 {   
     LocalPlayer caster;
+    string _animationName = "Catch";        
     public Catch()
     {
         cooldown = 1.0f;
@@ -21,11 +22,11 @@ public class Catch : Skill
     }
 
     public void OnAnimationStart(string animationName) {
-        if(animationName != name) return;        
+        if(animationName != _animationName) return;        
     }
     
     public void OnAnimationEnd(string animationName) {
-        if(animationName != name) return;
+        if(animationName != this._animationName) return;
         caster.GetComponent<Animator>().SetBool("IsCatching", false);
         caster.OnAnimationStart -= OnAnimationStart;      
         caster.OnAnimationEnd -= OnAnimationEnd;
