@@ -69,13 +69,6 @@ public class PlayerController : NetworkBehaviour
         
     }
 
-    public void ResetFaceAngle() {
-        LocalPlayer localPlayer = GetPlayer();
-        if(localPlayer) { 
-            localPlayer.faceAngle = (localPlayer.team == Team.BLUE ? 180 : 0);
-        }
-    }
-
     private LocalPlayer _player;
     public LocalPlayer GetPlayer()
     {

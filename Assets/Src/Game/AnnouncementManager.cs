@@ -41,7 +41,7 @@ public class AnnouncementManager : NetworkBehaviour
     void OnPlayerScored(Player player) {
         if(!IsServer) return;        
         string teamString = (player.GetTeam() == Team.BLUE) ? "Blue" : "Red";
-        AnnounceStringClientRpc($"{teamString} team scores!");
+        AnnounceStringClientRpc($"{teamString} team scores!", clearOld:true);
     }
 
     void OnPlayerJailed(Player player, Player caputredBy) {
@@ -69,7 +69,11 @@ public class AnnouncementManager : NetworkBehaviour
     }
 
     [ClientRpc]
-    void AnnounceStringClientRpc(string content) {        
+    void AnnounceStringClientRpc(string content, bool clearOld=false) {
+        if(clearOld) {
+            announcements.Clear();    
+        }
+
         announcements.Enqueue(new Announcement{content=content});
     }
 

@@ -15,9 +15,9 @@ public class Catch : Skill
     public override void UseSkill(LocalPlayer caster)
     {
         this.caster = caster;
-        caster.GetComponent<Animator>().SetBool("IsCatching", true);
         caster.OnAnimationStart += OnAnimationStart;      
         caster.OnAnimationEnd += OnAnimationEnd;      
+        caster.GetComponent<Animator>().SetBool("IsCatching", true);
     }
 
     public void OnAnimationStart(string animationName) {
@@ -28,6 +28,6 @@ public class Catch : Skill
         if(animationName != name) return;
         caster.GetComponent<Animator>().SetBool("IsCatching", false);
         caster.OnAnimationStart -= OnAnimationStart;      
-        caster.OnAnimationEnd -= OnAnimationEnd;      
+        caster.OnAnimationEnd -= OnAnimationEnd;
     }
 }

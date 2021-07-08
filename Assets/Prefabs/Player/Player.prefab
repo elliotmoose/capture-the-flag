@@ -625,11 +625,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 025f66f40915a492180c417c9e17c991, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnPos: {x: 0, y: 0, z: 0}
-  spawnDir: {x: 0, y: 0, z: 0, w: 0}
-  skill1CooldownTime: 0
-  skill2CooldownTime: 0
-  catchCooldownTime: 0
 --- !u!114 &-8639053039359840742
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -645,9 +640,9 @@ MonoBehaviour:
   interpolationBackTime: 0.1
   extrapolationMode: 1
   useExtrapolationTimeLimit: 1
-  extrapolationTimeLimit: 1
+  extrapolationTimeLimit: 0.5
   useExtrapolationDistanceLimit: 0
-  extrapolationDistanceLimit: 5
+  extrapolationDistanceLimit: 3
   sendPositionThreshold: 0
   sendRotationThreshold: 0
   sendScaleThreshold: 0

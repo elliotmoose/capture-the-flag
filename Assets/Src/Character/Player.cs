@@ -160,38 +160,60 @@ public class Player : NetworkBehaviour
 
         if (this.team != by.team)
         {
-            if (this.localPlayer.isCatchable && !by.localPlayer.isJailed)
-            {
-                this.ServerImprison(by);
+            if(!this.localPlayer.isCatchable) {
+                Debug.Log("Can't catch, not catchable");
+                return;
             }
+
+            if(by.localPlayer.isJailed) {
+                Debug.Log("Can't catch, catcher is jailed jailed");
+                return;
+            }
+            
+            if(localPlayer.isJailed) {
+                Debug.Log("Can't catch, already jailed");
+                return;
+            }
+
+            this.ServerImprison(by);
         }
         else //same team
         {
+            if(!localPlayer.isJailed) {
+                Debug.Log("Can't release, target player not jailed");
+                return;
+            }
+
+            if(by.localPlayer.isJailed) {
+                Debug.Log("Can't release, player trying to release is jailed");
+                return;
+
+            }
+
             this.ServerRelease(by);
         }
     }
     
     //onserver
     public void ServerImprison(Player by) {
-        if(!IsServer) return;
-        if(!localPlayer.isJailed) {
-            ImprisonClientRpc();
-            GameManager.Instance.TriggerOnPlayerJailed(this, by);
-        }
+        if(!IsServer) return;        
+        localPlayer.isJailed = true; //server needs to register this immediately
+        GameManager.Instance.TriggerOnPlayerJailed(this, by);
+        ImprisonClientRpc();
     }
 
     [ClientRpc]
     private void ImprisonClientRpc() {
+        Debug.Log("IMPRISONED"  + gameObject.name);
         localPlayer.isJailed = true;
     }
 
     //onserver
     public void ServerRelease(Player by) {
         if(!IsServer) return;
-        if(localPlayer.isJailed) {
-            ReleaseClientRpc();
-            GameManager.Instance.TriggerOnPlayerFreed(this, by);
-        }
+        localPlayer.isJailed = false; //server needs to register this immediately
+        GameManager.Instance.TriggerOnPlayerFreed(this, by);
+        ReleaseClientRpc();
     }
 
     [ClientRpc]

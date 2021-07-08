@@ -29957,6 +29957,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 8062280885767414512, guid: 9c819b117196a4f50b725bb9b3087a87, type: 3}
+      propertyPath: team
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8062280885767414518, guid: 9c819b117196a4f50b725bb9b3087a87, type: 3}
       propertyPath: m_RootOrder
       value: 2
@@ -57880,7 +57884,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   autoStartConnection: 1
-  twoPlayer: 0
+  twoPlayer: 1
   isHost: 1
   character: 1
 --- !u!1001 &1919001616

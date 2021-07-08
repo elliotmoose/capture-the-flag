@@ -9,10 +9,14 @@ public class Flag : NetworkBehaviour
 {
     public LocalPlayer capturer;
     // public Team team = Team.BLUE;
-    public NetworkVariable<Team> team = new NetworkVariable<Team>(new NetworkVariableSettings{
-        WritePermission=NetworkVariablePermission.ServerOnly,
-        SendTickrate = 0
-    });
+    // public NetworkVariable<Team> team = new NetworkVariable<Team>(new NetworkVariableSettings{
+    //     WritePermission=NetworkVariablePermission.ServerOnly,
+    //     SendTickrate = 0
+    // });
+
+    public Team team;
+
+    private Vector3 spawnPos => (new Vector3(0,1.25f,120 * ((GetTeam() == Team.BLUE) ? 1 : -1)));
 
     Renderer rendererComponent;
     // Start is called before the first frame update
@@ -29,7 +33,7 @@ public class Flag : NetworkBehaviour
     }
 
     public Team GetTeam() {
-        return team.Value;
+        return team;
     }
 
     void OnTriggerEnter(Collider collider) {        
@@ -52,16 +56,17 @@ public class Flag : NetworkBehaviour
         this.transform.localPosition = Vector3.zero;
         capturer = player;
     }
-
-    public void SetTeam(Team team) {
-        if(!IsServer) { return; }
-        this.team.Value = team;        
-    }
     
     public void ResetPosition() {
         this.capturer = null;
         this.transform.SetParent(null);
-        this.transform.position = new Vector3(0,1.25f,120 * ((GetTeam() == Team.BLUE) ? 1 : -1));
+        this.transform.position = spawnPos;
         this.transform.rotation = Quaternion.identity;
+    }
+
+    public bool hasReset {
+        get {
+            return this.capturer == null && this.transform.parent == null && Vector3.Distance(spawnPos, this.transform.position) < 0.1f;
+        }
     }
 }

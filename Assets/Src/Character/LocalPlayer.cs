@@ -239,6 +239,7 @@ public class LocalPlayer : NetworkBehaviour
             Jail jail = JailManager.Instance.JailForPlayerOfTeam(team);
             Vector3 jailCenter = jail.transform.position;
             if(!_transportedToJail) {
+                Debug.Log("JAILED! (Teleport Triggered)");
                 this.transform.position = jailCenter;
                 this.GetComponent<Smooth.SmoothSyncMLAPI>().teleportOwnedObjectFromOwner();
                 _transportedToJail = true;
@@ -450,12 +451,14 @@ public class LocalPlayer : NetworkBehaviour
     #region Network-Local Interface
     
     public void ResetForRound() {
+        Debug.Log($"Player reset: {this.gameObject.name}");
+        this.isJailed = false;
+        this.transform.position = syncPlayer.spawnPos;
+        this.transform.rotation = syncPlayer.spawnRot;
+
         if(!IsOwner) return; 
         //reset position
-        this.transform.position = syncPlayer.spawnPos;
-        this.transform.rotation = syncPlayer.spawnRot; 
         // this.GetComponent<Smooth.SmoothSyncMLAPI>().teleportOwnedObjectFromOwner();
-        this.isJailed = false;
         
         //reset stats
         this.curStamina = this.maxStamina;
@@ -471,8 +474,18 @@ public class LocalPlayer : NetworkBehaviour
         //reset animation 
         Animator animator = GetComponent<Animator>();
         animator.SetFloat("HorMovement", 0);
-        animator.SetFloat("VertMovement", 0);      
-        animator.SetBool("IsMoving", false);         
+        animator.SetFloat("VertMovement", 0);
+        animator.SetBool("IsMoving", false);
+    }
+
+    public bool hasReset {
+        get {
+            bool jailReset = !isJailed;
+            bool staminaReset = (curStamina == maxStamina);
+            bool transformReset = (Vector3.Distance(this.transform.position, syncPlayer.spawnPos) < 0.01f); 
+            bool effectsReset = this.effects.Count == 0;
+            return jailReset && staminaReset && transformReset && effectsReset;
+        }
     }
 
     #endregion

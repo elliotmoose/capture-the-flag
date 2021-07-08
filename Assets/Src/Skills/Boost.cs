@@ -15,7 +15,7 @@ public class Boost : Skill
 
     public override void UseSkill(LocalPlayer player)
     {
-        Debug.Log(name + " skill is used");
+        // Debug.Log(name + " skill is used");
         BoostEffect effect = new BoostEffect(player, player.transform.forward, distance, timeTaken);
         player.TakeEffect(effect);
 
