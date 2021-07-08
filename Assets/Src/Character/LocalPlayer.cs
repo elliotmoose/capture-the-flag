@@ -461,6 +461,9 @@ public class LocalPlayer : NetworkBehaviour
         // this.GetComponent<Smooth.SmoothSyncMLAPI>().teleportOwnedObjectFromOwner();
         
         //reset stats
+        this.skill1CooldownTime = 0;
+        this.skill2CooldownTime = 0;
+        this.catchCooldownTime = 0;
         this.curStamina = this.maxStamina;
 
         //reset effects
