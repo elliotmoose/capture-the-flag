@@ -41,7 +41,7 @@ public class AnnouncementManager : NetworkBehaviour
     void OnPlayerScored(Player player) {
         if(!IsServer) return;        
         string teamString = (player.GetTeam() == Team.BLUE) ? "Blue" : "Red";
-        AnnounceStringClientRpc($"{teamString} team scores!");
+        AnnounceStringClientRpc($"{teamString} team scores!", clearOld:true);
     }
 
     void OnPlayerJailed(Player player, Player caputredBy) {
@@ -69,32 +69,39 @@ public class AnnouncementManager : NetworkBehaviour
     }
 
     [ClientRpc]
-    void AnnounceStringClientRpc(string content) {        
+    void AnnounceStringClientRpc(string content, bool clearOld=false) {
+        if(clearOld) {
+            announcements.Clear();    
+        }
+
         announcements.Enqueue(new Announcement{content=content});
     }
 
     [ClientRpc] 
     void AnnounceFlagCapturedClientRpc(Team playerTeam) {
-        Player localPlayer = PlayerController.LocalInstance.GetPlayer();
-        bool isMyFlag = (playerTeam != localPlayer.GetTeam());
+        LocalPlayer thisClientPlayer = PlayerController.LocalInstance.GetPlayer();
+        bool isMyFlag = (playerTeam != thisClientPlayer.team);
         announcements.Enqueue(new Announcement{content=isMyFlag ? "Your flag has been captured by the enemy!" : "Your team has captured the enemy flag!"});
     }
     
     [ClientRpc] 
-    void AnnouncePlayerCapturedClientRpc(User user) {
-        Player localPlayer = PlayerController.LocalInstance.GetPlayer();
-        bool isMyTeammate = (user.team == localPlayer.GetTeam());
-        string playerString = isMyTeammate ? "Ally" : "Enemy";
+    void AnnouncePlayerCapturedClientRpc(User capturedUser) {
+        //my player
+        LocalPlayer thisClientPlayer = PlayerController.LocalInstance.GetPlayer();
+        bool isMyTeammate = (capturedUser.team == thisClientPlayer.team);
+        bool isMe = (capturedUser.clientId == thisClientPlayer.OwnerClientId);
+        string playerString = isMe ? "You have been" : (isMyTeammate ? "Ally" : "Enemy");
         announcements.Enqueue(new Announcement{content=$"{playerString} put in jail!"});
-        // announcements.Enqueue(new Announcement{content=$"{user.username} has been captured!"});
     }
     
     [ClientRpc] 
-    void AnnouncePlayerFreedClientRpc(User user) {
+    void AnnouncePlayerFreedClientRpc(User freedUser) {
         //only announce to teammates
-        if(user.team != PlayerController.LocalInstance.GetPlayer().GetTeam()) return;
-        // announcements.Enqueue(new Announcement{content=$"{user.username} has been freed!"});
-        announcements.Enqueue(new Announcement{content=$"Ally has been freed!"});
+        LocalPlayer thisClientPlayer = PlayerController.LocalInstance.GetPlayer();
+        if(freedUser.team != thisClientPlayer.team) return;
+        bool isMe = (freedUser.clientId == thisClientPlayer.OwnerClientId);
+        string announcementString = (isMe ? "You have" : "Ally has") + " been freed!";
+        announcements.Enqueue(new Announcement{content=announcementString});
     }
 
     void DisplayAnnouncement(Announcement announcement) {

@@ -12,7 +12,7 @@ public class Invisibility : Skill
         name = "Invisibility";
     }
 
-    public override void UseSkill(Player player)
+    public override void UseSkill(LocalPlayer player)
     {
         InvisEffect effect = new InvisEffect(player, duration);
         player.TakeEffect(effect);
@@ -21,7 +21,7 @@ public class Invisibility : Skill
 
 public class InvisEffect : Effect
 {
-    public InvisEffect(Player _target, float duration) : base(_target)
+    public InvisEffect(LocalPlayer _target, float duration) : base(_target)
     {
         this.duration = duration;
         this.name = "INVIS_EFFECT";

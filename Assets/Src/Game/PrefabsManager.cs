@@ -16,6 +16,8 @@ public class PrefabsManager : NetworkBehaviour
     public Sprite lancerIcon;
 
     public GameObject playerUsername;
+    
+    public GameObject flag;
 
     void Awake() {
         Instance = this;

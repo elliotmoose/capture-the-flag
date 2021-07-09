@@ -10,47 +10,8 @@ using Cinemachine;
 public class PlayerController : NetworkBehaviour 
 {   
     public static PlayerController LocalInstance;
+    float MOUSE_SENSITIVITY = 9;
 
-    NetworkVariableBool sprinting = new NetworkVariableBool(new NetworkVariableSettings{
-        WritePermission = NetworkVariablePermission.OwnerOnly
-    });
-
-    public bool GetSprinting() {
-        return sprinting.Value;
-    }
-
-    NetworkVariableVector2 moveDir = new NetworkVariableVector2(new NetworkVariableSettings{
-        WritePermission = NetworkVariablePermission.OwnerOnly,
-        SendTickrate = 20,
-    });
-    
-    NetworkVariableFloat faceAngle = new NetworkVariableFloat(new NetworkVariableSettings{
-        WritePermission = NetworkVariablePermission.OwnerOnly,
-        SendTickrate = 20,
-    });
-
-    //skill cooldown displats
-    public NetworkVariableFloat skill1CooldownDisplay = new NetworkVariableFloat(new NetworkVariableSettings{
-        WritePermission = NetworkVariablePermission.OwnerOnly,
-        SendTickrate = 1,
-    });
-    public NetworkVariableFloat skill2CooldownDisplay = new NetworkVariableFloat(new NetworkVariableSettings{
-        WritePermission = NetworkVariablePermission.OwnerOnly,
-        SendTickrate = 1,
-    });
-    public NetworkVariableFloat catchCooldownDisplay = new NetworkVariableFloat(new NetworkVariableSettings{
-        WritePermission = NetworkVariablePermission.OwnerOnly,
-        SendTickrate = 1,
-    });
-
-    public NetworkVariableULong playerObjNetId = new NetworkVariableULong(new NetworkVariableSettings{
-        WritePermission = NetworkVariablePermission.ServerOnly,
-        SendTickrate = 0,        
-    });
-
-    float commandDurationThreshold = 0.1f;
-    float timeSinceLastCommand = 0f;
-    bool isStale = false;
     // public User user;
     private NetworkVariable<User> _user = new NetworkVariable<User>(new NetworkVariableSettings{
         WritePermission = NetworkVariablePermission.ServerOnly,
@@ -68,21 +29,13 @@ public class PlayerController : NetworkBehaviour
     public KeyCode SKILL1_KEY = KeyCode.Q;
     public KeyCode SKILL2_KEY = KeyCode.E;
     public KeyCode SPRINT_KEY = KeyCode.Space;
-    // Start is called before the first frame update
+
     public override void NetworkStart()
     {
         base.NetworkStart();        
         if(IsLocalPlayer) {
-            LocalInstance = this;            
+            LocalInstance = this;
         }
-    }
-    
-    void Start() {
-        if(IsServer) {
-            moveDir.OnValueChanged += (Vector2 prevMoveDir, Vector2 newMoveDir)=>{
-                timeSinceLastCommand = 0;
-            };            
-        }                
     }
 
     // Update is called once per frame
@@ -91,106 +44,36 @@ public class PlayerController : NetworkBehaviour
         if(IsLocalPlayer) {
             ClientControls();
         }
-
-        if(IsServer) {
-            timeSinceLastCommand += Time.deltaTime;
-            isStale = (timeSinceLastCommand > commandDurationThreshold); //if command hasn't come in, we mark as stale
-
-            //server should move player
-            // GameObject playerObj = GameObject.Find("player"+GetComponent<NetworkObject>().OwnerClientId.ToString());
-            Player player = GetPlayer();
-            if(player) {
-                player.moveDir = moveDir.Value;
-                player.faceAngle = faceAngle.Value;
-                player.sprinting = sprinting.Value;
-
-                //display cooldowns
-                skill1CooldownDisplay.Value = player.skill1CooldownTime;
-                skill2CooldownDisplay.Value = player.skill2CooldownTime;
-                catchCooldownDisplay.Value = player.catchCooldownTime;
-            }
-        }
     }
 
     void ClientControls() {
         //movement
-        float horizontal = Input.GetAxisRaw("Horizontal");
-        float vertical = Input.GetAxisRaw("Vertical");
+        LocalPlayer localPlayer = GetPlayer();
+        if(localPlayer) {
+            float horizontal = Input.GetAxisRaw("Horizontal");
+            float vertical = Input.GetAxisRaw("Vertical");            
+            localPlayer.moveDir = new Vector2(horizontal, vertical);            
+            localPlayer.faceAngle += Input.GetAxis("Mouse X") * MOUSE_SENSITIVITY;
+            localPlayer.sprinting = Input.GetKey(SPRINT_KEY);
         
-        moveDir.Value = new Vector2(horizontal, vertical);
-        
-        faceAngle.Value += Input.GetAxis("Mouse X") * 15;
-        // faceAngle.Value = Camera.main.transform.eulerAngles.y;
-        
-        if(Input.GetMouseButtonDown(0)) {
-            Debug.Log("Catch!");
-            CatchServerRpc();
-        }
-        if(Input.GetKeyDown(SKILL1_KEY)) {
-            Skill1ServerRpc();
-        }
-        if(Input.GetKeyDown(SKILL2_KEY)) {
-            Skill2ServerRpc();
-        }
-        
-        sprinting.Value = Input.GetKey(SPRINT_KEY);
-    }
-
-    [ServerRpc]
-    void CatchServerRpc() {
-        if(IsServer) {            
-            Player player = GetPlayer();
-            if (player)
-            {
-                player.Catch();
+            if(Input.GetMouseButtonDown(0)) {
+                localPlayer.Catch();
+            }
+            if(Input.GetKeyDown(SKILL1_KEY)) {
+                localPlayer.CastSkillAtIndex(0);
+            }
+            if(Input.GetKeyDown(SKILL2_KEY)) {
+                localPlayer.CastSkillAtIndex(1);
             }
         }
+        
     }
 
-    [ServerRpc]
-    void Skill1ServerRpc() {
-        if(IsServer) {
-            Player player = GetPlayer();
-            if(player) {
-                player.CastSkillAtIndex(0);
-            }
-        }
-    }
-
-    [ServerRpc]
-    void Skill2ServerRpc() {
-        if(IsServer) {
-            Player player = GetPlayer();
-            if(player) {
-                player.CastSkillAtIndex(1);
-            }
-        }
-    }
-
-    public void ResetFaceAngle() {
-        faceAngle.Value = (GetUser().team == Team.BLUE ? 180 : 0);
-    }
-
-    public void LinkPlayerReference(GameObject playerGameObject) {
-        if(!IsServer) {return;}
-        playerObjNetId.Value = playerGameObject.GetComponent<NetworkObject>().NetworkObjectId;
-    }    
-
-    public Player GetPlayer()
+    private LocalPlayer _player;
+    public LocalPlayer GetPlayer()
     {
-        if(!NetworkSpawnManager.SpawnedObjects.ContainsKey(playerObjNetId.Value)) {
-            Debug.Log("Could not find player for this PlayerController");
-            return null;
-        }
-        NetworkObject playerNetworkObj = NetworkSpawnManager.SpawnedObjects[playerObjNetId.Value];
-        GameObject playerObj = playerNetworkObj.gameObject;
-        if (playerObj)
-        {
-            return playerObj.GetComponent<Player>();
-        }
-        else
-        {
-            return null;
-        }
+        if(_player != null) return _player;
+        _player = LocalPlayer.WithClientId(this.OwnerClientId);        
+        return _player;
     }
 }

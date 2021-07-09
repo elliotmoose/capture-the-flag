@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using MLAPI;
 
 public class EndZone : MonoBehaviour
 {
@@ -27,11 +28,11 @@ public class EndZone : MonoBehaviour
     // }
 
     void OnTriggerEnter(Collider hit) {
-
+        if(!NetworkManager.Singleton.IsServer) return;
         Player player = hit.gameObject.GetComponent<Player>();
         if(!player) {return;}
-        bool redTeamShouldScore = (player.GetTeam() == Team.RED && team == Team.RED && GameManager.Instance.blueTeamFlag.capturer == player);
-        bool blueTeamShouldScore = (player.GetTeam() == Team.BLUE && team == Team.BLUE && GameManager.Instance.redTeamFlag.capturer == player);
+        bool redTeamShouldScore = (player.team == Team.RED && team == Team.RED && GameManager.Instance.blueTeamFlag.capturer == player.localPlayer);
+        bool blueTeamShouldScore = (player.team == Team.BLUE && team == Team.BLUE && GameManager.Instance.redTeamFlag.capturer == player.localPlayer);
         if((redTeamShouldScore || blueTeamShouldScore)) {
             GameManager.Instance.ScorePoint(player);
         }

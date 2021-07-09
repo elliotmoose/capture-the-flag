@@ -12,15 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c913b3e5d977384b8d154b5329b137e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnPos: {x: 0, y: 0, z: 0}
-  spawnDir: {x: 0, y: 0, z: 0, w: 0}
-  flagSlot: {fileID: 0}
   moveDir: {x: 0, y: 0}
   faceAngle: 0
   sprinting: 0
+  isDisabled: 0
+  moveSpeed: 15
   skill1CooldownTime: 0
   skill2CooldownTime: 0
   catchCooldownTime: 0
+  flagSlot: {fileID: 0}
 --- !u!1001 &2952591192579447852
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -113,8 +113,7 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents:
-    - {fileID: 3606717322404090613, guid: 9cb4daa18f4b34bcfb909ca9cd4de466, type: 3}
-    - {fileID: 5889400617423039191, guid: 9cb4daa18f4b34bcfb909ca9cd4de466, type: 3}
+    - {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: 9cb4daa18f4b34bcfb909ca9cd4de466, type: 3}
 --- !u!1 &5767545232183299094 stripped
 GameObject:

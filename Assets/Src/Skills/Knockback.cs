@@ -14,7 +14,7 @@ public class Knockback : Skill
         name = "Knockback";
     }
 
-    public override void UseSkill(Player player)
+    public override void UseSkill(LocalPlayer player)
     {
         Debug.Log(name + " skill is used");
         Collider[] hitColliders = Physics.OverlapSphere(player.transform.position, radius);
@@ -29,8 +29,10 @@ public class Knockback : Skill
                 Vector3 direction = target.transform.position - player.transform.position;
                 float currentDistance = direction.magnitude;
                 float knockbackDistance = finalDistance - currentDistance;
-                PushEffect effect = new PushEffect(target, direction, knockbackDistance, timeTaken);
-                target.TakeEffect(effect);
+
+                target.TakeNetworkEffect(EffectType.Knockback, player.OwnerClientId);
+                // PushEffect effect = new PushEffect(target, direction, knockbackDistance, timeTaken);
+                // target.TakeEffect(effect);
             }
         }
 

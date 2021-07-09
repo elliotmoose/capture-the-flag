@@ -8,6 +8,6 @@ public abstract class Skill
     public float cooldown;
     public string name;
 
-    public abstract void UseSkill(Player player);
+    public abstract void UseSkill(LocalPlayer caster);
     
 }

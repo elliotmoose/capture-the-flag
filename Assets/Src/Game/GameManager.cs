@@ -8,6 +8,17 @@ using MLAPI.Messaging;
 public delegate void GameEvent(Player player);
 public delegate void GameEventInteraction(Player receiver, Player giver);
 
+public enum GameState {
+    AWAITING_CONNECTIONS,
+    INIT_GAME_SERVER, //init stats, generate summary ui for host player
+    SPAWNING, //spawn players and flags
+    AWAIT_SPAWN_CONFIRMATION, //spawn players and flags
+    TRIGGER_RESET, //reset player positions, effects, flag positions
+    AWAIT_RESET,
+    COUNTDOWN, //countdown
+    PLAY,
+    SCORESCREEN
+}
 public class GameManager : NetworkBehaviour
 {
     public static GameManager Instance;
@@ -16,9 +27,6 @@ public class GameManager : NetworkBehaviour
 
     public Flag redTeamFlag;
     public Flag blueTeamFlag;
-
-    public Jail blueTeamJail;
-    public Jail redTeamJail;
     
     public NetworkVariableInt blueTeamScore = new NetworkVariableInt(new NetworkVariableSettings{
         SendTickrate = 0,
@@ -31,41 +39,62 @@ public class GameManager : NetworkBehaviour
 
     int winScore = 15;
 
-    public bool roundInProgress = false;
+    // public bool roundInProgress = false;
+    // public bool gameInProgress = false;
 
-    public GameEvent OnPlayerScored;
-    public GameEvent OnFlagCaptured;
-    public GameEventInteraction OnPlayerJailed;
-    public GameEventInteraction OnPlayerFreed;
+    public bool roundInProgress => clientState == (GameState.PLAY);
+    public bool gameInProgress => (clientState >= GameState.COUNTDOWN) && (clientState != GameState.SCORESCREEN);
+
+    public event GameEvent OnPlayerScored;
+    public event GameEvent OnFlagCaptured;
+    public event GameEventInteraction OnPlayerJailed;
+    public event GameEventInteraction OnPlayerFreed;
+
+    [SerializeField]
+    GameState serverState = GameState.AWAITING_CONNECTIONS;
+    [SerializeField]
+    GameState clientState = GameState.AWAITING_CONNECTIONS;
+    int countdown = 3;
+    float curCountdownTimer = 0;
+    float resetTimeout = 1; //we let the server wait 1 second before resetting
+    float curResetTimer = 0;
     
+    //Spawn PlayerControllers (spawns players) -> Spawn flags -> (INSERT SANITY CHECK FOR PLAYER SPAWN) )Reset Positions 
     public void StartGame() {        
-        if(!IsServer) { return; }
-        Debug.Log("== GameManager: Game Started!");
-        UIManager.Instance.GenerateGameSummaryUI();
-        SpawnPlayerControllers();     
-        StatsManager.Instance.Initialise(RoomManager.Instance.GetUsers());    
-        ResetRound();
-        BeginCountdownForRound();
+        if(!IsServer) { return; }    
+        ServerUpdateGameState(GameState.INIT_GAME_SERVER);           
     }
 
-    #region Round methods
-    void ResetRound() {
-        if(!IsServer) {return;}
-        ResetFlags();
-        ResetPlayerPositions();
+    [ClientRpc]
+    private void ClientResetRoundClientRpc() {
+        ClientResetRound();
     }
 
-    void ResetPlayerPositions() {
-        foreach(Player player in PlayerSpawner.Instance.GetAllPlayers()) {
-            player.ResetForRound();
+    private void ClientResetRound() {
+        //player positions
+        //IMPLEMENTATION NOTE:
+        //we need to reset all local players, because the isJailed flag is not synced
+        foreach(LocalPlayer player in LocalPlayer.AllPlayers()) {
+            player.ResetForRound(); 
         }
 
-        ResetPlayerCamerasClientRpc();
+        //flag positions
+        redTeamFlag.GetComponent<Flag>().ResetPosition();
+        blueTeamFlag.GetComponent<Flag>().ResetPosition();
     }
 
-    private void BeginCountdownForRound() {
-        roundInProgress = false;
-        StartCoroutine(RoundCountdown());
+    private bool clientHasReset {
+        get {
+            bool playersReset = true;
+            foreach(LocalPlayer localPlayer in LocalPlayer.AllPlayers()) {
+                if(!localPlayer.hasReset) {
+                    playersReset = false;
+                    break;
+                }
+            }
+
+            return playersReset && redTeamFlag.GetComponent<Flag>().hasReset && blueTeamFlag.GetComponent<Flag>().hasReset;
+        }
     }
 
     private IEnumerator RoundCountdown() {
@@ -76,21 +105,27 @@ public class GameManager : NetworkBehaviour
         CountdownClientRpc(1);
         yield return new WaitForSeconds(1);
         CountdownClientRpc(0);
-        roundInProgress = true;
+        ServerUpdateGameState(GameState.PLAY);
     }
 
-    #endregion
-
     #region Client RPCS
+
     [ClientRpc]
     private void CountdownClientRpc(int count) {
         UIManager.Instance.DisplayCountdown(count);        
     } 
-
-    [ClientRpc]
-    private void ResetPlayerCamerasClientRpc() {
-        PlayerController.LocalInstance.ResetFaceAngle();
+    
+    private void ServerUpdateGameState(GameState state) {
+        Debug.Log($"== GameManager (Server): Setting State: {state}");
+        serverState = state;
+        UpdateGameStateClientRpc(state);
+        OnServerStateChange(state);
     }
+    [ClientRpc]
+    private void UpdateGameStateClientRpc(GameState state) {
+        Debug.Log($"== GameManager (Client): Setting State: {state}");
+        clientState = state;
+    } 
 
     [ClientRpc]
     private void GameOverClientRpc(Team winningTeam) {
@@ -100,49 +135,13 @@ public class GameManager : NetworkBehaviour
 
     #endregion
 
-    #region Server Game Methods
-    public void Imprison(Player player, Player imprisonedBy) {        
-        if(player.GetTeam() == imprisonedBy.GetTeam()) {
-            Debug.LogError("Cannot be imprisoned by player of same team");
-            return;
-        }
-
-        if(player.GetTeam() == Team.BLUE) {
-            if(!redTeamJail.GetJailedPlayers().Contains(player)) {
-                redTeamJail.Imprison(player);
-                if(OnPlayerJailed != null) OnPlayerJailed(player, imprisonedBy);
-            }
-        }
-        else {
-            if(!blueTeamJail.GetJailedPlayers().Contains(player)) {
-                blueTeamJail.Imprison(player);
-                if(OnPlayerJailed != null) OnPlayerJailed(player, imprisonedBy);
-            }
-        }
-    }
-
-    public void Release(Player player, Player releasedBy) {
-        Jail targetJail = player.GetTeam() == Team.RED ? blueTeamJail : redTeamJail;
-        // only release if player is not jailed themselves
-        if (!targetJail.GetJailedPlayers().Contains(releasedBy) && targetJail.GetJailedPlayers().Contains(player))
-        {
-            if(OnPlayerFreed != null) OnPlayerFreed(player, releasedBy);
-            targetJail.Release(player);
-        }
-    }
-
-    public void ResetJail() {
-        blueTeamJail.ReleaseAll();
-        redTeamJail.ReleaseAll();
-    }
-    
+    #region Game Methods
     public void FlagCapturedBy(Player player) {
         if(OnFlagCaptured != null) OnFlagCaptured(player);
     }
     
     public void ScorePoint(Player player) {
         if(!IsServer) {return;}
-
         if(OnPlayerScored != null) OnPlayerScored(player);
 
         Team team = player.GetTeam();
@@ -159,19 +158,77 @@ public class GameManager : NetworkBehaviour
         else if(redTeamScore.Value >= winScore) {
             GameOver(Team.RED);
         }
-        else {
-            ResetRound();
-            BeginCountdownForRound();
+        else {            
+            ServerUpdateGameState(GameState.TRIGGER_RESET);
+        }
+    }
+
+    void OnServerStateChange(GameState newState) {
+        if(IsServer) {
+            switch (serverState)
+            {
+                case GameState.AWAITING_CONNECTIONS:
+                    break;
+                case GameState.INIT_GAME_SERVER:
+                    // Debug.Log("== GameManager (Server): Initialising Server");
+                    UIManager.Instance.GenerateGameSummaryUI();
+                    StatsManager.Instance.Initialise(RoomManager.Instance.GetUsers());  
+                    ServerUpdateGameState(GameState.SPAWNING);
+                    break;
+                case GameState.SPAWNING:
+                    // Debug.Log("== GameManager (Server): Spawning Players");
+                    SpawnPlayerControllers();
+                    ServerUpdateGameState(GameState.AWAIT_SPAWN_CONFIRMATION);
+                    break;
+                case GameState.AWAIT_SPAWN_CONFIRMATION:
+                    // Debug.Log("== GameManager (Server): Awaiting Confirmation...");
+                    bool clientConfirmationsReceived = true;
+                    // Debug.LogWarning("Check for client confirmations");
+                    if(clientConfirmationsReceived) {
+                        // Debug.Log("== GameManager (Server): Confirmation received!");
+                        
+                        ServerUpdateGameState(GameState.TRIGGER_RESET);
+                    }
+                    break;
+                
+                //IMPLEMENTATION NOTE:
+                //we need to reset over a period of time, to let the old RPCs wear of with respect to imprisonment,
+                //as order of execution is not assured across objects. 
+                //this might result in a race condition where if catching a player wins a round
+                //round reset RPC -> player imprisoned RPC
+                case GameState.TRIGGER_RESET:
+                    // Debug.Log("== GameManager (Server): Resetting Round");                          
+                    // curResetTimer = resetTimeout;
+                    ClientResetRoundClientRpc();
+                    ServerUpdateGameState(GameState.AWAIT_RESET);                    
+                    break;
+                case GameState.AWAIT_RESET:
+                    // curResetTimer -= Time.deltaTime;
+                    // if(curResetTimer < 0) {
+                    //     // Debug.Log("AWAIT RESET DONE");
+                    //     curResetTimer = resetTimeout; //reset the timer
+                    // }
+                    ServerUpdateGameState(GameState.COUNTDOWN);
+                    countdown = 3;
+                    break;
+                case GameState.COUNTDOWN:
+                    StartCoroutine(RoundCountdown());
+                    break;
+                case GameState.PLAY:
+                    // Debug.Log("== GameManager: IN PLAY");
+                    break;
+                default:
+                    break;
+            }
         }
     }
     // Update is called once per frame
     void Update()
     {
-        
     }
 
     void GameOver(Team winningTeam) {
-        roundInProgress = false;
+        ServerUpdateGameState(GameState.SCORESCREEN);
         StatsManager.Instance.PublishStats();
         GameOverClientRpc(winningTeam);
     }
@@ -202,7 +259,7 @@ public class GameManager : NetworkBehaviour
             GameObject spawnedPlayerGO = PlayerSpawner.Instance.SpawnPlayer(user, playerIndex, roomSize); 
 
             //link
-            playerController.LinkPlayerReference(spawnedPlayerGO);            
+            // playerController.LinkPlayerReference(spawnedPlayerGO);            
 
             if(user.team == Team.BLUE) {
                 blueTeamIndex += 1;
@@ -213,15 +270,38 @@ public class GameManager : NetworkBehaviour
         }
     }
 
-    void ResetFlags() {
-        if(!IsServer) { return; }
-        redTeamFlag.GetComponent<Flag>().SetTeam(Team.RED);
-        redTeamFlag.GetComponent<Flag>().ResetPosition();
-        blueTeamFlag.GetComponent<Flag>().SetTeam(Team.BLUE);
-        blueTeamFlag.GetComponent<Flag>().ResetPosition();
+    #endregion
+
+    #region Event Triggers
+
+    public void TriggerOnPlayerJailed(Player playerJailed, Player playerCatcher) {
+        if(OnPlayerJailed!=null) OnPlayerJailed(playerJailed, playerCatcher);
+
+        //check if any free players
+        List<LocalPlayer> jailedPlayerAllies = LocalPlayer.PlayersFromTeam(playerJailed.team);
+
+        bool shouldContinueRound = false;
+        foreach(LocalPlayer ally in jailedPlayerAllies) {
+            Debug.Log($"{ally.gameObject.name} isJailed: {ally.isJailed}");
+            if(!ally.isJailed) {
+                //as long as one ally is not jailed, the round continues
+                shouldContinueRound = true;
+                break;        
+            }
+        }
+
+        if(!shouldContinueRound) {
+            //end round
+            ScorePoint(playerCatcher);
+        }        
+    }
+    
+    public void TriggerOnPlayerFreed(Player playerFreed, Player playerFreedBy) {
+        if(OnPlayerFreed!=null) OnPlayerFreed(playerFreed, playerFreedBy);
     }
 
     #endregion
+
     void Awake() {
         if(Instance != null) {
             throw new System.Exception("More than one GameManager exists");

@@ -13,7 +13,7 @@ public class Smoke : Skill
         name = "Smoke";
     }
 
-    public override void UseSkill(Player player)
+    public override void UseSkill(LocalPlayer player)
     {
         SmokeEffect effect = new SmokeEffect(player, duration);
         player.TakeEffect(effect);
@@ -26,7 +26,7 @@ public class SmokeEffect : Effect
     private string animation = "Smoke";
     private bool finished = false;
 
-    public SmokeEffect(Player _target, float duration) : base(_target)
+    public SmokeEffect(LocalPlayer _target, float duration) : base(_target)
     {
         this.duration = duration;
         this.name = "SMOKE_EFFECT";

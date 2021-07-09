@@ -2,15 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Lancer : Player
+public class Lancer : LocalPlayer
 {
     private void Awake()
     {
-        if(IsServer) {
-            moveSpeed = 18;
-            this.SetMaxStamina(80);
-        }
-        
+        this.SetMaxStamina(80);
+        moveSpeed = 18;
         catchSkill = new Catch();
         skills.Add(new Smoke());
         skills.Add(new Reach());

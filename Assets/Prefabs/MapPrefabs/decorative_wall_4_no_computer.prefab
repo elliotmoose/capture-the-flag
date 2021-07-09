@@ -9,8 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8521362188933801877}
-  - component: {fileID: 8521362188931918331}
   - component: {fileID: 8521362188918051097}
+  - component: {fileID: 5019740830019480051}
   m_Layer: 0
   m_Name: decorative_wall_4_no_computer
   m_TagString: Untagged
@@ -34,19 +34,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
---- !u!65 &8521362188931918331
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8521362188934123595}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 4, y: 4, z: 0.29866624}
-  m_Center: {x: 0, y: 2, z: 0.14933297}
 --- !u!205 &8521362188918051097
 LODGroup:
   m_ObjectHideFlags: 0
@@ -70,6 +57,19 @@ LODGroup:
     renderers:
     - renderer: {fileID: 8521362188936117525}
   m_Enabled: 1
+--- !u!65 &5019740830019480051
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8521362188934123595}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 4.0000014, y: 4, z: 0.29866627}
+  m_Center: {x: 2.1221491e-15, y: 2, z: 0.14933299}
 --- !u!1 &8521362188934137787
 GameObject:
   m_ObjectHideFlags: 0
@@ -121,6 +121,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -204,6 +205,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1

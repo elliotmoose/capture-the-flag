@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine;
 using MLAPI.Spawning;
 using MLAPI;
 
@@ -9,6 +8,8 @@ public class MinimapCameraFollower : MonoBehaviour
 {
     public static MinimapCameraFollower Instance;
     GameObject target;
+
+    // public GameObject 
 
     void Awake() {
         Instance = this;
@@ -30,15 +31,18 @@ public class MinimapCameraFollower : MonoBehaviour
         PlayerController playerController = localPlayerObject.GetComponent<PlayerController>();
         if(!playerController) return;
 
-        ulong playerGameObjectNetId = playerController.playerObjNetId.Value;
-        //if(playerGameObjectNetId != 0) {
+        LocalPlayer localPlayer = playerController.GetPlayer();
+        if(!localPlayer) return;
+        target = localPlayer.gameObject;        
         GameObject camera = GameObject.FindGameObjectWithTag("MinimapCam");
-        target = NetworkSpawnManager.SpawnedObjects[playerGameObjectNetId].gameObject;
         camera.transform.parent = target.transform;
         camera.transform.localPosition = new Vector3(0, 50, 0);
         camera.transform.localRotation = Quaternion.Euler(90.0f, 0.0f, 0.0f);
+    }
 
-        //}
+    void UpdatePlayerMinimap() {
+        //update map position
+
     }
 }
 

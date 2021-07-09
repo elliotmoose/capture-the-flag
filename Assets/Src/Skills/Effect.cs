@@ -10,15 +10,15 @@ public abstract class Effect
     public bool effectEnded = false;
     public string name;
 
-    protected Player _target;
+    protected LocalPlayer _target;
 
-    public Effect(Player target)
+    public Effect(LocalPlayer target)
     {
         this._target = target;
     }
 
     protected virtual bool ShouldEffectEnd() {
-        return age > duration;
+        return age >= duration;
     }
     public void Update()
     {
@@ -31,8 +31,8 @@ public abstract class Effect
         }
         else
         {
-            effectEnded = true;
             OnEffectEnd();
+            effectEnded = true;
         }
     }
 
@@ -42,7 +42,7 @@ public abstract class Effect
         }
     }
 
-    public Player GetTarget()
+    public LocalPlayer GetTarget()
     {
         return _target;
     }

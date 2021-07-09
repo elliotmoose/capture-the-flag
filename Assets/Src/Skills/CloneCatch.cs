@@ -9,25 +9,17 @@ public class CloneCatch : Catch
         name = "Clone Catch";
     }
 
-    public override void UseSkill(Player player)
+    public override void UseSkill(LocalPlayer player)
     {
         base.UseSkill(player);
-        Collider[] hitColliders = Physics.OverlapSphere(player.transform.position, player.GetCatchRadius());
+        Collider[] hitColliders = Physics.OverlapSphere(player.transform.position, player.syncPlayer.GetCatchRadius());
 
         foreach (Collider c in hitColliders)
         {
-            Player target = c.gameObject.GetComponent<Player>();
+            LocalPlayer target = c.gameObject.GetComponent<LocalPlayer>();
 
-            if (target == null)
-            {
-                continue;
-            }
-            
-            if(target == player) {
-                // Debug.Log("cannot clone self");
-                continue;
-            }
-
+            if (target == null) continue;
+            if(target == player) continue;
             if(target.skills.Count < 2) {
                 Debug.Log("Target does not have enough skills");
                 continue;

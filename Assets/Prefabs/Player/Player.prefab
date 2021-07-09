@@ -517,14 +517,13 @@ GameObject:
   - component: {fileID: 7609006731988850574}
   - component: {fileID: 8618782737254064447}
   - component: {fileID: 8158180437212963690}
-  - component: {fileID: 5617067148386915242}
   - component: {fileID: 4682214866918665150}
   - component: {fileID: 3606717322404090613}
   - component: {fileID: -8639053039359840742}
   - component: {fileID: 4612563886510343300}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -599,19 +598,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!65 &5617067148386915242
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8715549257419821114}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 2, y: 2, z: 1.5}
-  m_Center: {x: 0, y: 1.2, z: 0}
 --- !u!54 &4682214866918665150
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -640,15 +626,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 025f66f40915a492180c417c9e17c991, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnPos: {x: 0, y: 0, z: 0}
-  spawnDir: {x: 0, y: 0, z: 0, w: 0}
-  flagSlot: {fileID: 5182581902123499094}
-  moveDir: {x: 0, y: 0}
-  faceAngle: 0
-  sprinting: 0
-  skill1CooldownTime: 0
-  skill2CooldownTime: 0
-  catchCooldownTime: 0
 --- !u!114 &-8639053039359840742
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -664,9 +641,9 @@ MonoBehaviour:
   interpolationBackTime: 0.1
   extrapolationMode: 1
   useExtrapolationTimeLimit: 1
-  extrapolationTimeLimit: 1
+  extrapolationTimeLimit: 0.5
   useExtrapolationDistanceLimit: 0
-  extrapolationDistanceLimit: 5
+  extrapolationDistanceLimit: 3
   sendPositionThreshold: 0
   sendRotationThreshold: 0
   sendScaleThreshold: 0
@@ -694,7 +671,7 @@ MonoBehaviour:
   isAngularVelocityCompressed: 0
   automaticallyResetTime: 1
   isSmoothingAuthorityChanges: 0
-  transformSource: 1
+  transformSource: 0
   whenToUpdateTransform: 0
   sendRate: 30
   networkChannel: 
@@ -715,10 +692,10 @@ CharacterController:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Height: 3.1
-  m_Radius: 1.13
-  m_SlopeLimit: 0
-  m_StepOffset: 0
+  m_Height: 2.21
+  m_Radius: 1.14
+  m_SlopeLimit: 0.42
+  m_StepOffset: 0.1
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 1.1, z: 0}
