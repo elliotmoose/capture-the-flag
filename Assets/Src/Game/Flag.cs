@@ -38,6 +38,7 @@ public class Flag : NetworkBehaviour
 
     void OnTriggerEnter(Collider collider) {        
         if(!IsServer) { return; }
+        if(!GameManager.Instance.roundInProgress) return;
         Player player = collider.gameObject.GetComponent<Player>();
         if(player == null) return;
         bool isDifferentTeam = (player.team != this.GetTeam());
@@ -50,6 +51,8 @@ public class Flag : NetworkBehaviour
 
     [ClientRpc]
     private void CapturedClientRpc(ulong byClientId) {
+        Debug.Log("Flag captured received on client!");
+        if(!GameManager.Instance.roundInProgress) return;
         LocalPlayer player = LocalPlayer.WithClientId(byClientId);
         this.transform.SetParent(player.flagSlot.transform);
         this.transform.localRotation = Quaternion.identity;

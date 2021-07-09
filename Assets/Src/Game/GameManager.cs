@@ -50,7 +50,9 @@ public class GameManager : NetworkBehaviour
     public event GameEventInteraction OnPlayerJailed;
     public event GameEventInteraction OnPlayerFreed;
 
+    [SerializeField]
     GameState serverState = GameState.AWAITING_CONNECTIONS;
+    [SerializeField]
     GameState clientState = GameState.AWAITING_CONNECTIONS;
     int countdown = 3;
     float curCountdownTimer = 0;
@@ -117,6 +119,7 @@ public class GameManager : NetworkBehaviour
         Debug.Log($"== GameManager (Server): Setting State: {state}");
         serverState = state;
         UpdateGameStateClientRpc(state);
+        OnServerStateChange(state);
     }
     [ClientRpc]
     private void UpdateGameStateClientRpc(GameState state) {
@@ -159,9 +162,8 @@ public class GameManager : NetworkBehaviour
             ServerUpdateGameState(GameState.TRIGGER_RESET);
         }
     }
-    // Update is called once per frame
-    void Update()
-    {
+
+    void OnServerStateChange(GameState newState) {
         if(IsServer) {
             switch (serverState)
             {
@@ -196,33 +198,21 @@ public class GameManager : NetworkBehaviour
                 //round reset RPC -> player imprisoned RPC
                 case GameState.TRIGGER_RESET:
                     // Debug.Log("== GameManager (Server): Resetting Round");                          
-                    curResetTimer = resetTimeout;
-                    // ClientResetRoundClientRpc();
+                    // curResetTimer = resetTimeout;
+                    ClientResetRoundClientRpc();
                     ServerUpdateGameState(GameState.AWAIT_RESET);                    
                     break;
                 case GameState.AWAIT_RESET:
-                    curResetTimer -= Time.deltaTime;
-                    if(curResetTimer < 0) {
-                        // Debug.Log("AWAIT RESET DONE");
-                        curResetTimer = resetTimeout; //reset the timer
-                        ServerUpdateGameState(GameState.COUNTDOWN);
-                    }
+                    // curResetTimer -= Time.deltaTime;
+                    // if(curResetTimer < 0) {
+                    //     // Debug.Log("AWAIT RESET DONE");
+                    //     curResetTimer = resetTimeout; //reset the timer
+                    // }
+                    ServerUpdateGameState(GameState.COUNTDOWN);
                     countdown = 3;
                     break;
                 case GameState.COUNTDOWN:
-                    // Debug.Log("== GameManager (Server): Counting Down...");
-                    curCountdownTimer -= Time.deltaTime;
-                    if(curCountdownTimer <= 0) {
-                        CountdownClientRpc(countdown);        
-                        countdown -= 1;
-                        curCountdownTimer = 1;
-                    }
-
-                    if(countdown == -1) {
-                        CountdownClientRpc(0);
-                        ServerUpdateGameState(GameState.PLAY);
-                    }
-
+                    StartCoroutine(RoundCountdown());
                     break;
                 case GameState.PLAY:
                     // Debug.Log("== GameManager: IN PLAY");
@@ -231,36 +221,10 @@ public class GameManager : NetworkBehaviour
                     break;
             }
         }
-
-        if(IsClient && clientState == GameState.AWAIT_RESET && !clientHasReset) {
-            ClientResetRound();
-        }
-
-        // if(IsClient) {
-        //     Debug.Log($"CLIENT STATE: {clientState}");
-        //     switch (clientState)
-        //     {                
-        //         case GameState.AWAITING_CONNECTIONS:
-        //         case GameState.INIT_GAME_SERVER:
-        //         case GameState.SPAWNING:
-        //             break;
-        //         case GameState.AWAIT_SPAWN_CONFIRMATION:
-        //             Debug.Log("== GameManager (Client): Confirming with server");                    
-        //             break;
-        //         case GameState.RESETTING:
-        //             Debug.Log("== GameManager (Client): Resetting Round");
-                    
-        //             break;
-        //         case GameState.COUNTDOWN:
-        //             Debug.Log("== GameManager (Client): Counting Down...");
-        //             break;
-        //         case GameState.PLAY:
-        //             Debug.Log("== GameManager (Client): IN PLAY");
-        //             break;
-        //         default:
-        //             break;
-        //     }
-        // }
+    }
+    // Update is called once per frame
+    void Update()
+    {
     }
 
     void GameOver(Team winningTeam) {

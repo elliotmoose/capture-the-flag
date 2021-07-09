@@ -457,6 +457,7 @@ public class LocalPlayer : NetworkBehaviour
         this.transform.rotation = syncPlayer.spawnRot;
 
         if(!IsOwner) return; 
+        
         //reset position
         // this.GetComponent<Smooth.SmoothSyncMLAPI>().teleportOwnedObjectFromOwner();
         

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using MLAPI;
+using MLAPI.Messaging;
 
 public class Test : NetworkBehaviour
 {
@@ -23,5 +24,17 @@ public class Test : NetworkBehaviour
             this.GetComponent<CharacterController>().Move(Vector3.forward*Time.deltaTime*20);
             // this.transform.Translate(Vector3.forward*Time.fixedDeltaTime*20);
         }
+    }
+
+    void Start() {
+        for (int i = 0; i < 20; i++)
+        {
+            TestClientRpc(i);
+        }
+    }
+
+    [ClientRpc]
+    void TestClientRpc(int i) {
+        Debug.Log(i);
     }
 }
