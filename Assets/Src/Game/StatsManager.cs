@@ -64,11 +64,11 @@ public class StatsManager : NetworkBehaviour
     void Update() {
         if(!IsServer) return;
         //time in opponent territory
-        List<Player> players = PlayerSpawner.Instance.GetAllPlayers();
-        foreach(Player player in players) {
-            LocalPlayer localPlayer = player.GetComponent<LocalPlayer>();
+        
+        List<LocalPlayer> localPlayers = LocalPlayer.AllPlayers();
+        foreach(LocalPlayer localPlayer in localPlayers) {
             if(localPlayer.isInEnemyTerritory && !localPlayer.isJailed) {
-                stats[player.GetUser().clientId] += new GameStat{timeInEnemyTerritory=Time.deltaTime};
+                stats[localPlayer.syncPlayer.GetUser().clientId] += new GameStat{timeInEnemyTerritory=Time.deltaTime};
             }
         }
 

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using MLAPI;
+using MLAPI.Spawning;
 using MLAPI.NetworkVariable;
 using MLAPI.Messaging;
 
@@ -14,7 +15,7 @@ public enum GameState {
     SPAWNING, //spawn players and flags
     AWAIT_SPAWN_CONFIRMATION, //spawn players and flags
     TRIGGER_RESET, //reset player positions, effects, flag positions
-    AWAIT_RESET,
+    COMPLETED_RESET,
     COUNTDOWN, //countdown
     PLAY,
     SCORESCREEN
@@ -54,10 +55,6 @@ public class GameManager : NetworkBehaviour
     GameState serverState = GameState.AWAITING_CONNECTIONS;
     [SerializeField]
     GameState clientState = GameState.AWAITING_CONNECTIONS;
-    int countdown = 3;
-    float curCountdownTimer = 0;
-    float resetTimeout = 1; //we let the server wait 1 second before resetting
-    float curResetTimer = 0;
     
     //Spawn PlayerControllers (spawns players) -> Spawn flags -> (INSERT SANITY CHECK FOR PLAYER SPAWN) )Reset Positions 
     public void StartGame() {        
@@ -81,20 +78,9 @@ public class GameManager : NetworkBehaviour
         //flag positions
         redTeamFlag.GetComponent<Flag>().ResetPosition();
         blueTeamFlag.GetComponent<Flag>().ResetPosition();
-    }
-
-    private bool clientHasReset {
-        get {
-            bool playersReset = true;
-            foreach(LocalPlayer localPlayer in LocalPlayer.AllPlayers()) {
-                if(!localPlayer.hasReset) {
-                    playersReset = false;
-                    break;
-                }
-            }
-
-            return playersReset && redTeamFlag.GetComponent<Flag>().hasReset && blueTeamFlag.GetComponent<Flag>().hasReset;
-        }
+        PlayerController.LocalInstance.playerGameState = GameState.COMPLETED_RESET; //for acknowledgement
+        if(IsServer) serverState = GameState.COMPLETED_RESET;
+        if(IsClient) clientState = GameState.COMPLETED_RESET;
     }
 
     private IEnumerator RoundCountdown() {
@@ -121,11 +107,63 @@ public class GameManager : NetworkBehaviour
         UpdateGameStateClientRpc(state);
         OnServerStateChange(state);
     }
+    
     [ClientRpc]
     private void UpdateGameStateClientRpc(GameState state) {
         Debug.Log($"== GameManager (Client): Setting State: {state}");
-        clientState = state;
+        clientState = state;        
+        OnClientStateChange(state);
     } 
+
+    void OnServerStateChange(GameState newState) {
+        if(!IsServer) return;
+        switch (serverState)
+        {
+            case GameState.AWAITING_CONNECTIONS:
+                break;
+            case GameState.INIT_GAME_SERVER:
+                // Debug.Log("== GameManager (Server): Initialising Server");
+                UIManager.Instance.GenerateGameSummaryUI();
+                StatsManager.Instance.Initialise(RoomManager.Instance.GetUsers());  
+                ServerUpdateGameState(GameState.SPAWNING);
+                break;
+            case GameState.SPAWNING:
+                // Debug.Log("== GameManager (Server): Spawning Players");
+                SpawnPlayerControllers();
+                ServerUpdateGameState(GameState.AWAIT_SPAWN_CONFIRMATION);
+                break;
+            case GameState.AWAIT_SPAWN_CONFIRMATION:
+                ServerUpdateGameState(GameState.TRIGGER_RESET); //sends out an RPC requesting reset
+                break;
+            case GameState.TRIGGER_RESET:
+                break;
+            case GameState.COMPLETED_RESET: //completed by ClientResetRound
+                break;
+            case GameState.COUNTDOWN:
+                StartCoroutine(RoundCountdown());
+                break;
+            case GameState.PLAY:
+                // Debug.Log("== GameManager: IN PLAY");
+                break;
+            default:
+                break;
+        }
+
+    }
+
+    void OnClientStateChange(GameState newState) {
+        if(!IsClient) return;
+        PlayerController.LocalInstance.playerGameState = newState; 
+
+        switch (newState)
+        {
+            case GameState.TRIGGER_RESET:
+                ClientResetRound();
+                break;
+            default:
+                break;
+        }
+    }
 
     [ClientRpc]
     private void GameOverClientRpc(Team winningTeam) {
@@ -163,68 +201,33 @@ public class GameManager : NetworkBehaviour
         }
     }
 
-    void OnServerStateChange(GameState newState) {
-        if(IsServer) {
-            switch (serverState)
-            {
-                case GameState.AWAITING_CONNECTIONS:
-                    break;
-                case GameState.INIT_GAME_SERVER:
-                    // Debug.Log("== GameManager (Server): Initialising Server");
-                    UIManager.Instance.GenerateGameSummaryUI();
-                    StatsManager.Instance.Initialise(RoomManager.Instance.GetUsers());  
-                    ServerUpdateGameState(GameState.SPAWNING);
-                    break;
-                case GameState.SPAWNING:
-                    // Debug.Log("== GameManager (Server): Spawning Players");
-                    SpawnPlayerControllers();
-                    ServerUpdateGameState(GameState.AWAIT_SPAWN_CONFIRMATION);
-                    break;
-                case GameState.AWAIT_SPAWN_CONFIRMATION:
-                    // Debug.Log("== GameManager (Server): Awaiting Confirmation...");
-                    bool clientConfirmationsReceived = true;
-                    // Debug.LogWarning("Check for client confirmations");
-                    if(clientConfirmationsReceived) {
-                        // Debug.Log("== GameManager (Server): Confirmation received!");
-                        
-                        ServerUpdateGameState(GameState.TRIGGER_RESET);
-                    }
-                    break;
-                
-                //IMPLEMENTATION NOTE:
-                //we need to reset over a period of time, to let the old RPCs wear of with respect to imprisonment,
-                //as order of execution is not assured across objects. 
-                //this might result in a race condition where if catching a player wins a round
-                //round reset RPC -> player imprisoned RPC
-                case GameState.TRIGGER_RESET:
-                    // Debug.Log("== GameManager (Server): Resetting Round");                          
-                    // curResetTimer = resetTimeout;
-                    ClientResetRoundClientRpc();
-                    ServerUpdateGameState(GameState.AWAIT_RESET);                    
-                    break;
-                case GameState.AWAIT_RESET:
-                    // curResetTimer -= Time.deltaTime;
-                    // if(curResetTimer < 0) {
-                    //     // Debug.Log("AWAIT RESET DONE");
-                    //     curResetTimer = resetTimeout; //reset the timer
-                    // }
-                    ServerUpdateGameState(GameState.COUNTDOWN);
-                    countdown = 3;
-                    break;
-                case GameState.COUNTDOWN:
-                    StartCoroutine(RoundCountdown());
-                    break;
-                case GameState.PLAY:
-                    // Debug.Log("== GameManager: IN PLAY");
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
+    
     // Update is called once per frame
     void Update()
     {
+        if(IsServer) {
+            if(serverState == GameState.AWAIT_SPAWN_CONFIRMATION) {
+                
+            }
+            
+            if(serverState == GameState.COMPLETED_RESET) {
+                bool allClientsCompletedReset = true;
+                foreach (PlayerController controller in PlayerController.AllControllers())
+                {
+                    if(controller.playerGameState != GameState.COMPLETED_RESET) {
+                        Debug.Log($"Waiting for user: {controller.GetUser().username}");
+                        allClientsCompletedReset = false;
+                    }
+                    else {
+                        Debug.Log($"User successfully reset: {controller.GetUser().username}");
+                    }
+                }
+
+                if(allClientsCompletedReset) {
+                    ServerUpdateGameState(GameState.COUNTDOWN); //start round
+                }
+            }
+        }
     }
 
     void GameOver(Team winningTeam) {

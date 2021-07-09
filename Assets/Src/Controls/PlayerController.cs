@@ -7,6 +7,8 @@ using MLAPI.Messaging;
 using MLAPI.Spawning;
 using MLAPI.NetworkVariable;
 using Cinemachine;
+
+
 public class PlayerController : NetworkBehaviour 
 {   
     public static PlayerController LocalInstance;
@@ -17,6 +19,21 @@ public class PlayerController : NetworkBehaviour
         WritePermission = NetworkVariablePermission.ServerOnly,
         SendTickrate = 0,
     });
+
+    private NetworkVariable<GameState> _playerGameState = new NetworkVariable<GameState>(new NetworkVariableSettings{
+        WritePermission=NetworkVariablePermission.OwnerOnly,
+        SendTickrate=10
+    });
+
+    public GameState playerGameState {
+        get {
+            return _playerGameState.Value;
+        }
+
+        set { 
+            _playerGameState.Value = value;
+        }
+    }
 
     public User GetUser() {
         return this._user.Value;
@@ -65,8 +82,7 @@ public class PlayerController : NetworkBehaviour
             if(Input.GetKeyDown(SKILL2_KEY)) {
                 localPlayer.CastSkillAtIndex(1);
             }
-        }
-        
+        }        
     }
 
     private LocalPlayer _player;
@@ -75,5 +91,18 @@ public class PlayerController : NetworkBehaviour
         if(_player != null) return _player;
         _player = LocalPlayer.WithClientId(this.OwnerClientId);        
         return _player;
+    }
+
+    public static List<PlayerController> AllControllers() {
+        List<PlayerController> controllers = new List<PlayerController>();
+
+        List<User> users = RoomManager.Instance.GetUsers();
+        foreach(User user in users) {
+            GameObject playerControllerGO = NetworkSpawnManager.GetPlayerNetworkObject(user.clientId).gameObject;
+            PlayerController controller = playerControllerGO.GetComponent<PlayerController>();
+            controllers.Add(controller);
+        }
+
+        return controllers;
     }
 }
