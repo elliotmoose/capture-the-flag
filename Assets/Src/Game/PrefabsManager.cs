@@ -10,6 +10,7 @@ public class PrefabsManager : NetworkBehaviour
     public GameObject smoke;
     public GameObject catchField;
     public GameObject teleportField;
+    public GameObject knockbackField;
     public Sprite berserkerIcon;
     public Sprite adeptIcon;
     public Sprite rogueIcon;
