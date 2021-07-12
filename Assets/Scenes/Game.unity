@@ -15296,6 +15296,7 @@ MonoBehaviour:
   smoke: {fileID: 7145597933269217638, guid: 0157679236ada9e4ca70294df248874b, type: 3}
   catchField: {fileID: 1439356418933139104, guid: 6da2dcdb28fa99b4d8a542c7417c6792, type: 3}
   teleportField: {fileID: 4833554853100618946, guid: 7041dbb2a52bb0e43a7647a8fe5b54f0, type: 3}
+  knockbackField: {fileID: 4626221234926358131, guid: c05e4058593afb34aadd3461df939687, type: 3}
   berserkerIcon: {fileID: 21300000, guid: d53f2076967484e7ca7865244cd941e1, type: 3}
   adeptIcon: {fileID: 21300000, guid: 2f7404c7474c9458698a640073285f7f, type: 3}
   rogueIcon: {fileID: 21300000, guid: 3cfa2d9e712644bae8caf05aa8aaf10a, type: 3}
@@ -33359,7 +33360,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 0
-    m_SensorSize: {x: 1.7777778, y: 1}
+    m_SensorSize: {x: 1.7786883, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -54462,7 +54463,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 1620, y: -300.0668}
+  m_AnchoredPosition: {x: 1620, y: -300.06677}
   m_SizeDelta: {x: 3240, y: 150}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1816771468
@@ -57886,9 +57887,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   autoStartConnection: 1
-  twoPlayer: 1
+  twoPlayer: 0
   isHost: 1
-  character: 3
+  character: 0
 --- !u!1001 &1919001616
 PrefabInstance:
   m_ObjectHideFlags: 0

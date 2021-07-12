@@ -578,7 +578,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SendRate: 0.1
   m_Animator: {fileID: 8158180437212963690}
-  m_TrackedParamFlags: 2047
+  m_TrackedParamFlags: 4095
 --- !u!95 &8158180437212963690
 Animator:
   serializedVersion: 3

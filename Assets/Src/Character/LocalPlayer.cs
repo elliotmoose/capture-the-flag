@@ -403,6 +403,7 @@ public class LocalPlayer : NetworkBehaviour
         if(animationName == "Teleport") SpawnTeleportStartParticle();
         if (animationName == "Catch") this.transform.Find("Catch").localScale = Vector3.one * syncPlayer.GetCatchRadius(); //we need this to be here so that it is replicated across all
         if (animationName == "Smoke") SpawnSmokeParticle();
+        if (animationName == "Knockback") SpawnKnockbackParticle();
         if (OnAnimationStart!=null) OnAnimationStart(animationName);
     }
 
@@ -432,6 +433,11 @@ public class LocalPlayer : NetworkBehaviour
     void SpawnSmokeParticle()
     {
         GameObject.Instantiate(PrefabsManager.Instance.smoke, this.transform.position, Quaternion.identity);
+    }
+
+    void SpawnKnockbackParticle()
+    {
+        GameObject.Instantiate(PrefabsManager.Instance.knockbackField, this.transform.position, Quaternion.Euler(new Vector3(-90, 0, 0)));
     }
 
     #endregion
