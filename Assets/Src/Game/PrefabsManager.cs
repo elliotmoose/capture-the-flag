@@ -11,6 +11,7 @@ public class PrefabsManager : NetworkBehaviour
     public GameObject catchField;
     public GameObject teleportField;
     public GameObject knockbackField;
+    public GameObject cloneTrail;
     public Sprite berserkerIcon;
     public Sprite adeptIcon;
     public Sprite rogueIcon;

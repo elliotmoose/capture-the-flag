@@ -142,6 +142,11 @@ public class Player : NetworkBehaviour
                 SlowEffect slow = new SlowEffect(localPlayer, 3, 2);
                 localPlayer.TakeEffect(slow);
                 break;
+            case EffectType.Cloned:
+                GameObject trail = GameObject.Instantiate(PrefabsManager.Instance.cloneTrail, this.transform.position, Quaternion.identity);
+                LocalPlayer by = LocalPlayer.WithClientId(byClientId);
+                trail.GetComponent<FollowPlayer>().player = by;
+                break;
         }
     }
     

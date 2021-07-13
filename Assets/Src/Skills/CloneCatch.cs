@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class CloneCatch : Catch
 {
+    private string animation = "Clone";
+
     public CloneCatch() : base()
     {
         name = "Clone Catch";
@@ -24,6 +26,9 @@ public class CloneCatch : Catch
                 Debug.Log("Target does not have enough skills");
                 continue;
             }
+
+            Debug.Log("Cloning...");
+            target.TakeNetworkEffect(EffectType.Cloned, player.OwnerClientId);
 
             Skill skill = target.skills[1];
             if (player.skills.Count == 2)

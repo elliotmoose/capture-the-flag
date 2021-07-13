@@ -1,4 +1,5 @@
 public enum EffectType {
     Knockback,
-    Slow
+    Slow,
+    Cloned
 }
