@@ -145,7 +145,8 @@ public class Player : NetworkBehaviour
             case EffectType.Cloned:
                 GameObject trail = GameObject.Instantiate(PrefabsManager.Instance.cloneTrail, this.transform.position, Quaternion.identity);
                 LocalPlayer by = LocalPlayer.WithClientId(byClientId);
-                trail.GetComponent<FollowPlayer>().player = by;
+                trail.GetComponent<FollowPlayer>().fromPlayer = this.gameObject;
+                trail.GetComponent<FollowPlayer>().toPlayer = by.gameObject;
                 break;
         }
     }
