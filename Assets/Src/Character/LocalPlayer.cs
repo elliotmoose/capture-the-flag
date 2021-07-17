@@ -78,6 +78,7 @@ public class LocalPlayer : NetworkBehaviour
     public GameObject flagSlot;
     protected Renderer[] rends;
     private Transform usernameTextTransform;
+    private AudioSource playerAudio;
 
     #region Getter Setters    
     public float GetMoveSpeed()
@@ -103,6 +104,7 @@ public class LocalPlayer : NetworkBehaviour
     void Start()
     {
         this.rends = this.GetComponentsInChildren<Renderer>();
+        this.playerAudio = this.GetComponent<AudioSource>();
         this.flagSlot = this.transform.Find("model/body/FlagSlot").gameObject;
         if (!flagSlot)
         {
@@ -398,6 +400,7 @@ public class LocalPlayer : NetworkBehaviour
     public PlayerAnimationEvent OnAnimationCommit;
     public PlayerAnimationEvent OnAnimationRelease;
     public PlayerAnimationEvent OnAnimationEnd;
+    public PlayerAnimationEvent OnAnimationSound;
 
     public void AnimationStart(string animationName) {        
         if(animationName == "Teleport") SpawnTeleportStartParticle();
@@ -419,6 +422,13 @@ public class LocalPlayer : NetworkBehaviour
         if(animationName == "Teleport") SpawnTeleportEndParticle();
         if (OnAnimationEnd!=null) OnAnimationEnd(animationName);
     }
+
+    public void AnimationSound(string animationName)
+    {
+        if (animationName == "Reach") PlayReachSFX();
+        if (animationName == "Smoke") PlaySmokeSFX();
+    }
+
     #endregion
 
     #region skill particle effect sync
@@ -438,6 +448,21 @@ public class LocalPlayer : NetworkBehaviour
     void SpawnKnockbackParticle()
     {
         GameObject.Instantiate(PrefabsManager.Instance.knockbackField, this.transform.position, Quaternion.Euler(new Vector3(-90, 0, 0)));
+    }
+
+    #endregion
+
+    #region skill sfx
+    void PlayReachSFX()
+    {
+        playerAudio.clip = PrefabsManager.Instance.laserSound;
+        playerAudio.Play();
+    }
+
+    void PlaySmokeSFX()
+    {
+        playerAudio.clip = PrefabsManager.Instance.smokeSound;
+        playerAudio.Play();
     }
 
     #endregion

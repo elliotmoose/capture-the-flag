@@ -12,6 +12,10 @@ public class PrefabsManager : NetworkBehaviour
     public GameObject teleportField;
     public GameObject knockbackField;
     public GameObject cloneTrail;
+
+    public AudioClip laserSound;
+    public AudioClip smokeSound;
+
     public Sprite berserkerIcon;
     public Sprite adeptIcon;
     public Sprite rogueIcon;
