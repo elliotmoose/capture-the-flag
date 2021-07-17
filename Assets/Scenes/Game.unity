@@ -15300,6 +15300,8 @@ MonoBehaviour:
   cloneTrail: {fileID: 6950795904565288395, guid: 7f5e4a3a9fe80b84c9b7da8d1786cd59, type: 3}
   laserSound: {fileID: 8300000, guid: e203fa34c5696944db0d5c05cab71b23, type: 3}
   smokeSound: {fileID: 8300000, guid: 7e0281dc82520d0449bfd4749c34ca4b, type: 3}
+  boostSound: {fileID: 8300000, guid: afe25b5270a84384581a35781c46f9d8, type: 3}
+  slamSound: {fileID: 8300000, guid: d406346a5c000324ba2b4f501215d76d, type: 3}
   berserkerIcon: {fileID: 21300000, guid: d53f2076967484e7ca7865244cd941e1, type: 3}
   adeptIcon: {fileID: 21300000, guid: 2f7404c7474c9458698a640073285f7f, type: 3}
   rogueIcon: {fileID: 21300000, guid: 3cfa2d9e712644bae8caf05aa8aaf10a, type: 3}

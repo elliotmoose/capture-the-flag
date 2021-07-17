@@ -15,6 +15,8 @@ public class PrefabsManager : NetworkBehaviour
 
     public AudioClip laserSound;
     public AudioClip smokeSound;
+    public AudioClip boostSound;
+    public AudioClip slamSound;
 
     public Sprite berserkerIcon;
     public Sprite adeptIcon;

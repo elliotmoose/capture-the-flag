@@ -427,6 +427,8 @@ public class LocalPlayer : NetworkBehaviour
     {
         if (animationName == "Reach") PlayReachSFX();
         if (animationName == "Smoke") PlaySmokeSFX();
+        if (animationName == "Boost") PlayBoostSFX();
+        if (animationName == "Knockback") PlaySlamSFX();
     }
 
     #endregion
@@ -462,6 +464,18 @@ public class LocalPlayer : NetworkBehaviour
     void PlaySmokeSFX()
     {
         playerAudio.clip = PrefabsManager.Instance.smokeSound;
+        playerAudio.Play();
+    }
+
+    void PlayBoostSFX()
+    {
+        playerAudio.clip = PrefabsManager.Instance.boostSound;
+        playerAudio.Play();
+    }
+
+    void PlaySlamSFX()
+    {
+        playerAudio.clip = PrefabsManager.Instance.slamSound;
         playerAudio.Play();
     }
 
