@@ -1,5 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+<<<<<<< Updated upstream
 --- !u!1 &1025762607362643836
 GameObject:
   m_ObjectHideFlags: 0
@@ -379,6 +380,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+=======
+>>>>>>> Stashed changes
 --- !u!1 &7096218531268262785
 GameObject:
   m_ObjectHideFlags: 0
@@ -448,7 +451,6 @@ Transform:
   - {fileID: 443195636305146123}
   - {fileID: 9003953353391347412}
   - {fileID: 8397695126930428565}
-  - {fileID: 2668411903839370531}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -604,6 +606,7 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 1.1, z: 0}
+<<<<<<< Updated upstream
 --- !u!82 &2470895628437246544
 AudioSource:
   m_ObjectHideFlags: 0
@@ -782,6 +785,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+=======
+>>>>>>> Stashed changes
 --- !u!1001 &240499777238150101
 PrefabInstance:
   m_ObjectHideFlags: 0
