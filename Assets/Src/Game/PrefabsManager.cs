@@ -15,6 +15,8 @@ public class PrefabsManager : NetworkBehaviour
     public Sprite rogueIcon;
     public Sprite lancerIcon;
 
+    public GameObject minimapPlayerIcon;
+
     public GameObject playerUsername;
     
     public GameObject flag;

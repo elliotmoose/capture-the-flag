@@ -10,8 +10,6 @@ public class PlayerSpawner : NetworkBehaviour
     public GameObject berserkerPrefab;
     public GameObject roguePrefab;
     public GameObject lancerPrefab;
-    public GameObject blueiconPrefab;
-    public GameObject rediconPrefab;
 
     public static PlayerSpawner Instance;
 
@@ -72,18 +70,6 @@ public class PlayerSpawner : NetworkBehaviour
         Quaternion faceDirection = Quaternion.Euler(0, team == Team.BLUE ? 180 : 0, 0);
         GameObject playerObj = GameObject.Instantiate(characterPrefab, spawnPosition, faceDirection);
 
-        // Assign the minimap color to teams
-        GameObject minimapObj;
-        if (team == Team.BLUE)
-        {
-            minimapObj = GameObject.Instantiate(blueiconPrefab, spawnPosition, faceDirection);
-        }
-        else
-        {
-            minimapObj = GameObject.Instantiate(rediconPrefab, spawnPosition, faceDirection);
-        }
-        minimapObj.GetComponent<NetworkObject>().Spawn();
-
         Player player = playerObj.GetComponent<Player>();
         player.spawnPos = spawnPosition;
         player.spawnRot = faceDirection;
@@ -92,9 +78,6 @@ public class PlayerSpawner : NetworkBehaviour
         // playerObj.GetComponent<NetworkObject>().SpawnAsPlayerObject(user.clientId);
         playerObj.GetComponent<NetworkObject>().SpawnWithOwnership(user.clientId);
         players[user.clientId] = player;
-
-        minimapObj.transform.parent = playerObj.transform;
-        minimapObj.transform.Rotate(90.0f, 0.0f, 0.0f);
 
         return playerObj;
     }

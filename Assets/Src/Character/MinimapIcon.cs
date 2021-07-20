@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class MinimapIcon : MonoBehaviour
 {
+    public LocalPlayer target;
     // Start is called before the first frame update
     void Start()
     {
@@ -13,6 +14,7 @@ public class MinimapIcon : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if(!target) return;
+        this.GetComponent<RectTransform>().position = target.transform.position;
     }
 }

@@ -15231,8 +15231,6 @@ MonoBehaviour:
   berserkerPrefab: {fileID: 3086753448720040265, guid: f058a2a1e2dd54c3f8b6b05cf9548dfc, type: 3}
   roguePrefab: {fileID: 2731114782039628039, guid: 8c2ff678523f040908cee1512a374e5a, type: 3}
   lancerPrefab: {fileID: 5767545232183299094, guid: 41a531846997a42f689806dd0252cae1, type: 3}
-  blueiconPrefab: {fileID: 6538538008511584895, guid: d55c1b0c94aed5048b9c64f1de0d8796, type: 3}
-  rediconPrefab: {fileID: 7589246180579022880, guid: 9f5520d3e27e54b418ef79c42e55762a, type: 3}
 --- !u!4 &368055227
 Transform:
   m_ObjectHideFlags: 0
@@ -15302,6 +15300,7 @@ MonoBehaviour:
   adeptIcon: {fileID: 21300000, guid: 2f7404c7474c9458698a640073285f7f, type: 3}
   rogueIcon: {fileID: 21300000, guid: 3cfa2d9e712644bae8caf05aa8aaf10a, type: 3}
   lancerIcon: {fileID: 21300000, guid: b471dba027e0d4e98b5cf632ad6a349a, type: 3}
+  minimapPlayerIcon: {fileID: 8420345038447651027, guid: 91557057c047d454c894857229c10682, type: 3}
   playerUsername: {fileID: 7223234545913753362, guid: 43b04c55078d74c0d8613dc3c0fe21c4, type: 3}
   flag: {fileID: 8062280885767414519, guid: 9c819b117196a4f50b725bb9b3087a87, type: 3}
 --- !u!114 &368055231
@@ -29786,7 +29785,6 @@ GameObject:
   - component: {fileID: 822941858}
   - component: {fileID: 822941857}
   - component: {fileID: 822941856}
-  - component: {fileID: 822941860}
   m_Layer: 12
   m_Name: MinimapCanvas
   m_TagString: Untagged
@@ -29875,18 +29873,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -0.000015258789}
   m_SizeDelta: {x: 500, y: 500}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &822941860
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 822941855}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2786b44651816614181613153270b48d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &824016515
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -37224,7 +37210,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.44705883}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.21176471}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -48687,6 +48673,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1286725973}
     m_Modifications:
+    - target: {fileID: 701690046618207727, guid: 0595265c0d5e10f47ba71332a15213fb, type: 3}
+      propertyPath: minimapCanvas
+      value: 
+      objectReference: {fileID: 822941859}
     - target: {fileID: 3317433506161704380, guid: 0595265c0d5e10f47ba71332a15213fb, type: 3}
       propertyPath: m_RootOrder
       value: 3
@@ -57849,10 +57839,6 @@ MonoBehaviour:
       PlayerPrefab: 0
     - Prefab: {fileID: 7218106968360669568, guid: bc6b7535a316c4ca58a1df71a1f5fc3e, type: 3}
       PlayerPrefab: 0
-    - Prefab: {fileID: 6538538008511584895, guid: d55c1b0c94aed5048b9c64f1de0d8796, type: 3}
-      PlayerPrefab: 0
-    - Prefab: {fileID: 7589246180579022880, guid: 9f5520d3e27e54b418ef79c42e55762a, type: 3}
-      PlayerPrefab: 0
     PlayerPrefabHash:
       id: 0
     CreatePlayerPrefab: 0
@@ -57908,7 +57894,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   autoStartConnection: 1
-  twoPlayer: 1
+  twoPlayer: 0
   isHost: 1
   character: 3
 --- !u!1001 &1919001616

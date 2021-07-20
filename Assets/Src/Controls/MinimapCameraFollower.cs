@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using MLAPI.Spawning;
 using MLAPI;
 
@@ -8,6 +9,7 @@ public class MinimapCameraFollower : MonoBehaviour
 {
     public static MinimapCameraFollower Instance;
     GameObject target;
+    public Transform minimapCanvas;
 
     // public GameObject 
 
@@ -46,12 +48,16 @@ public class MinimapCameraFollower : MonoBehaviour
         //GameObject map = GameObject.FindGameObjectWithTag("Map2d");
         //map.transform.position = target.transform.position;
         //map.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, 0.0f);
+        GenerateScreenIcons();
     }
 
-    void UpdatePlayerMinimap() {
-        //update map position
-
-
+    void GenerateScreenIcons() {
+        foreach(LocalPlayer localPlayer in LocalPlayer.AllPlayers())
+        {
+            GameObject iconGO = GameObject.Instantiate(PrefabsManager.Instance.minimapPlayerIcon, minimapCanvas);
+            iconGO.GetComponent<Image>().color = (localPlayer.team == Team.BLUE ? UIManager.Instance.colors.textBlue : UIManager.Instance.colors.textRed);
+            iconGO.GetComponent<MinimapIcon>().target = localPlayer;
+        }
     }
 }
 
