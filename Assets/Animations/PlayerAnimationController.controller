@@ -2949,7 +2949,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: TurnVisible
-  m_Speed: -1
+  m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 8500221017980708974}
@@ -2962,7 +2962,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 0eb7e023977914efe8859ccd4d035f90, type: 2}
+  m_Motion: {fileID: 7400000, guid: 39b8c7b9402a39a47a14454bccc3795c, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
