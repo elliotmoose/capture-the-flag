@@ -7,6 +7,8 @@ TagManager:
   - CinemachineCamera
   - MinimapCam
   - Terrain
+  - MinimapIcon
+  - Map2d
   layers:
   - Default
   - TransparentFX

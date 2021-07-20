@@ -36,7 +36,8 @@ public class PlayerSpawner : NetworkBehaviour
     }
 
     public GameObject SpawnPlayer(User user, int index, int noOfPlayersPerTeam) {
-        if(!IsServer) {return null;}
+
+        if (!IsServer) {return null;}
 
         GameObject characterPrefab;
         
@@ -66,42 +67,8 @@ public class PlayerSpawner : NetworkBehaviour
         float teamIndexPosition = -(noOfPlayersPerTeam-1) * distanceBetweenPlayers/2 + (index * distanceBetweenPlayers);
         Vector3 spawnPosition = new Vector3(teamIndexPosition,0,teamPosition);
         // Debug.Log($"{spawnPosition} {index}");
-
         Quaternion faceDirection = Quaternion.Euler(0, team == Team.BLUE ? 180 : 0, 0);
         GameObject playerObj = GameObject.Instantiate(characterPrefab, spawnPosition, faceDirection);
-
-
-        // Assign the color of LocPoint to teams 
-
-        if (team == Team.BLUE)
-        {
-            Transform[] transforms = playerObj.GetComponentsInChildren<Transform>();
-            Debug.Log(transforms);
-
-            foreach (Transform t in transforms)
-            {
-                if (t.gameObject.name == "LocPoint")
-                {
-                    t.GetComponent<Renderer>().material.color = new Color(0, 0, 255);
-                    //Debug.Log("Found blue" + t);
-                }
-            }
-        }
-        else
-        {
-            Transform[] transforms = playerObj.GetComponentsInChildren<Transform>();
-            Debug.Log(transforms);
-
-            foreach (Transform t in transforms)
-            {
-                if (t.gameObject.name == "LocPoint")
-                {
-                    t.GetComponent<Renderer>().material.color = new Color(255, 0, 0);
-                    //Debug.Log("Found red" + t);
-                }
-            }
-        }
-
 
         Player player = playerObj.GetComponent<Player>();
         player.spawnPos = spawnPosition;
@@ -111,6 +78,7 @@ public class PlayerSpawner : NetworkBehaviour
         // playerObj.GetComponent<NetworkObject>().SpawnAsPlayerObject(user.clientId);
         playerObj.GetComponent<NetworkObject>().SpawnWithOwnership(user.clientId);
         players[user.clientId] = player;
+
         return playerObj;
     }
 }

@@ -1,10 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
-public class JoinRoom : MonoBehaviour
+public class MinimapIcon : MonoBehaviour
 {
+    public LocalPlayer target;
     // Start is called before the first frame update
     void Start()
     {
@@ -14,6 +14,7 @@ public class JoinRoom : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if(!target) return;
+        this.GetComponent<RectTransform>().position = target.transform.position;
     }
 }
