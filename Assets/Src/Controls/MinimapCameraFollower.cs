@@ -38,10 +38,19 @@ public class MinimapCameraFollower : MonoBehaviour
         camera.transform.parent = target.transform;
         camera.transform.localPosition = new Vector3(0, 50, 0);
         camera.transform.localRotation = Quaternion.Euler(90.0f, 0.0f, 0.0f);
+
+        GameObject icon = GameObject.FindGameObjectWithTag("MinimapIcon");
+        //icon.transform.parent = target.transform;
+        //icon.transform.localRotation = Quaternion.Euler(90.0f, 0.0f, 0.0f);
+
+        //GameObject map = GameObject.FindGameObjectWithTag("Map2d");
+        //map.transform.position = target.transform.position;
+        //map.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, 0.0f);
     }
 
     void UpdatePlayerMinimap() {
         //update map position
+
 
     }
 }
