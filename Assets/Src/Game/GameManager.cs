@@ -6,6 +6,7 @@ using MLAPI.Spawning;
 using MLAPI.NetworkVariable;
 using MLAPI.Messaging;
 
+public delegate void GameStateEvent();
 public delegate void GameEvent(Player player);
 public delegate void GameEventInteraction(Player receiver, Player giver);
 
@@ -39,6 +40,8 @@ public class GameManager : NetworkBehaviour
     });
 
     int winScore = 15;
+    public float gameTime = 0;
+    public int currentRoundNumber => blueTeamScore.Value + redTeamScore.Value + 1;
 
     // public bool roundInProgress = false;
     // public bool gameInProgress = false;
@@ -46,6 +49,7 @@ public class GameManager : NetworkBehaviour
     public bool roundInProgress => clientState == (GameState.PLAY);
     public bool gameInProgress => (clientState >= GameState.COUNTDOWN) && (clientState != GameState.SCORESCREEN);
 
+    public event GameStateEvent OnRoundStart;
     public event GameEvent OnPlayerScored;
     public event GameEvent OnFlagCaptured;
     public event GameEventInteraction OnPlayerJailed;
@@ -140,6 +144,7 @@ public class GameManager : NetworkBehaviour
             case GameState.COMPLETED_RESET: //completed by ClientResetRound
                 break;
             case GameState.COUNTDOWN:
+                if(OnRoundStart != null) OnRoundStart();
                 StartCoroutine(RoundCountdown());
                 break;
             case GameState.PLAY:
@@ -205,6 +210,7 @@ public class GameManager : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
+        gameTime += Time.deltaTime;
         if(IsServer) {
             if(serverState == GameState.AWAIT_SPAWN_CONFIRMATION) {
                 
@@ -304,6 +310,12 @@ public class GameManager : NetworkBehaviour
     }
 
     #endregion
+
+    public bool PlayerHasFlag(LocalPlayer player) {
+        if(player.team == Team.BLUE && redTeamFlag.capturer == player) return true;
+        if(player.team == Team.RED && blueTeamFlag.capturer == player) return true;
+        return false;
+    }
 
     void Awake() {
         if(Instance != null) {

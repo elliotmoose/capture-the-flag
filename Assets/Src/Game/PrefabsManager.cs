@@ -27,6 +27,7 @@ public class PrefabsManager : NetworkBehaviour
     
     public GameObject flag;
 
+    public GameObject eventLogText;
     void Awake() {
         Instance = this;
     }

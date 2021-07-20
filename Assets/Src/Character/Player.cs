@@ -46,6 +46,7 @@ public class Player : NetworkBehaviour
         WritePermission = NetworkVariablePermission.ServerOnly
     });
 
+    public string username => GetUser().username;
     private NetworkVariableFloat _catchRadius = new NetworkVariableFloat(new NetworkVariableSettings{
         SendTickrate = 0,
         WritePermission = NetworkVariablePermission.ServerOnly
