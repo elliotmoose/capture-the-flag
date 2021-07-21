@@ -215,6 +215,15 @@ public class Player : NetworkBehaviour
         if(!GameManager.Instance.roundInProgress) return;
         Debug.Log("IMPRISONED"  + gameObject.name);
         localPlayer.isJailed = true;
+
+        // play jail sound for the jailed player
+        if (localPlayer == PlayerController.LocalInstance.GetPlayer())
+        {
+            AudioSource playerAudio = localPlayer.GetComponent<AudioSource>();
+            playerAudio.clip = PrefabsManager.Instance.jailSound;
+            playerAudio.Play();
+        }
+        
     }
 
     //onserver
