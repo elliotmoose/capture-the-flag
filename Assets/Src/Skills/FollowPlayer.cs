@@ -9,12 +9,16 @@ public class FollowPlayer : MonoBehaviour
     Vector3 position;
     float time = 0.4f;
     private float curtime = 0f;
+    private bool soundPlayed;
+
+    private AudioSource audioSource;
 
     public int state = 0;
     // Start is called before the first frame update
     void Start()
     {
-        
+        soundPlayed = false;
+        audioSource = this.GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -27,8 +31,18 @@ public class FollowPlayer : MonoBehaviour
             if(progress >= 1) state = 1;
         }
         else if(state == 1) {
+            if (!soundPlayed)
+            {
+                LocalPlayer localPlayer = toPlayer.GetComponent<LocalPlayer>();
+                if (localPlayer == PlayerController.LocalInstance.GetPlayer())
+                {
+                    audioSource.Play();
+                    soundPlayed = true;
+                }
+            }
+
             this.transform.position = toPlayer.transform.position;
-            if(curtime >= 2) {
+            if(curtime >= 2 && !audioSource.isPlaying) {
                 GameObject.Destroy(this.gameObject);
             }
         }

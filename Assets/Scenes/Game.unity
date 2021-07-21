@@ -15458,6 +15458,7 @@ MonoBehaviour:
   teleportSound: {fileID: 8300000, guid: 883dcffad15b9e84b8f192ccffc00fee, type: 3}
   electricitySound: {fileID: 8300000, guid: ef9d1e5b874fd994996f7dc350031a74, type: 3}
   invisSound: {fileID: 8300000, guid: aa84ab9e82338e44b985514f8b1332ed, type: 3}
+  clonedSound: {fileID: 8300000, guid: 0c44ec61cd3c8ed4c9b8cdf7a40b315d, type: 3}
   jailSound: {fileID: 8300000, guid: 8630fc876df165f4fad8cee9c0689cb8, type: 3}
   berserkerIcon: {fileID: 21300000, guid: d53f2076967484e7ca7865244cd941e1, type: 3}
   adeptIcon: {fileID: 21300000, guid: 2f7404c7474c9458698a640073285f7f, type: 3}
@@ -23501,7 +23502,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 1620, y: -900.2004}
+  m_AnchoredPosition: {x: 1620, y: -900.2003}
   m_SizeDelta: {x: 3240, y: 150}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &634363861
@@ -33577,7 +33578,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 0
-    m_SensorSize: {x: 1.7777774, y: 1}
+    m_SensorSize: {x: 1.7775466, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -48657,7 +48658,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 206805398}
   m_HandleRect: {fileID: 206805397}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -58511,7 +58512,7 @@ MonoBehaviour:
   autoStartConnection: 1
   twoPlayer: 1
   isHost: 1
-  character: 1
+  character: 2
 --- !u!1001 &1919001616
 PrefabInstance:
   m_ObjectHideFlags: 0
