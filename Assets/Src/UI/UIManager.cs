@@ -59,16 +59,21 @@ public class UIManager : MonoBehaviour
         countdownText.SetActive(true);
         TMP_Text textMeshPro = countdownText.GetComponent<TMPro.TMP_Text>(); 
         Animation animation = countdownText.GetComponent<Animation>();
+        AudioSource audioSource = countdownText.GetComponent<AudioSource>();
         if(count > 0) {
+            audioSource.clip = PrefabsManager.Instance.countdown1;
             textMeshPro.fontSize = 600;
             textMeshPro.text = $"{count}";
             animation.Rewind();
+            audioSource.Play();
             animation.Play("CountdownAnim");
         }
         else {
+            audioSource.clip = PrefabsManager.Instance.countdown2;
             textMeshPro.fontSize = 300;
             textMeshPro.text = "ROUND START";
             animation.Rewind();
+            audioSource.Play();
             animation.Play("CountdownAnim");
         }
     }

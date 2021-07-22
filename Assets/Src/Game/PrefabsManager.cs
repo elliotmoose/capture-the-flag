@@ -22,6 +22,8 @@ public class PrefabsManager : NetworkBehaviour
     public AudioClip invisSound;
 
     public AudioClip jailSound;
+    public AudioClip countdown1;
+    public AudioClip countdown2;
 
     public Sprite berserkerIcon;
     public Sprite adeptIcon;
