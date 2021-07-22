@@ -15451,7 +15451,7 @@ MonoBehaviour:
   teleportField: {fileID: 4833554853100618946, guid: 7041dbb2a52bb0e43a7647a8fe5b54f0, type: 3}
   knockbackField: {fileID: 4626221234926358131, guid: 9f7082eb4ae8523438f3d40db293119d, type: 3}
   cloneTrail: {fileID: 6950795904565288395, guid: 7f5e4a3a9fe80b84c9b7da8d1786cd59, type: 3}
-  laserSound: {fileID: 8300000, guid: e203fa34c5696944db0d5c05cab71b23, type: 3}
+  laserSound: {fileID: 8300000, guid: 92d854cdbfdcd40418cdadeda7e8a77e, type: 3}
   smokeSound: {fileID: 8300000, guid: 7e0281dc82520d0449bfd4749c34ca4b, type: 3}
   boostSound: {fileID: 8300000, guid: 10a051a8bbc89ed4eb2e384e997da2f8, type: 3}
   slamSound: {fileID: 8300000, guid: d406346a5c000324ba2b4f501215d76d, type: 3}
@@ -58610,7 +58610,7 @@ MonoBehaviour:
   autoStartConnection: 1
   twoPlayer: 0
   isHost: 1
-  character: 0
+  character: 3
 --- !u!1001 &1919001616
 PrefabInstance:
   m_ObjectHideFlags: 0

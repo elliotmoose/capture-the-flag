@@ -8,7 +8,7 @@ public class Reach : Skill
 
     public Reach()
     {
-        cooldown = 6.0f;
+        cooldown = 10.0f;
         name = "Extended Reach";
 
     }
@@ -27,7 +27,7 @@ public class ReachEffect : Effect
     public ReachEffect(LocalPlayer _target) : base(_target)
     {
         this.name = "REACH_EFFECT";
-        this.duration = 1.0f;        
+        this.duration = 0.8f;        
     }
 
     public override void OnEffectApplied()
