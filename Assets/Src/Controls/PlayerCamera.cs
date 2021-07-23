@@ -51,7 +51,7 @@ public class PlayerCamera : MonoBehaviour
         if(!animator) return;
         float hor = animator.GetFloat("HorMovement");
         float vert = animator.GetFloat("VertMovement");
-        bool isSprinting = (hor == 1 || vert == 1);
+        bool isSprinting = (hor >= 0.6f || vert >= 0.6f );
         sprintVfx.SetActive(isSprinting);
     }
 }
