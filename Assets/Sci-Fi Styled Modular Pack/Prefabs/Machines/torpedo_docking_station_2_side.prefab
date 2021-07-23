@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 6063618598129389649}
   - component: {fileID: 947264677727021648}
   - component: {fileID: 225189560312057553}
+  - component: {fileID: 2061056745696197965}
   m_Layer: 0
   m_Name: torpedo_docking_station_2_side
   m_TagString: Untagged
@@ -138,3 +139,15 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 2, y: 3.1962192, z: 1.3629097}
   m_Center: {x: 0, y: 1.5981096, z: -2.93}
+--- !u!114 &2061056745696197965
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 189006}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 459904b3b1e105b49b3b381051705db3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

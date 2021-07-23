@@ -33827,7 +33827,7 @@ MonoBehaviour:
   m_Lens:
     FieldOfView: 40
     OrthographicSize: 10
-    NearClipPlane: 0.1
+    NearClipPlane: 0.001
     FarClipPlane: 5000
     Dutch: 0
     ModeOverride: 0
@@ -39657,6 +39657,7 @@ GameObject:
   - component: {fileID: 1183394283}
   - component: {fileID: 1183394282}
   - component: {fileID: 1183394281}
+  - component: {fileID: 1183394286}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -39761,7 +39762,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.1
+  near clip plane: 0.001
   far clip plane: 5000
   field of view: 40
   orthographic: 0
@@ -39795,6 +39796,18 @@ Transform:
   m_Father: {fileID: 1286725973}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 78, y: 0, z: 0}
+--- !u!114 &1183394286
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1183394280}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7fd706dfddfbc8642b8e024e75afbf9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1184795614
 PrefabInstance:
   m_ObjectHideFlags: 0

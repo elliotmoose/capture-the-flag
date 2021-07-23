@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5801921133658593043}
   - component: {fileID: 5801921133659547443}
   - component: {fileID: 1859512898599776087}
+  - component: {fileID: 8974319412502837507}
   m_Layer: 0
   m_Name: glass_panel_1_corner
   m_TagString: Untagged
@@ -98,3 +99,15 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 87697a119091a8042b8edd7358266a70, type: 3}
+--- !u!114 &8974319412502837507
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5801921133661696091}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 459904b3b1e105b49b3b381051705db3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
