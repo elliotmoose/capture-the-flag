@@ -217,6 +217,7 @@ public class LocalPlayer : NetworkBehaviour
         if(!GameManager.Instance.gameInProgress) { return; }
         ClientsSetupRendererIfNeeded();        
         ClientsUpdateUsername();
+        UpdateSfx();
         
         if(!IsOwner) return;
         
@@ -233,6 +234,17 @@ public class LocalPlayer : NetworkBehaviour
     {
         UpdatePositionIfJailed();
         this.transform.position = new Vector3(this.transform.position.x, 0, this.transform.position.z);
+    }
+
+    void UpdateSfx() {
+        AudioSource source = this.transform.Find("sfx_movement").GetComponent<AudioSource>();
+        Animator animator = GetComponent<Animator>();
+        //[0, 1]
+        float movement = Mathf.Max(Mathf.Abs(animator.GetFloat("HorMovement")), Mathf.Abs(animator.GetFloat("VertMovement")));        
+        source.pitch = Mathf.Lerp(1.73f, 2, movement);
+        float minVolume = 0.02f;
+        float maxVolume = 0.04f;
+        source.volume = Mathf.Min(0.5f, movement) * 2 * (maxVolume-minVolume) + minVolume;
     }
 
     private void UpdatePositionIfJailed() {
