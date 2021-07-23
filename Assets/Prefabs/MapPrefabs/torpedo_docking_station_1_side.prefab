@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5635122864661570011}
   - component: {fileID: 5635122864662365925}
   - component: {fileID: 5635122864663340331}
+  - component: {fileID: 3833971136982909801}
   m_Layer: 0
   m_Name: torpedo_docking_station_1_side
   m_TagString: Untagged
@@ -82,3 +83,17 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!64 &3833971136982909801
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5635122864661323737}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 4300000, guid: 7e051df189fc7fe4b9ebfaa0a108f41a, type: 3}

@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5221420451419988584}
   - component: {fileID: 5221420451421244604}
   - component: {fileID: 5221420451422283512}
+  - component: {fileID: 2388385286997487115}
   m_Layer: 0
   m_Name: Battery_medium
   m_TagString: Untagged
@@ -83,3 +84,16 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &2388385286997487115
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5221420451420272564}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2, y: 3.879192, z: 2.0000002}
+  m_Center: {x: 0, y: 1.939596, z: -0.0000038146973}
