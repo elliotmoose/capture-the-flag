@@ -11,6 +11,7 @@ public class Catch : Skill
     {
         cooldown = 1.0f;
         name = "Catch";        
+        this.icon = PrefabsManager.Instance.catchIcon;
     }
 
     public override void UseSkill(LocalPlayer caster)

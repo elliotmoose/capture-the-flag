@@ -12,6 +12,7 @@ public class Teleport : Skill
     {
         cooldown = 7.0f;
         name = "Teleport";
+        this.icon = PrefabsManager.Instance.teleportIcon;
     }
 
     public override void UseSkill(LocalPlayer player)

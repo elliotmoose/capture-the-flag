@@ -10,6 +10,7 @@ public class Reach : Skill
     {
         cooldown = 10.0f;
         name = "Extended Reach";
+        this.icon = PrefabsManager.Instance.extendedReachIcon;
 
     }
     public override void UseSkill(LocalPlayer player)

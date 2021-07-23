@@ -8,6 +8,7 @@ public class SkillButton : MonoBehaviour
 
     public float maxCooldown;
     public float curCooldown;
+    public Sprite icon;
     // Start is called before the first frame update
     void Start()
     {
@@ -17,6 +18,7 @@ public class SkillButton : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        this.transform.Find("SkillIcon").GetComponent<Image>().sprite = icon;
         if(curCooldown > 0) {
             curCooldown -= Time.deltaTime;            
             this.transform.Find("CooldownOverlay").gameObject.SetActive(true);

@@ -9,6 +9,7 @@ public class CloneCatch : Catch
     public CloneCatch() : base()
     {
         name = "Clone Catch";
+        this.icon = PrefabsManager.Instance.cloneCatchIcon;
     }
 
     public override void UseSkill(LocalPlayer player)

@@ -11,6 +11,7 @@ public class Boost : Skill
     {
         cooldown = 10.0f;
         name = "Boost";
+        this.icon = PrefabsManager.Instance.boostIcon;
     }
 
     public override void UseSkill(LocalPlayer player)

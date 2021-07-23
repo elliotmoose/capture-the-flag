@@ -11,6 +11,7 @@ public class Smoke : Skill
     {
         cooldown = 10.0f;
         name = "Smoke";
+        this.icon = PrefabsManager.Instance.smokeIcon;
     }
 
     public override void UseSkill(LocalPlayer player)

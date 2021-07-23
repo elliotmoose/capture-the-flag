@@ -16,6 +16,7 @@ public class Slow : Skill
     {
         cooldown = 8.0f;
         name = "AOE Slow";
+        this.icon = PrefabsManager.Instance.empIcon;
     }
 
     public override void UseSkill(LocalPlayer player)

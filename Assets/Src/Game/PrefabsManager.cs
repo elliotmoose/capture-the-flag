@@ -30,6 +30,16 @@ public class PrefabsManager : NetworkBehaviour
     public Sprite rogueIcon;
     public Sprite lancerIcon;
 
+    public Sprite teleportIcon;
+    public Sprite empIcon;
+    public Sprite invisibilityIcon;
+    public Sprite cloneCatchPlaceholderIcon;
+    public Sprite smokeIcon;
+    public Sprite extendedReachIcon;
+    public Sprite boostIcon;
+    public Sprite knockbackIcon;
+    public Sprite catchIcon;
+    public Sprite cloneCatchIcon;
     public GameObject minimapPlayerIcon;
 
     public GameObject playerUsername;

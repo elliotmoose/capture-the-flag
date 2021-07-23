@@ -15,6 +15,7 @@ public class Knockback : Skill
     {
         cooldown = 6.0f;
         name = "Knockback";
+        this.icon = PrefabsManager.Instance.knockbackIcon;
     }
 
     public override void UseSkill(LocalPlayer player)

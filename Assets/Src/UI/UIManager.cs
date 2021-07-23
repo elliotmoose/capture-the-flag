@@ -124,6 +124,9 @@ public class UIManager : MonoBehaviour
         LocalPlayer localPlayer = PlayerController.LocalInstance.GetPlayer();
                 
         if(localPlayer != null) {
+            skill1Button.icon = localPlayer.skills[0].icon;
+            if(localPlayer.skills.Count > 1) skill2Button.icon = localPlayer.skills[1].icon;
+            catchButton.icon = localPlayer.catchSkill.icon;
             skill1Button.curCooldown = localPlayer.skill1CooldownTime;
             skill2Button.curCooldown = localPlayer.skill2CooldownTime;
             catchButton.curCooldown = localPlayer.catchCooldownTime;
