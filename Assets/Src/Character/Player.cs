@@ -204,6 +204,16 @@ public class Player : NetworkBehaviour
     //onserver
     public void ServerImprison(Player by) {
         if(!IsServer) return;
+        //evade
+        if(localPlayer.GetType() == typeof(Rogue)) {
+            bool evadeSuccess = (Random.value < Rogue.EVADE_CHANCE);
+            if(evadeSuccess) {
+                GameManager.Instance.TriggerOnPlayerEvade(this, by);
+                return; 
+            }
+        }
+        
+        
         localPlayer.isJailed = true; //server needs to register this immediately, in order to end the round
         GameManager.Instance.TriggerOnPlayerJailed(this, by); //IMPORTANT: we trigger event to check if round ends. If this wins the round, game is no longer in progress, so no need to imprison
         if(!GameManager.Instance.roundInProgress) return;

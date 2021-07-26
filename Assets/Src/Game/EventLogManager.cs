@@ -17,6 +17,7 @@ public class EventLogManager : NetworkBehaviour
         GameManager.Instance.OnFlagCaptured += OnFlagCaptured;
         GameManager.Instance.OnPlayerScored += OnPlayerScored;
         GameManager.Instance.OnPlayerJailed += OnPlayerJailed;
+        GameManager.Instance.OnPlayerEvade += OnPlayerEvade;
         GameManager.Instance.OnPlayerFreed += OnPlayerFreed;
         GameManager.Instance.OnRoundStart += OnRoundStart;
         // announcements.Enqueue(new Announcement{content="mooselliot has been captured!"});
@@ -63,6 +64,11 @@ public class EventLogManager : NetworkBehaviour
     void OnPlayerFreed(Player player, Player freedBy) {
         if(!IsServer) return;    
         LogEventClientRpc(GetTime()+$"(team only) <color={HtmlColorForTeam(player.team)}>{player.username}</color> has been freed by <color={HtmlColorForTeam(freedBy.team)}>{freedBy.username}</color>", true, player.team);
+    }
+
+    void OnPlayerEvade(Player player, Player catcher) {
+        if(!IsServer) return;    
+        LogEventClientRpc(GetTime()+$"<color={HtmlColorForTeam(player.team)}>{player.username}</color> has evaded <color={HtmlColorForTeam(catcher.team)}>{catcher.username}</color>");
     }
 
 

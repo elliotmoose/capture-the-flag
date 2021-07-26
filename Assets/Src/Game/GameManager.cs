@@ -52,6 +52,7 @@ public class GameManager : NetworkBehaviour
     public event GameStateEvent OnRoundStart;
     public event GameEvent OnPlayerScored;
     public event GameEvent OnFlagCaptured;
+    public event GameEventInteraction OnPlayerEvade;
     public event GameEventInteraction OnPlayerJailed;
     public event GameEventInteraction OnPlayerFreed;
 
@@ -303,6 +304,10 @@ public class GameManager : NetworkBehaviour
             //end round
             ScorePoint(playerCatcher);
         }        
+    }
+
+    public void TriggerOnPlayerEvade(Player evadedPlayer, Player catcher) {
+        if(OnPlayerEvade != null) OnPlayerEvade(evadedPlayer, catcher);
     }
     
     public void TriggerOnPlayerFreed(Player playerFreed, Player playerFreedBy) {
