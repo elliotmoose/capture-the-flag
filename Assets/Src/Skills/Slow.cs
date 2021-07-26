@@ -15,7 +15,7 @@ public class Slow : Skill
     public Slow()
     {
         cooldown = 8.0f;
-        name = "AOE Slow";
+        name = "EMP";
         this.icon = PrefabsManager.Instance.empIcon;
     }
 

@@ -10,6 +10,7 @@ public class Invisibility : Skill
     {
         cooldown = 14.0f;
         name = "Invisibility";
+        icon = PrefabsManager.Instance.invisibilityIcon;
     }
 
     public override void UseSkill(LocalPlayer player)
