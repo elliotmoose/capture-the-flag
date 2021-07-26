@@ -13,6 +13,7 @@ public class Teleport : Skill
         cooldown = 7.0f;
         name = "Teleport";
         this.icon = PrefabsManager.Instance.teleportIcon;
+        this.description = "Warps the Adept through space, teleporting it past any obstacles or opponents";
     }
 
     public override void UseSkill(LocalPlayer player)

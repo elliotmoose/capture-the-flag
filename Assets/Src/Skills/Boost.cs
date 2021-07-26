@@ -11,7 +11,8 @@ public class Boost : Skill
     {
         cooldown = 10.0f;
         name = "Boost";
-        this.icon = PrefabsManager.Instance.boostIcon;
+        this.icon = PrefabsManager.Instance.boostIcon;        
+        this.description = "Activates thrusters, boosting the Berserker forward with incredible speed";
     }
 
     public override void UseSkill(LocalPlayer player)

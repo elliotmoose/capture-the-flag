@@ -17,6 +17,7 @@ public class Slow : Skill
         cooldown = 8.0f;
         name = "EMP";
         this.icon = PrefabsManager.Instance.empIcon;
+        this.description = "The Adept charges up and releases a surge of electromagnetic energy, short circuiting enemy N.O.Ds causing them to be slowed";
     }
 
     public override void UseSkill(LocalPlayer player)

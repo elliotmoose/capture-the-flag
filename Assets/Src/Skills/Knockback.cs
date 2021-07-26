@@ -16,6 +16,7 @@ public class Knockback : Skill
         cooldown = 6.0f;
         name = "Knockback";
         this.icon = PrefabsManager.Instance.knockbackIcon;
+        this.description = "Berserker explodes in rage, pushing surrounding N.O.Ds back and disabling for a short duration";
     }
 
     public override void UseSkill(LocalPlayer player)

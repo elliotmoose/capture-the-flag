@@ -10,6 +10,7 @@ public class CloneCatch : Catch
     {
         name = "Clone Catch";
         this.icon = PrefabsManager.Instance.cloneCatchIcon;
+        this.description = "Catching any other N.O.D allows the Rogue to clone its skill";
     }
 
     public override void UseSkill(LocalPlayer player)
