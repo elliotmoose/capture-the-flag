@@ -34,8 +34,8 @@ public class PlayerCamera : MonoBehaviour
         {
             case 0:
                 bodySetting.ShoulderOffset = new Vector3(0, -5, 0);
-                bodySetting.CameraDistance = 18.3f;
-                bodySetting.VerticalArmLength = 13f;
+                bodySetting.CameraDistance = 23.64f;
+                bodySetting.VerticalArmLength = 14.9f;
                 composer.m_TrackedObjectOffset = new Vector3(0, 4.39f, 0);
                 break;
             case 1:
