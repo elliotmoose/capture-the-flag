@@ -11,6 +11,8 @@ public class PlayerCamera : MonoBehaviour
     public GameObject sprintVfx;
     GameObject target;
 
+    public int cameraPreset = 0;
+
     void Awake() {
         Instance = this;
     }
@@ -19,6 +21,41 @@ public class PlayerCamera : MonoBehaviour
     {
         AttachToPlayerIfNeeded();
         UpdateVFX();
+
+        SetCameraPreset();
+    }
+
+    void SetCameraPreset() {
+        CinemachineVirtualCamera virtCam = GetComponent<CinemachineVirtualCamera>();
+        Cinemachine3rdPersonFollow bodySetting = virtCam.GetCinemachineComponent<Cinemachine3rdPersonFollow>();
+        CinemachineComposer composer = virtCam.GetCinemachineComponent<CinemachineComposer>();
+        
+        switch (cameraPreset)
+        {
+            case 0:
+                bodySetting.ShoulderOffset = new Vector3(0, -5, 0);
+                bodySetting.CameraDistance = 18.3f;
+                bodySetting.VerticalArmLength = 13f;
+                composer.m_TrackedObjectOffset = new Vector3(0, 4.39f, 0);
+                break;
+            case 1:
+                bodySetting.ShoulderOffset = new Vector3(0, 18.54f, 0);
+                bodySetting.CameraDistance = 25.16f;
+                bodySetting.VerticalArmLength = 0.69f;
+                composer.m_TrackedObjectOffset = new Vector3(0, 4, 0);
+                break;
+            case 2:
+                bodySetting.ShoulderOffset = new Vector3(0, 13, -5);
+                bodySetting.CameraDistance = 17.75f;
+                bodySetting.VerticalArmLength = 5.5f;
+                composer.m_TrackedObjectOffset = new Vector3(0, 4.39f, 0);
+                break;
+            default:
+                bodySetting.ShoulderOffset = new Vector3(0, -5, 0);
+                bodySetting.CameraDistance = 18.3f;
+                bodySetting.VerticalArmLength = 13f;
+                break;
+        }
     }
 
     void AttachToPlayerIfNeeded() {
@@ -51,7 +88,7 @@ public class PlayerCamera : MonoBehaviour
         if(!animator) return;
         float hor = animator.GetFloat("HorMovement");
         float vert = animator.GetFloat("VertMovement");
-        bool isSprinting = (hor >= 0.6f || vert >= 0.6f );
+        bool isSprinting = (Mathf.Abs(hor) >= 0.6f || Mathf.Abs(vert) >= 0.6f );
         sprintVfx.SetActive(isSprinting);
     }
 }
