@@ -125,7 +125,7 @@ public class UIManager : MonoBehaviour
                 
         if(localPlayer != null) {
             skill1Button.icon = localPlayer.skills[0].icon;
-            if(localPlayer.skills.Count > 1) skill2Button.icon = localPlayer.skills[1].icon;
+            skill2Button.icon = localPlayer.skills.Count > 1 ? localPlayer.skills[1].icon : PrefabsManager.Instance.cloneCatchPlaceholderIcon;
             catchButton.icon = localPlayer.catchSkill.icon;
             skill1Button.curCooldown = localPlayer.skill1CooldownTime;
             skill2Button.curCooldown = localPlayer.skill2CooldownTime;

@@ -40,6 +40,11 @@ public class PrefabsManager : NetworkBehaviour
     public Sprite knockbackIcon;
     public Sprite catchIcon;
     public Sprite cloneCatchIcon;
+
+    public Sprite adeptPassiveIcon;
+    public Sprite berserkerPassiveIcon;
+    public Sprite roguePassiveIcon;
+    public Sprite lancerPassiveIcon;
     public GameObject minimapPlayerIcon;
 
     public GameObject playerUsername;

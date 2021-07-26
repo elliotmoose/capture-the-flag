@@ -42,22 +42,22 @@ public class CharacterSelectionManager : MonoBehaviour
         switch (characters[characterIndex])
         {
             case Character.Berserker:
-                displaySkills[0] = new Boost();//passive
+                displaySkills[0] = new SkillDescription("Passive: Overcharge", PrefabsManager.Instance.berserkerPassiveIcon, "Berserker's max stamina is increased from 100 to 130");//passive
                 displaySkills[1] = new Boost();
                 displaySkills[2] = new Knockback();
                 break;
             case Character.Adept:
-                displaySkills[0] = new Teleport();//passive
+                displaySkills[0] = new SkillDescription("Passive: Augmentfield", PrefabsManager.Instance.adeptPassiveIcon, "Adept's catch radius is increased from 8 to 10");//passive
                 displaySkills[1] = new Teleport();
                 displaySkills[2] = new Slow();
                 break;
             case Character.Rogue:
-                displaySkills[0] = new Invisibility();//passive
+                displaySkills[0] = new SkillDescription("Passive: Shadowfield", PrefabsManager.Instance.roguePassiveIcon, "Rogue has a 20% chance of evading jail when caught");//passive
                 displaySkills[1] = new Invisibility();
                 displaySkills[2] = new CloneCatch();
                 break;
             case Character.Lancer:
-                displaySkills[0] = new Smoke();//passive
+                displaySkills[0] = new SkillDescription("Passive: Hyperdrive", PrefabsManager.Instance.lancerPassiveIcon, "Lancer's stamina is reduced from 100 to 80 but has a base movement speed increase from 15 to 18");//passive
                 displaySkills[1] = new Smoke();
                 displaySkills[2] = new Reach();
                 break;
@@ -84,7 +84,7 @@ public class CharacterSelectionManager : MonoBehaviour
         skillDescriptionContainer.SetActive(true);
         skillName.text = displaySkills[index].name;
         skillDescription.text = displaySkills[index].description;
-        skillCooldown.text = $"Cooldown: {displaySkills[index].cooldown:#.#}s";
+        skillCooldown.text = displaySkills[index].cooldown == 0 ? "" : $"Cooldown: {displaySkills[index].cooldown:#.#}s";
     }
     public void OnPointerExitSkillIcon(int index) {
         skillDescriptionContainer.SetActive(false);
