@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Rogue : LocalPlayer
 {    
+    public static float EVADE_CHANCE = 0.2f;
     private void Awake()
     {
         moveSpeed = 15;
