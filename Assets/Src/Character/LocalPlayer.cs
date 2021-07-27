@@ -126,15 +126,9 @@ public class LocalPlayer : NetworkBehaviour
             for (int i = 0; i < this.rends.Length; i++)
             {
                 Renderer rend = rends[i];
-                if (this.team == PlayerController.LocalInstance.GetPlayer().team)
-                {
-                    // if same team, appear transparent
-                    rend.material.SetFloat("_alphaValue", 0.3f);
-                }
-                else
-                {
-                    // if enemy team, appear invisible
-                    rend.material.SetFloat("_alphaValue", 0f);
+                float alphaValue = (this.team == PlayerController.LocalInstance.GetPlayer().team) ? 0.3f : 0;
+                foreach(Material mat in rend.materials) {
+                    rend.material.SetFloat("_alphaValue", alphaValue);
                 }
             }       
 
