@@ -121,13 +121,14 @@ public class LocalPlayer : NetworkBehaviour
     /// </summary>
     void ClientsSetupRendererIfNeeded() {
         if(!_rendererSetupComplete && PlayerController.LocalInstance != null && PlayerController.LocalInstance.GetPlayer() != null && !syncPlayer.GetUser().IsNull() && !PlayerController.LocalInstance.GetUser().IsNull()) {
+            float alphaValue = (this.team == PlayerController.LocalInstance.GetPlayer().team) ? 0.3f : 0;
             //SET RENDERER FOR INVISIBILTY
             Renderer[] rends = this.GetComponentsInChildren<Renderer>();
             for (int i = 0; i < this.rends.Length; i++)
             {
                 Renderer rend = rends[i];
-                float alphaValue = (this.team == PlayerController.LocalInstance.GetPlayer().team) ? 0.3f : 0;
                 foreach(Material mat in rend.materials) {
+                    Debug.LogError($"Setting {this.syncPlayer.username} ({this.team}) material to {alphaValue} as this client is viewing from {PlayerController.LocalInstance.GetPlayer().team} team");
                     rend.material.SetFloat("_alphaValue", alphaValue);
                 }
             }       
