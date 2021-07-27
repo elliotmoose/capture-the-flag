@@ -9,8 +9,8 @@ public class Lancer : LocalPlayer
         this.SetMaxStamina(80);
         moveSpeed = 18;
         catchSkill = new Catch();
-        skills.Add(new Reach());
         skills.Add(new StaminaBuff());
-        
+        skills.Add(new Reach());
+
     }
 }
