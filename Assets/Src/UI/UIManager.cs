@@ -35,6 +35,7 @@ public class UIManager : MonoBehaviour
     private SkillButton catchButton;    
 
     public Transform eventLogContainerContent;
+    public ScrollRect eventLogScrollRect;
 
     // Start is called before the first frame update
     void Start()
@@ -144,8 +145,13 @@ public class UIManager : MonoBehaviour
     public void LogEvent(string text) {
         GameObject eventLogText = GameObject.Instantiate(PrefabsManager.Instance.eventLogText, eventLogContainerContent);
         eventLogText.GetComponentInChildren<TextMeshProUGUI>().text = text;
+        Canvas.ForceUpdateCanvases ();
         LayoutRebuilder.ForceRebuildLayoutImmediate(eventLogContainerContent.GetComponent<RectTransform>());
+        Canvas.ForceUpdateCanvases ();
+        eventLogScrollRect.verticalNormalizedPosition = 0f;
+        Canvas.ForceUpdateCanvases ();
     }
+        
     #endregion
 
     #region Gameover UI
