@@ -9,9 +9,9 @@ public class StaminaBuff : Skill
     public StaminaBuff()
     {
         cooldown = 9.0f;
-        name = "Buff";
+        name = "Inductive Charge";
         //this.icon = PrefabsManager.Instance.
-        //this.description = "";
+        this.description = "The Lancer generates an inductive field where allies will be stamina will be boosted and enemies' stamina will be discharged";
     }
 
     public override void UseSkill(LocalPlayer player)

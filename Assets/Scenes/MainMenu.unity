@@ -25917,7 +25917,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35d133f17dbe3401dbf5b2f808e4bbc7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resetUsername: 0
+  resetUsername: 1
 --- !u!4 &1027241025 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 469248, guid: 3845c7234a0ed4843ba4e38e2404f54d, type: 3}

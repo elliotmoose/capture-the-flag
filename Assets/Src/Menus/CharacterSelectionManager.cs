@@ -58,8 +58,9 @@ public class CharacterSelectionManager : MonoBehaviour
                 break;
             case Character.Lancer:
                 displaySkills[0] = new SkillDescription("Passive: Hyperdrive", PrefabsManager.Instance.lancerPassiveIcon, "Lancer's stamina is reduced from 100 to 80 but has a base movement speed increase from 15 to 18");//passive
-                displaySkills[1] = new Smoke();
-                displaySkills[2] = new Reach();
+                displaySkills[1] = new Reach();
+                displaySkills[2] = new StaminaBuff();
+                
                 break;
             default:
                 Debug.LogError("Invalid character type");
