@@ -314,6 +314,19 @@ public class LocalPlayer : NetworkBehaviour
         }
     }
 
+    // either increase or decrease stamina
+    public void buffStamina(float x)
+    {
+        if (x > 0)
+        {
+            curStamina = Mathf.Clamp(curStamina + Time.deltaTime * staminaRecoveryFactor * x, 0, maxStamina);
+        } else
+        {
+            curStamina = Mathf.Max(0, curStamina - Time.deltaTime * staminaBurnFactor * -x);
+        }
+        
+    }
+
         public void UpdateEffects()
     {        
         if(!GameManager.Instance.roundInProgress) { return; }
@@ -439,6 +452,7 @@ public class LocalPlayer : NetworkBehaviour
     {
         if (animationName == "Reach") PlayReachSFX();
         if (animationName == "Smoke") PlaySmokeSFX();
+        if (animationName == "Buff") PlayBuffSFX();
         if (animationName == "Boost") PlayBoostSFX();
         if (animationName == "Knockback") PlaySlamSFX();
         if (animationName == "Teleport") PlayTeleportSFX();
@@ -473,6 +487,12 @@ public class LocalPlayer : NetworkBehaviour
     void PlayReachSFX()
     {
         playerAudio.clip = PrefabsManager.Instance.laserSound;
+        playerAudio.Play();
+    }
+
+    void PlayBuffSFX()
+    {
+        playerAudio.clip = PrefabsManager.Instance.buffSound;
         playerAudio.Play();
     }
 
