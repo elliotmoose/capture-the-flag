@@ -15528,6 +15528,7 @@ MonoBehaviour:
   knockbackField: {fileID: 4626221234926358131, guid: 9f7082eb4ae8523438f3d40db293119d, type: 3}
   cloneTrail: {fileID: 6950795904565288395, guid: 7f5e4a3a9fe80b84c9b7da8d1786cd59, type: 3}
   laserSound: {fileID: 8300000, guid: 92d854cdbfdcd40418cdadeda7e8a77e, type: 3}
+  buffSound: {fileID: 8300000, guid: 79b3408cb37430247bcfed9fbf405aa4, type: 3}
   smokeSound: {fileID: 8300000, guid: 7e0281dc82520d0449bfd4749c34ca4b, type: 3}
   boostSound: {fileID: 8300000, guid: 10a051a8bbc89ed4eb2e384e997da2f8, type: 3}
   slamSound: {fileID: 8300000, guid: d406346a5c000324ba2b4f501215d76d, type: 3}
@@ -21043,7 +21044,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -54.349472}
+  m_AnchoredPosition: {x: 0, y: -54.349487}
   m_SizeDelta: {x: -600, y: -808.69946}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &510382628
@@ -33930,7 +33931,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 0
-    m_SensorSize: {x: 1.7787416, y: 1}
+    m_SensorSize: {x: 1.7777776, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -33967,6 +33968,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sprintVfx: {fileID: 220636624}
+  cameraPreset: 0
 --- !u!1001 &983422143
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -49388,7 +49390,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 1620, y: -450.1001}
+  m_AnchoredPosition: {x: 1620, y: -450.10013}
   m_SizeDelta: {x: 3240, y: 150}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1543110029
@@ -56416,7 +56418,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 1620, y: -150.03322}
+  m_AnchoredPosition: {x: 1620, y: -150.0332}
   m_SizeDelta: {x: 3240, y: 150}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1843823477
@@ -59092,9 +59094,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   autoStartConnection: 1
-  twoPlayer: 1
+  twoPlayer: 0
   isHost: 1
-  character: 1
+  character: 3
 --- !u!1001 &1919001616
 PrefabInstance:
   m_ObjectHideFlags: 0

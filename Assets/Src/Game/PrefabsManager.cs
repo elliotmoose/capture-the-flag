@@ -14,6 +14,7 @@ public class PrefabsManager : NetworkBehaviour
     public GameObject cloneTrail;
 
     public AudioClip laserSound;
+    public AudioClip buffSound;
     public AudioClip smokeSound;
     public AudioClip boostSound;
     public AudioClip slamSound;
