@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MinimapIcon : MonoBehaviour
 {
@@ -16,5 +17,6 @@ public class MinimapIcon : MonoBehaviour
     {
         if(!target) return;
         this.GetComponent<RectTransform>().position = target.transform.position;
+        GetComponent<Image>().color = (target.team == Team.BLUE ? UIManager.Instance.colors.textBlue : UIManager.Instance.colors.textRed);
     }
 }
