@@ -35,7 +35,7 @@ public class PrefabsManager : NetworkBehaviour
     public Sprite empIcon;
     public Sprite invisibilityIcon;
     public Sprite cloneCatchPlaceholderIcon;
-    public Sprite smokeIcon;
+    public Sprite inductiveChargeIcon;
     public Sprite extendedReachIcon;
     public Sprite boostIcon;
     public Sprite knockbackIcon;

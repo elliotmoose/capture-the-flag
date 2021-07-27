@@ -11,7 +11,7 @@ public class Smoke : Skill
     {
         cooldown = 10.0f;
         name = "Smoke";
-        this.icon = PrefabsManager.Instance.smokeIcon;
+        this.icon = PrefabsManager.Instance.inductiveChargeIcon;
         this.description = "Deploys a smoke screen, obstructing vision of nearby N.O.Ds";
     }
 

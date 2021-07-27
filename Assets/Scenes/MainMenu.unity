@@ -12602,6 +12602,7 @@ MonoBehaviour:
   knockbackField: {fileID: 0}
   cloneTrail: {fileID: 0}
   laserSound: {fileID: 0}
+  buffSound: {fileID: 0}
   smokeSound: {fileID: 0}
   boostSound: {fileID: 0}
   slamSound: {fileID: 0}
@@ -12619,8 +12620,8 @@ MonoBehaviour:
   empIcon: {fileID: 21300000, guid: 9c89ffadea320c04c993ecd4d48ce9d4, type: 3}
   invisibilityIcon: {fileID: 21300000, guid: c3b6fcb010e24e7488ce4df0e3eeee47, type: 3}
   cloneCatchPlaceholderIcon: {fileID: 21300000, guid: c6ea06c2b5f995d46bf0f566895722c8, type: 3}
-  smokeIcon: {fileID: 21300000, guid: e76eb1e8a6f55fb4198196a25cc49321, type: 3}
-  extendedReachIcon: {fileID: 21300000, guid: 732adb6ddc5dabc418b5a947007b3e69, type: 3}
+  inductiveChargeIcon: {fileID: 21300000, guid: 732adb6ddc5dabc418b5a947007b3e69, type: 3}
+  extendedReachIcon: {fileID: 21300000, guid: e76eb1e8a6f55fb4198196a25cc49321, type: 3}
   boostIcon: {fileID: 21300000, guid: c62277f0bcad2ee49915056130f5fb5b, type: 3}
   knockbackIcon: {fileID: 21300000, guid: 280775c0fde92604b9bb6d2ad83b301f, type: 3}
   catchIcon: {fileID: 21300000, guid: b557cdede7d703c4c8d5d2b486a28786, type: 3}
