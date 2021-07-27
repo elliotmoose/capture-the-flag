@@ -105,7 +105,7 @@ Material:
     - _Surface: 1
     - _WorkflowMode: 1
     - _ZWrite: 0
-    - _alphaValue: 0.3
+    - _alphaValue: 0
     - _dissolved: -0.5
     - intensity: 4
     - thickness: 0.02
