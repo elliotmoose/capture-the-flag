@@ -128,8 +128,8 @@ public class LocalPlayer : NetworkBehaviour
             {
                 Renderer rend = rends[i];
                 foreach(Material mat in rend.materials) {
-                    Debug.LogError($"Setting {this.syncPlayer.username} ({this.team}) material to {alphaValue} as this client is viewing from {PlayerController.LocalInstance.GetPlayer().team} team");
-                    rend.material.SetFloat("_alphaValue", alphaValue);
+                    // Debug.LogError($"Setting {this.syncPlayer.username} ({this.team}) material to {alphaValue} as this client is viewing from {PlayerController.LocalInstance.GetPlayer().team} team");
+                    mat.SetFloat("_alphaValue", alphaValue);
                 }
             }       
 
