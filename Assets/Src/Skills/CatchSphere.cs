@@ -15,12 +15,12 @@ public class CatchSphere : MonoBehaviour
         //we only check for contact on the server
         if(!NetworkManager.Singleton.IsServer) return;
 
-        // Player caster = transform.GetComponentInParent<Player>();
-        // Player target = other.gameObject.GetComponent<Player>();
+        Player caster = transform.GetComponentInParent<Player>();
+        Player target = other.gameObject.GetComponent<Player>();
 
-        // if (target != null)
-        // {
-        //     target.ServerContact(caster);
-        // }
+        if (target != null)
+        {
+            target.ServerContact(caster);
+        }
     }
 }

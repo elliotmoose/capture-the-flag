@@ -11,7 +11,7 @@ public class StaminaBuff : Skill
         cooldown = 9.0f;
         name = "Inductive Charge";
         this.icon = PrefabsManager.Instance.inductiveChargeIcon;
-        this.description = "Generates an inductive field, increasing ally N.O.Ds' stamina regeneration while draining enemy N.O.Ds' stamina";
+        this.description = "Generates an inductive field, regenerating ally N.O.Ds' stamina regeneration while draining enemy N.O.Ds' stamina";
     }
 
     public override void UseSkill(LocalPlayer player)
