@@ -354,6 +354,18 @@ public class LocalPlayer : NetworkBehaviour
         }
     }
 
+    public Effect GetEffectWithName(string effectName) {
+        foreach(Effect effect in effects) {
+            if(effect.name == effectName) return effect;
+        }
+
+        return null;
+    }
+
+    public bool HasEffect(string effectName) {
+        return GetEffectWithName(effectName) != null;
+    }
+
     public void Catch()
     {
         if(!GameManager.Instance.roundInProgress) { return; }

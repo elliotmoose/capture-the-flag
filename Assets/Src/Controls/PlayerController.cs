@@ -67,9 +67,13 @@ public class PlayerController : NetworkBehaviour
         LocalPlayer localPlayer = GetPlayer();
         if(localPlayer && !InGameMenuManager.Instance.isMenuActive) {
             float horizontal = Input.GetAxisRaw("Horizontal");
-            float vertical = Input.GetAxisRaw("Vertical");            
+            float vertical = Input.GetAxisRaw("Vertical");
+
+            if(!localPlayer.HasEffect("REACH_EFFECT")) {
+                localPlayer.faceAngle += Input.GetAxis("Mouse X") * SettingsManager.Instance.mouseSensitivity;
+            }
+
             localPlayer.moveDir = new Vector2(horizontal, vertical);            
-            localPlayer.faceAngle += Input.GetAxis("Mouse X") * SettingsManager.Instance.mouseSensitivity;
             localPlayer.sprinting = Input.GetKey(SPRINT_KEY);
         
             if(Input.GetMouseButtonDown(0)) {
