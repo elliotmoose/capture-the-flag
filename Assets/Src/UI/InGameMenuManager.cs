@@ -38,6 +38,6 @@ public class InGameMenuManager : MonoBehaviour
     }
 
     public void LeaveGame() {
-        // SceneTransitionManager.Instance.GameToMainMenu();
+        SceneTransitionManager.Instance.GameToMainMenu();
     }
 }
