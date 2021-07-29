@@ -29,6 +29,13 @@ public class LocalPlayer : NetworkBehaviour
     public Player syncPlayer => GetComponent<Player>();
     public bool isDisabled = false;  
     public bool isJailed = false;  
+    public bool isInvisToLocalPlayer {
+        get {
+            bool isInvis = this.GetComponent<Animator>().GetBool("IsInvisible");
+            bool shouldBeInvis = (isInvis && this.team != PlayerController.LocalInstance.GetPlayer().team);
+            return shouldBeInvis;
+        }        
+    }
     private bool _transportedToJail = false;
     private bool isMoving => (moveDir.magnitude > 0.01f && !isDisabled);
     private bool canSprint => (GetStaminaFraction() > 0 && isMoving);
@@ -142,9 +149,7 @@ public class LocalPlayer : NetworkBehaviour
     }
 
     private void ClientsUpdateUsername() {
-        bool isInvis = this.GetComponent<Animator>().GetBool("IsInvisible");
-        bool shouldShowUsername = (!isInvis || this.team == PlayerController.LocalInstance.GetPlayer().team);
-        usernameTextTransform.gameObject.SetActive(shouldShowUsername); //for invis
+        usernameTextTransform.gameObject.SetActive(!isInvisToLocalPlayer); //for invis
         TMPro.TextMeshPro textMesh = usernameTextTransform.GetComponent<TMPro.TextMeshPro>();
         textMesh.text = syncPlayer.GetUser().username;
         textMesh.color = this.team == Team.BLUE ? UIManager.Instance.colors.textBlue : UIManager.Instance.colors.textRed;

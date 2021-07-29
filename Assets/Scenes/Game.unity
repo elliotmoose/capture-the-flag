@@ -62181,7 +62181,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   autoStartConnection: 1
-  twoPlayer: 1
+  twoPlayer: 0
   isHost: 1
   character: 2
 --- !u!1001 &1919001616
