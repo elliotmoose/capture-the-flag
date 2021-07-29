@@ -16,6 +16,7 @@ public class UIManager : MonoBehaviour
     public TMPro.TextMeshProUGUI blueTeamScore;
     public GameObject countdownText;
 
+    public GameObject settings;
     //gameover
     public GameObject gameoverPanel;
     public Transform scoreboardRowsParent;
@@ -225,5 +226,9 @@ public class UIManager : MonoBehaviour
         else {
             Debug.LogWarning("Attempting to update UI but GameManager does not exist");
         }
+    }
+
+    public void SetSettingsMenu(bool active) {
+        settings.SetActive(active);
     }
 }
