@@ -14,6 +14,7 @@ public class Flag : NetworkBehaviour
     //     SendTickrate = 0
     // });
 
+    public float flagPassRadius = 7;
     public Team team;
 
     private Vector3 spawnPos => (new Vector3(0,1.25f,120 * ((GetTeam() == Team.BLUE) ? 1 : -1)));
@@ -42,6 +43,27 @@ public class Flag : NetworkBehaviour
         return team;
     }
 
+    public void ClientHandoverFlag() {
+        HandoverFlagServerRpc();
+    }
+
+    [ServerRpc(RequireOwnership =false)]
+    void HandoverFlagServerRpc() {
+        if(!IsServer) return;
+        Collider[] hits = Physics.OverlapSphere(this.transform.position, flagPassRadius);
+        foreach(Collider collider in hits) {
+            Player player = collider.gameObject.GetComponent<Player>();
+            if(player == null) continue;
+            if(player.team == capturer.team && player.localPlayer != capturer) {                
+                Debug.Log($"Passing from {capturer.gameObject.name}{capturer.OwnerClientId} to {player.gameObject.name}{player.OwnerClientId}");
+                GameManager.Instance.FlagPassed(player, capturer.syncPlayer);
+                capturer = player.localPlayer;
+                CapturedClientRpc(player.OwnerClientId);
+                return;
+            }
+        }
+    }
+
     void OnTriggerEnter(Collider collider) {        
         if(!IsServer) { return; }
         if(!GameManager.Instance.roundInProgress) return;
@@ -50,6 +72,7 @@ public class Flag : NetworkBehaviour
         bool isDifferentTeam = (player.team != this.GetTeam());
         bool isAvailableForCapture = (capturer == null);
         if(isDifferentTeam && isAvailableForCapture) {
+            capturer = player.localPlayer;
             GameManager.Instance.FlagCapturedBy(player);
             CapturedClientRpc(player.OwnerClientId);
         }
@@ -57,9 +80,10 @@ public class Flag : NetworkBehaviour
 
     [ClientRpc]
     private void CapturedClientRpc(ulong byClientId) {
-        Debug.Log("Flag captured received on client!");
         if(!GameManager.Instance.roundInProgress) return;
+        
         LocalPlayer player = LocalPlayer.WithClientId(byClientId);
+        Debug.Log(player.gameObject.name + "has received the flag....");
         this.transform.SetParent(player.flagSlot.transform);
         this.transform.localRotation = Quaternion.identity;
         this.transform.localPosition = Vector3.zero;

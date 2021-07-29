@@ -62,6 +62,7 @@ public class LocalPlayer : NetworkBehaviour
 
     //stats
     public float moveSpeed = 15;
+    public float flagPassRadius = 7f;
     float sprintMultiplier = 2.4f;
     float curStamina = 100;
     float maxStamina = 100;
@@ -384,6 +385,12 @@ public class LocalPlayer : NetworkBehaviour
         {
             // Debug.Log($"Catch remainding cooldown: {catchCooldownTime}");
         }
+    }
+
+    public void PassFlag() {
+        if(!GameManager.Instance.roundInProgress) return;
+        Flag flag = GameManager.Instance.FlagForPlayer(this);
+        if(flag != null) flag.ClientHandoverFlag();
     }
 
     public void CastSkillAtIndex(int index)

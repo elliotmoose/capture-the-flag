@@ -79,6 +79,9 @@ public class PlayerController : NetworkBehaviour
             if(Input.GetMouseButtonDown(0)) {
                 localPlayer.Catch();
             }
+            if(Input.GetMouseButtonDown(1)) {
+                localPlayer.PassFlag();
+            }
             if(Input.GetKeyDown(SKILL1_KEY)) {
                 localPlayer.CastSkillAtIndex(0);
             }
