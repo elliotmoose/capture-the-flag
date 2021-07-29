@@ -218,6 +218,10 @@ public class Player : NetworkBehaviour
         GameManager.Instance.TriggerOnPlayerJailed(this, by); //IMPORTANT: we trigger event to check if round ends. If this wins the round, game is no longer in progress, so no need to imprison
         if(!GameManager.Instance.roundInProgress) return;
         ImprisonClientRpc();
+        // play caught sfx
+        GameObject soundObj = GameObject.Instantiate(PrefabsManager.Instance.soundObject, by.transform.position, Quaternion.identity);
+        SoundObject soundObject = soundObj.GetComponent<SoundObject>();
+        soundObject.audioSource.clip = PrefabsManager.Instance.caughtSound;
     }
 
     [ClientRpc]
@@ -249,5 +253,12 @@ public class Player : NetworkBehaviour
     private void ReleaseClientRpc() {
         if(!GameManager.Instance.roundInProgress) return;
         localPlayer.isJailed = false;
+
+        //spawn sparkle particle effect to show successful release
+        GameObject.Instantiate(PrefabsManager.Instance.freedParticles, localPlayer.transform.position+new Vector3(0,1.25f), Quaternion.identity);
+        // play freed sfx
+        GameObject soundObj = GameObject.Instantiate(PrefabsManager.Instance.soundObject, localPlayer.transform.position, Quaternion.identity);
+        SoundObject soundObject = soundObj.GetComponent<SoundObject>();
+        soundObject.audioSource.clip = PrefabsManager.Instance.freedSound;
     }
 }

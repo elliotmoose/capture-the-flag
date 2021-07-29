@@ -55,7 +55,7 @@ public class LocalPlayer : NetworkBehaviour
 
     //stats
     public float moveSpeed = 15;
-    float sprintMultiplier = 2.4f;
+    float sprintMultiplier = 2.0f;
     float curStamina = 100;
     float maxStamina = 100;
     protected float staminaBurnFactor = 30;

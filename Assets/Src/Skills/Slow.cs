@@ -10,6 +10,7 @@ public class Slow : Skill
     private float duration = 2.0f;
     private string animation = "EMP";
     private Animator animator;
+    private Collider col;
 
     private LocalPlayer caster;
     public Slow()
@@ -24,12 +25,15 @@ public class Slow : Skill
     {
         caster = player;
         this.animator = player.GetComponent<Animator>();
+        this.col = caster.GetComponent<Collider>();
         caster.OnAnimationStart += OnAnimationStart;
         caster.OnAnimationCommit += OnAnimationCommit;
         caster.OnAnimationRelease += OnAnimationRelease;
         caster.OnAnimationEnd += OnAnimationEnd;
         caster.SetDisabled(true);
         animator.SetBool("IsEMPing", true);
+        col.enabled = false;
+        
     }
 
     public void OnAnimationStart(string animationName) {
@@ -50,6 +54,7 @@ public class Slow : Skill
     public void OnAnimationEnd(string animationName) {
         if(animationName != animation) return;
         animator.SetBool("IsEMPing", false);
+        col.enabled = true;
     }
     private void Trigger() {
         Debug.Log(name + " skill is used");

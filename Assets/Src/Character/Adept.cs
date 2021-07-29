@@ -7,7 +7,7 @@ public class Adept : LocalPlayer
 {
     void Awake()
     {
-        moveSpeed = 15;            
+        moveSpeed = 18;            
         if(IsServer) {
             this.syncPlayer.SetCatchRadius(10);
         }

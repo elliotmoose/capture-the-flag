@@ -7,7 +7,7 @@ public class RingBuff : MonoBehaviour
 
     float radius = 10;
     LocalPlayer caster;
-    float buff_factor = 1.5f;
+    float buff_factor = 1;
 
     // Start is called before the first frame update
     void Start()

@@ -12,6 +12,7 @@ public class PrefabsManager : NetworkBehaviour
     public GameObject teleportField;
     public GameObject knockbackField;
     public GameObject cloneTrail;
+    public GameObject freedParticles;
 
     public AudioClip laserSound;
     public AudioClip buffSound;
@@ -23,6 +24,8 @@ public class PrefabsManager : NetworkBehaviour
     public AudioClip invisSound;
 
     public AudioClip jailSound;
+    public AudioClip caughtSound;
+    public AudioClip freedSound;
     public AudioClip countdown1;
     public AudioClip countdown2;
 
@@ -51,6 +54,7 @@ public class PrefabsManager : NetworkBehaviour
     public GameObject playerUsername;
     
     public GameObject flag;
+    public GameObject soundObject;
 
     public GameObject eventLogText;
     void Awake() {

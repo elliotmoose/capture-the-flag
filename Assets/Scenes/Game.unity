@@ -15527,6 +15527,7 @@ MonoBehaviour:
   teleportField: {fileID: 4833554853100618946, guid: 7041dbb2a52bb0e43a7647a8fe5b54f0, type: 3}
   knockbackField: {fileID: 4626221234926358131, guid: 9f7082eb4ae8523438f3d40db293119d, type: 3}
   cloneTrail: {fileID: 6950795904565288395, guid: 7f5e4a3a9fe80b84c9b7da8d1786cd59, type: 3}
+  freedParticles: {fileID: 6020272176981681460, guid: 5c956ce5dbc6e2b4f94f8da94ef04a7f, type: 3}
   laserSound: {fileID: 8300000, guid: 92d854cdbfdcd40418cdadeda7e8a77e, type: 3}
   buffSound: {fileID: 8300000, guid: 79b3408cb37430247bcfed9fbf405aa4, type: 3}
   smokeSound: {fileID: 8300000, guid: 7e0281dc82520d0449bfd4749c34ca4b, type: 3}
@@ -15536,6 +15537,8 @@ MonoBehaviour:
   electricitySound: {fileID: 8300000, guid: ef9d1e5b874fd994996f7dc350031a74, type: 3}
   invisSound: {fileID: 8300000, guid: aa84ab9e82338e44b985514f8b1332ed, type: 3}
   jailSound: {fileID: 8300000, guid: 8630fc876df165f4fad8cee9c0689cb8, type: 3}
+  caughtSound: {fileID: 8300000, guid: a90a830c3300aab47af07f2cce6e6180, type: 3}
+  freedSound: {fileID: 8300000, guid: 58f8a57a56683814da7fbe570e2c0553, type: 3}
   countdown1: {fileID: 8300000, guid: 319e54b18d157c14b9523b8c8af12b81, type: 3}
   countdown2: {fileID: 8300000, guid: b481e05c079b66f458d1dfb985a00f1d, type: 3}
   berserkerIcon: {fileID: 21300000, guid: d53f2076967484e7ca7865244cd941e1, type: 3}
@@ -15559,6 +15562,7 @@ MonoBehaviour:
   minimapPlayerIcon: {fileID: 8420345038447651027, guid: 91557057c047d454c894857229c10682, type: 3}
   playerUsername: {fileID: 7223234545913753362, guid: 43b04c55078d74c0d8613dc3c0fe21c4, type: 3}
   flag: {fileID: 8062280885767414519, guid: 9c819b117196a4f50b725bb9b3087a87, type: 3}
+  soundObject: {fileID: 7773183885647323388, guid: 0a79474b064675b4dae9a089265024a3, type: 3}
   eventLogText: {fileID: 5151733805792542747, guid: 89f3a3ab8c33a0348ae341b38da472a5, type: 3}
 --- !u!114 &368055231
 MonoBehaviour:
@@ -33936,7 +33940,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 0
-    m_SensorSize: {x: 1.7777778, y: 1}
+    m_SensorSize: {x: 1.7780485, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -45841,7 +45845,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.000415802}
+  m_AnchoredPosition: {x: 0, y: -0.000374492}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1425613120
@@ -49148,7 +49152,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 206805398}
   m_HandleRect: {fileID: 206805397}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -55673,7 +55677,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 1620, y: -300.06677}
+  m_AnchoredPosition: {x: 1620, y: -300.0668}
   m_SizeDelta: {x: 3240, y: 150}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1816771468
