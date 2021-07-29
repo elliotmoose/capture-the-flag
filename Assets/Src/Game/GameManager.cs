@@ -52,6 +52,7 @@ public class GameManager : NetworkBehaviour
     public event GameStateEvent OnRoundStart;
     public event GameEvent OnPlayerScored;
     public event GameEvent OnFlagCaptured;
+    public event GameEventInteraction OnFlagPassed;
     public event GameEventInteraction OnPlayerEvade;
     public event GameEventInteraction OnPlayerJailed;
     public event GameEventInteraction OnPlayerFreed;
@@ -182,6 +183,10 @@ public class GameManager : NetworkBehaviour
     #region Game Methods
     public void FlagCapturedBy(Player player) {
         if(OnFlagCaptured != null) OnFlagCaptured(player);
+    }
+    
+    public void FlagPassed(Player player, Player by) {
+        if(OnFlagPassed != null) OnFlagPassed(player, by);
     }
     
     public void ScorePoint(Player player) {
@@ -320,6 +325,13 @@ public class GameManager : NetworkBehaviour
         if(player.team == Team.BLUE && redTeamFlag.capturer == player) return true;
         if(player.team == Team.RED && blueTeamFlag.capturer == player) return true;
         return false;
+    }
+
+    public Flag FlagForPlayer(LocalPlayer player) {
+        if(!PlayerHasFlag(player)) return null;
+
+        if(player.team == Team.BLUE) return redTeamFlag;
+        else return blueTeamFlag;
     }
 
     void Awake() {

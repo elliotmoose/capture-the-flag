@@ -25,11 +25,13 @@ public class ReachEffect : Effect
 {
     private string animation = "Reach";
     private bool finished = false;
+    public float referenceAngle; 
 
     public ReachEffect(LocalPlayer _target) : base(_target)
     {
         this.name = "REACH_EFFECT";
-        this.duration = 0.8f;        
+        this.duration = 0.8f;
+        this.referenceAngle = _target.transform.rotation.eulerAngles.y;        
     }
 
     public override void OnEffectApplied()

@@ -50,7 +50,7 @@ public class Player : NetworkBehaviour
     private NetworkVariableFloat _catchRadius = new NetworkVariableFloat(new NetworkVariableSettings{
         SendTickrate = 0,
         WritePermission = NetworkVariablePermission.ServerOnly
-    }, 8);
+    }, 4);
     
     private NetworkVariable<Team> _team = new NetworkVariable<Team>(new NetworkVariableSettings{
         SendTickrate = 0,
@@ -101,6 +101,10 @@ public class Player : NetworkBehaviour
 
     void Start()
     {
+        
+    }
+
+    void Update() {
         
     }
 
@@ -164,7 +168,7 @@ public class Player : NetworkBehaviour
     public void ServerContact(Player by) {
         if(!IsServer) return; //contact happens on server only
         if(by.OwnerClientId == this.OwnerClientId) return; //cannot contact self
-
+        
         if (this.team != by.team)
         {
             if(!this.localPlayer.isCatchable) {

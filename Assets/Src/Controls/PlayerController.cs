@@ -12,7 +12,6 @@ using Cinemachine;
 public class PlayerController : NetworkBehaviour 
 {   
     public static PlayerController LocalInstance;
-    float MOUSE_SENSITIVITY = 9;
 
     // public User user;
     private NetworkVariable<User> _user = new NetworkVariable<User>(new NetworkVariableSettings{
@@ -66,15 +65,22 @@ public class PlayerController : NetworkBehaviour
     void ClientControls() {
         //movement
         LocalPlayer localPlayer = GetPlayer();
-        if(localPlayer) {
+        if(localPlayer && !InGameMenuManager.Instance.isMenuActive) {
             float horizontal = Input.GetAxisRaw("Horizontal");
-            float vertical = Input.GetAxisRaw("Vertical");            
+            float vertical = Input.GetAxisRaw("Vertical");
+
+            if(!localPlayer.HasEffect("REACH_EFFECT")) {
+                localPlayer.faceAngle += Input.GetAxis("Mouse X") * SettingsManager.Instance.mouseSensitivity;
+            }
+
             localPlayer.moveDir = new Vector2(horizontal, vertical);            
-            localPlayer.faceAngle += Input.GetAxis("Mouse X") * MOUSE_SENSITIVITY;
             localPlayer.sprinting = Input.GetKey(SPRINT_KEY);
         
             if(Input.GetMouseButtonDown(0)) {
                 localPlayer.Catch();
+            }
+            if(Input.GetMouseButtonDown(1)) {
+                localPlayer.PassFlag();
             }
             if(Input.GetKeyDown(SKILL1_KEY)) {
                 localPlayer.CastSkillAtIndex(0);

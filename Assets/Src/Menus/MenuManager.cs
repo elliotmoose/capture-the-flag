@@ -9,17 +9,6 @@ using MLAPI.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
 
-
-
-public enum MenuPage {
-    Null,
-    SetUsername,
-    Home,
-    JoinRoom,
-    Room,
-    Connecting
-}
-
 public class MenuManager : MonoBehaviour
 {
     public static MenuManager Instance;
@@ -27,7 +16,7 @@ public class MenuManager : MonoBehaviour
         Instance = this;
     }
     // Start is called before the first frame update
-    MenuPage currentPage = MenuPage.SetUsername;
+    string currentPage = "SetUsername";
     public TMP_InputField playerNameInput;
     public TMP_InputField IpAddressInput;
     
@@ -50,19 +39,11 @@ public class MenuManager : MonoBehaviour
     }
 
     public void SetCurrentPage(string pageName) {
-        MenuPage result;
-        System.Enum.TryParse<MenuPage>(pageName, true, out result);
-        if(result == MenuPage.Null) {
-            Debug.LogError($"SetCurrentPage failed: No page with name {pageName}");
-            return;
-        }
-        
-        MenuPage previousPage = currentPage;
-        currentPage = result;
+        currentPage = pageName;
         
         foreach(Transform child in transform) {
-            child.gameObject.SetActive(child.gameObject.name == currentPage.ToString());
-        }        
+            child.gameObject.SetActive(child.gameObject.name == currentPage);
+        }
     }
 
     public void UpdatePlayerName()
@@ -193,4 +174,5 @@ public class MenuManager : MonoBehaviour
     }
 
     #endregion
+
 }

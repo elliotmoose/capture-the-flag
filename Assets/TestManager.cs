@@ -47,7 +47,7 @@ public class TestManager : MonoBehaviour
             Debug.LogWarning("Auto start host was enabled, but came from main menu. Ignoring...");
             return;
         }
-        if(twoPlayer && RoomManager.Instance.roomUsers.Count == 2) {
+        if(twoPlayer && RoomManager.Instance.roomUsers.Count == 3) {
             GameManager.Instance.StartGame();
             gameStarted = true;
         }

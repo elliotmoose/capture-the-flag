@@ -29,6 +29,13 @@ public class LocalPlayer : NetworkBehaviour
     public Player syncPlayer => GetComponent<Player>();
     public bool isDisabled = false;  
     public bool isJailed = false;  
+    public bool isInvisToLocalPlayer {
+        get {
+            bool isInvis = this.GetComponent<Animator>().GetBool("IsInvisible");
+            bool shouldBeInvis = (isInvis && this.team != PlayerController.LocalInstance.GetPlayer().team);
+            return shouldBeInvis;
+        }        
+    }
     private bool _transportedToJail = false;
     private bool isMoving => (moveDir.magnitude > 0.01f && !isDisabled);
     private bool canSprint => (GetStaminaFraction() > 0 && isMoving);
@@ -142,9 +149,7 @@ public class LocalPlayer : NetworkBehaviour
     }
 
     private void ClientsUpdateUsername() {
-        bool isInvis = this.GetComponent<Animator>().GetBool("IsInvisible");
-        bool shouldShowUsername = (!isInvis || this.team == PlayerController.LocalInstance.GetPlayer().team);
-        usernameTextTransform.gameObject.SetActive(shouldShowUsername); //for invis
+        usernameTextTransform.gameObject.SetActive(!isInvisToLocalPlayer); //for invis
         TMPro.TextMeshPro textMesh = usernameTextTransform.GetComponent<TMPro.TextMeshPro>();
         textMesh.text = syncPlayer.GetUser().username;
         textMesh.color = this.team == Team.BLUE ? UIManager.Instance.colors.textBlue : UIManager.Instance.colors.textRed;
@@ -354,6 +359,18 @@ public class LocalPlayer : NetworkBehaviour
         }
     }
 
+    public Effect GetEffectWithName(string effectName) {
+        foreach(Effect effect in effects) {
+            if(effect.name == effectName) return effect;
+        }
+
+        return null;
+    }
+
+    public bool HasEffect(string effectName) {
+        return GetEffectWithName(effectName) != null;
+    }
+
     public void Catch()
     {
         if(!GameManager.Instance.roundInProgress) { return; }
@@ -367,6 +384,12 @@ public class LocalPlayer : NetworkBehaviour
         {
             // Debug.Log($"Catch remainding cooldown: {catchCooldownTime}");
         }
+    }
+
+    public void PassFlag() {
+        if(!GameManager.Instance.roundInProgress) return;
+        Flag flag = GameManager.Instance.FlagForPlayer(this);
+        if(flag != null) flag.ClientHandoverFlag();
     }
 
     public void CastSkillAtIndex(int index)
@@ -424,7 +447,8 @@ public class LocalPlayer : NetworkBehaviour
 
     public void AnimationStart(string animationName) {        
         if(animationName == "Teleport") SpawnTeleportStartParticle();
-        if (animationName == "Catch") this.transform.Find("Catch").localScale = Vector3.one * syncPlayer.GetCatchRadius(); //we need this to be here so that it is replicated across all
+        Debug.Log($"catch radius: {syncPlayer.GetCatchRadius()}");
+        if (animationName == "Catch") this.transform.Find("Catch").localScale = Vector3.one * syncPlayer.GetCatchRadius()*2; //we need this to be here so that it is replicated across all
         if (animationName == "Smoke") SpawnSmokeParticle();
         if (animationName == "Knockback") SpawnKnockbackParticle();
         if (OnAnimationStart!=null) OnAnimationStart(animationName);
