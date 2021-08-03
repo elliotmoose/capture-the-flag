@@ -375,7 +375,14 @@ public class LocalPlayer : NetworkBehaviour
     {
         if(!GameManager.Instance.roundInProgress) { return; }
 
-        if(catchCooldownTime < 0)
+        if (isDisabled)
+        {
+            Debug.Log("Player is stunned.");
+            return;
+        }
+
+
+        if (catchCooldownTime < 0)
         {
             catchSkill.UseSkill(this);
             catchCooldownTime = catchSkill.cooldown;
@@ -399,6 +406,12 @@ public class LocalPlayer : NetworkBehaviour
         if (index >= skills.Count)
         {
             Debug.LogWarning($"Skill index out of range: {index}");
+            return;
+        }
+
+        if (isDisabled)
+        {
+            Debug.Log("Player is stunned.");
             return;
         }
 

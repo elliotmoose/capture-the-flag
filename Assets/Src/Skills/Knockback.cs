@@ -54,7 +54,7 @@ public class Knockback : Skill
         Debug.Log(hitColliders.Length);
         foreach (Collider c in hitColliders)
         {
-            Player target = c.gameObject.GetComponent<Player>();
+            LocalPlayer target = c.gameObject.GetComponent<LocalPlayer>();
 
             if (target != null && player != target)
             {
@@ -69,4 +69,54 @@ public class Knockback : Skill
             }
         }
     }
+}
+
+public class StunEffect : Effect
+{
+
+    public StunEffect(LocalPlayer _target, float duration) : base(_target)
+    {
+        this.duration = duration;
+        this.name = "STUN_EFFECT";
+
+    }
+
+    public override void OnEffectApplied()
+    {
+        _target.SetDisabled(true);
+        _target.GetComponent<Animator>().SetBool("IsStunned", true);
+
+    }
+
+    public override void OnEffectEnd()
+    {
+        _target.GetComponent<Animator>().SetBool("IsStunned", false);
+        _target.SetDisabled(false);
+        
+    }
+
+}
+
+public class KnockbackEffect : PushEffect
+{
+    private float stunDuration;
+
+    public KnockbackEffect(LocalPlayer _target, Vector3 direction, float distance, float duration, float stunDuration) : base(_target, direction, distance, duration)
+    {
+        this.stunDuration = stunDuration;
+
+    }
+
+    public override void OnEffectApplied()
+    {
+        base.OnEffectApplied();
+        _target.GetComponent<Animator>().SetBool("IsStunned", true);
+    }
+
+    public override void OnEffectEnd()
+    {
+        StunEffect effect = new StunEffect(_target, stunDuration);
+        _target.TakeEffect(effect);
+    }
+
 }
