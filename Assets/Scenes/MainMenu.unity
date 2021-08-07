@@ -13247,6 +13247,7 @@ MonoBehaviour:
   teleportField: {fileID: 0}
   knockbackField: {fileID: 0}
   cloneTrail: {fileID: 0}
+  freedParticles: {fileID: 0}
   laserSound: {fileID: 0}
   buffSound: {fileID: 0}
   smokeSound: {fileID: 0}
@@ -13256,6 +13257,8 @@ MonoBehaviour:
   electricitySound: {fileID: 0}
   invisSound: {fileID: 0}
   jailSound: {fileID: 0}
+  caughtSound: {fileID: 0}
+  freedSound: {fileID: 0}
   countdown1: {fileID: 0}
   countdown2: {fileID: 0}
   berserkerIcon: {fileID: 21300000, guid: d53f2076967484e7ca7865244cd941e1, type: 3}
@@ -13279,6 +13282,7 @@ MonoBehaviour:
   minimapPlayerIcon: {fileID: 0}
   playerUsername: {fileID: 0}
   flag: {fileID: 0}
+  soundObject: {fileID: 0}
   eventLogText: {fileID: 0}
 --- !u!114 &478187861
 MonoBehaviour:
@@ -13299,6 +13303,7 @@ MonoBehaviour:
   musicVolumeSlider: {fileID: 1861883708}
   vfxVolumeSlider: {fileID: 1649213416}
   mouseSensSlider: {fileID: 774192152}
+  gameAudio: {fileID: 24100000, guid: 0630e22681a81354392b559f0b18550e, type: 2}
 --- !u!1001 &479620767
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -38,4 +38,10 @@ public struct GameStat : INetworkSerializable {
         serializer.Serialize(ref timeWithFlag);
         serializer.Serialize(ref isMVP);
     }
+
+    public float computedScore {
+        get {
+            return this.flagsScored * 10 + this.playersCaptured * 7 + this.playersFreed * 5 - this.timesInJail * 3;
+        }
+    }
 }

@@ -16151,6 +16151,7 @@ MonoBehaviour:
   musicVolumeSlider: {fileID: 1802757934}
   vfxVolumeSlider: {fileID: 1905482462}
   mouseSensSlider: {fileID: 1323096345}
+  gameAudio: {fileID: 24100000, guid: 0630e22681a81354392b559f0b18550e, type: 2}
 --- !u!1001 &369485974
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -35172,7 +35173,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 0
-    m_SensorSize: {x: 1.7780485, y: 1}
+    m_SensorSize: {x: 1.7777778, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -51450,7 +51451,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 206805398}
   m_HandleRect: {fileID: 206805397}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
