@@ -45,6 +45,7 @@ public class MinimapRadarIcon : MonoBehaviour
         this.GetComponent<RectTransform>().localRotation = Quaternion.Euler(0.0f, 0.0f, angle);
 
         GetComponent<Image>().color = (target.team == Team.BLUE ? UIManager.Instance.colors.textBlue : UIManager.Instance.colors.textRed);
+
         if (!target.isInvisToLocalPlayer)
         {
             if (isInsideMinimap)
@@ -55,8 +56,16 @@ public class MinimapRadarIcon : MonoBehaviour
             else
             {
                 this.GetComponent<RectTransform>().position = ref_target.transform.position + new Vector3(x * 45, y * 45, z * 45);
-                GetComponent<Image>().enabled = true;
+                if (GameManager.Instance.redTeamFlag.capturer == target || GameManager.Instance.blueTeamFlag.capturer == target)
+                {
+                    GetComponent<Image>().enabled = true;
+                }
+                else
+                {
+                    GetComponent<Image>().enabled = false;
+                }
             }
+            
         }
         else
         {
