@@ -25,12 +25,6 @@ public class MinimapRadarIcon : MonoBehaviour
             x = (float)(target.transform.position.x - ref_target.transform.position.x)/dist;
             y = (float)(target.transform.position.y - ref_target.transform.position.y)/dist;
             z = (float)(target.transform.position.z - ref_target.transform.position.z)/dist;
-            
-            Debug.Log("WHEE");
-            //Debug.Log(target.transform.position);
-            //Debug.Log(ref_target.transform.position);
-            //Debug.Log(new Vector3(x,y,z));
-            //Debug.Log(dist);
         }
         else
         {
