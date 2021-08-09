@@ -13,7 +13,7 @@ public class Knockback : Skill
 
     public Knockback()
     {
-        cooldown = 6.0f;
+        cooldown = 8.0f;
         name = "Knockback";
         this.icon = PrefabsManager.Instance.knockbackIcon;
         this.description = "Berserker explodes in rage, pushing surrounding N.O.Ds back and disabling them for a short duration";
