@@ -50,6 +50,7 @@ public class PrefabsManager : NetworkBehaviour
     public Sprite roguePassiveIcon;
     public Sprite lancerPassiveIcon;
     public GameObject minimapPlayerIcon;
+    public GameObject minimapPlayerRadarIcon;
 
     public GameObject playerUsername;
     

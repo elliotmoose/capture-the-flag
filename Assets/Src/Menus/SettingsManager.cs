@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.UI;
 using TMPro;
 
@@ -13,11 +14,10 @@ public class SettingsManager : MonoBehaviour
     float maxMouseSensitivity = 30;
     public float mouseSensitivity = 6;
     public float mouseSensitivityPercentage => (mouseSensitivity - minMouseSensitivity)/(maxMouseSensitivity - minMouseSensitivity); 
-    float minVolume = 2;
-    float maxVolume = 12;
+    float minVolume = 0.0001f;
+    float maxVolume = 1;
     public float musicVolume = 6;
-    public float musicVolumePercentage => (musicVolume - minVolume)/(maxVolume - minVolume); 
-    float minVFXV = 2;
+    public float musicVolumePercentage => (musicVolume - minVolume)/(maxVolume - minVolume);
     public float vfxVolume = 6;
     public float vfxVolumePercentage => (vfxVolume - minVolume)/(maxVolume - minVolume); 
     
@@ -25,6 +25,7 @@ public class SettingsManager : MonoBehaviour
     public GameObject vfxVolumeSlider;
     public GameObject mouseSensSlider;  
 
+    public AudioMixer gameAudio;
     void Awake()
     {
         Instance = this;
@@ -37,16 +38,21 @@ public class SettingsManager : MonoBehaviour
         mouseSensitivity = PlayerPrefs.GetFloat("mouse_sensitivity") == 0 ? mouseSensitivity : PlayerPrefs.GetFloat("mouse_sensitivity");
         musicVolume = PlayerPrefs.GetFloat("music_volume") == 0 ? musicVolume : PlayerPrefs.GetFloat("music_volume");
         vfxVolume = PlayerPrefs.GetFloat("vfx_volume") == 0 ? vfxVolume : PlayerPrefs.GetFloat("vfx_volume");
+
+        gameAudio.SetFloat("music_volume", Mathf.Log10(musicVolume) * 20);
+        gameAudio.SetFloat("vfx_volume", Mathf.Log10(vfxVolume) * 20);
     }
     public void SetSetting(string setting, float percentage) {
         switch (setting)
         {
             case "music":
-                musicVolume = Mathf.Lerp(minVolume, maxVolume, percentage);                
+                musicVolume = Mathf.Lerp(minVolume, maxVolume, percentage);
+                gameAudio.SetFloat("music_volume", Mathf.Log10(musicVolume) * 20);          
                 PlayerPrefs.SetFloat("music_volume", musicVolume);
                 break;
             case "vfx":
-                vfxVolume = Mathf.Lerp(minVolume, maxVolume, percentage);                
+                vfxVolume = Mathf.Lerp(minVolume, maxVolume, percentage);
+                gameAudio.SetFloat("vfx_volume", Mathf.Log10(vfxVolume) * 20);
                 PlayerPrefs.SetFloat("vfx_volume", vfxVolume);
                 break;
             case "mouse_sensitivity":

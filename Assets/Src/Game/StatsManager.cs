@@ -92,9 +92,23 @@ public class StatsManager : NetworkBehaviour
 
     public List<GameStat> GetStats() {
         List<GameStat> output = new List<GameStat>();
-        foreach(GameStat stat in displayStats) {
+        
+        float highScore = 0;
+        int highScoreIndex = 0;
+
+        for(int i=0; i<displayStats.Count;i++) {
+            GameStat stat = displayStats[i];
             output.Add(stat);
+            if(stat.computedScore >= highScore) {
+                highScore = stat.computedScore;
+                highScoreIndex = i;
+            }
         }
+        
+        if(output.Count > 0) {
+            output[highScoreIndex] += new GameStat{isMVP=true}; 
+        }
+
         return output;
     }
 
