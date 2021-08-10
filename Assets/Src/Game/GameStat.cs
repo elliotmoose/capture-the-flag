@@ -3,7 +3,7 @@ using System;
 
 public struct GameStat : INetworkSerializable {
     public User user;
-    public ulong flagsScored;
+    public ulong pointsScored;
     public ulong playersCaptured;
     public ulong playersFreed;
     public ulong timesInJail;
@@ -15,7 +15,7 @@ public struct GameStat : INetworkSerializable {
         return new GameStat 
         {
             user = x.user,
-            flagsScored = x.flagsScored + y.flagsScored,
+            pointsScored = x.pointsScored + y.pointsScored,
             playersCaptured = x.playersCaptured + y.playersCaptured,
             playersFreed = x.playersFreed+ y.playersFreed,
             timesInJail = x.timesInJail + y.timesInJail,
@@ -31,7 +31,7 @@ public struct GameStat : INetworkSerializable {
         serializer.Serialize(ref user.username);
         serializer.Serialize(ref user.team);
         serializer.Serialize(ref user.character);
-        serializer.Serialize(ref flagsScored);
+        serializer.Serialize(ref pointsScored);
         serializer.Serialize(ref playersCaptured);
         serializer.Serialize(ref playersFreed);
         serializer.Serialize(ref timesInJail);
@@ -42,7 +42,7 @@ public struct GameStat : INetworkSerializable {
 
     public float computedScore {
         get {            
-            return Convert.ToSingle(this.flagsScored) * 10 + Convert.ToSingle(this.playersCaptured) * 7 + Convert.ToSingle(this.playersFreed) * 5 - Convert.ToSingle(this.timesInJail) * 3;
+            return Convert.ToSingle(this.pointsScored) * 10 + Convert.ToSingle(this.playersCaptured) * 4 + Convert.ToSingle(this.playersFreed) * 4 - Convert.ToSingle(this.timesInJail) * 3;
         }
     }
 }

@@ -13498,9 +13498,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   username: 
-  mouseSensitivity: 6
-  musicVolume: 6
-  vfxVolume: 6
+  mouseSensitivity: 2
+  musicVolume: 1
+  vfxVolume: 1
   musicVolumeSlider: {fileID: 1861883708}
   vfxVolumeSlider: {fileID: 1649213416}
   mouseSensSlider: {fileID: 774192152}

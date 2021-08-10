@@ -55,9 +55,13 @@ public class StatsManager : NetworkBehaviour
             stats[freedUser.clientId] += new GameStat{playersFreed=1};
         };
         
-        GameManager.Instance.OnPlayerScored += (Player player)=>{
+        GameManager.Instance.OnFlagScored += (Player player)=>{
             User user = player.GetUser();
-            stats[user.clientId] += new GameStat{flagsScored=1};
+            stats[user.clientId] += new GameStat{pointsScored=1};
+        };
+        GameManager.Instance.OnCaughtLastPlayer += (Player player)=>{
+            User user = player.GetUser();
+            stats[user.clientId] += new GameStat{pointsScored=1};
         };
     }
 

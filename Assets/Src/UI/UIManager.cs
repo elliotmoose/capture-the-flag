@@ -186,7 +186,7 @@ public class UIManager : MonoBehaviour
             statRow.transform.Find("Username").GetComponent<TMP_Text>().text = stat.user.username;
             statRow.transform.Find("Username").GetComponent<TMP_Text>().color = (stat.user.team == Team.BLUE) ? colors.textBlue : colors.textRed;
             statRow.transform.Find("Score").GetComponent<TMP_Text>().text = stat.computedScore.ToString();
-            statRow.transform.Find("Flags Scored").GetComponent<TMP_Text>().text = stat.flagsScored.ToString();
+            statRow.transform.Find("Points Scored").GetComponent<TMP_Text>().text = stat.pointsScored.ToString();
             statRow.transform.Find("Players Captured").GetComponent<TMP_Text>().text = stat.playersCaptured.ToString();
             statRow.transform.Find("Players Freed").GetComponent<TMP_Text>().text = stat.playersFreed.ToString();
             statRow.transform.Find("Times In Jail").GetComponent<TMP_Text>().text = stat.timesInJail.ToString();

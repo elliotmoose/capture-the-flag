@@ -20,6 +20,7 @@ public class CameraWallClipper : MonoBehaviour
 
         lastFrameMeshRenderers.Clear();
         
+        if(!PlayerController.LocalInstance) return;
         LocalPlayer player = PlayerController.LocalInstance.GetPlayer();
         if(!player) return;
         List<float> rayAngles = new List<float>{0};

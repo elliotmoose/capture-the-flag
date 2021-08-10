@@ -435,7 +435,7 @@ public class LocalPlayer : NetworkBehaviour
 
         if (isDisabled)
         {
-            Debug.Log("Player is stunned.");
+            Debug.Log("Player is disabled.");
             return;
         }
 

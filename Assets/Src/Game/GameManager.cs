@@ -50,7 +50,8 @@ public class GameManager : NetworkBehaviour
     public bool gameInProgress => (clientState >= GameState.COUNTDOWN) && (clientState != GameState.SCORESCREEN);
 
     public event GameStateEvent OnRoundStart;
-    public event GameEvent OnPlayerScored;
+    public event GameEvent OnFlagScored;
+    public event GameEvent OnCaughtLastPlayer;
     public event GameEvent OnFlagCaptured;
     public event GameEventInteraction OnFlagPassed;
     public event GameEventInteraction OnPlayerEvade;
@@ -191,7 +192,6 @@ public class GameManager : NetworkBehaviour
     
     public void ScorePoint(Player player) {
         if(!IsServer) {return;}
-        if(OnPlayerScored != null) OnPlayerScored(player);
 
         Team team = player.GetTeam();
         if(team == Team.BLUE) {
@@ -199,7 +199,7 @@ public class GameManager : NetworkBehaviour
         }
         else {
             redTeamScore.Value += 1;
-        }        
+        }
 
         if(blueTeamScore.Value >= winScore) {
             GameOver(Team.BLUE);
@@ -207,7 +207,7 @@ public class GameManager : NetworkBehaviour
         else if(redTeamScore.Value >= winScore) {
             GameOver(Team.RED);
         }
-        else {            
+        else {
             ServerUpdateGameState(GameState.TRIGGER_RESET);
         }
     }
@@ -289,7 +289,14 @@ public class GameManager : NetworkBehaviour
 
     #region Event Triggers
 
+    public void TriggerOnFlagScored(Player player) {
+        if(!IsServer) return;
+        if(OnFlagScored != null) OnFlagScored(player);
+        ScorePoint(player);
+    }
+
     public void TriggerOnPlayerJailed(Player playerJailed, Player playerCatcher) {
+        if(!IsServer) return;
         if(OnPlayerJailed!=null) OnPlayerJailed(playerJailed, playerCatcher);
 
         //check if any free players
@@ -307,15 +314,18 @@ public class GameManager : NetworkBehaviour
 
         if(!shouldContinueRound) {
             //end round
+            if(OnCaughtLastPlayer != null) OnCaughtLastPlayer(playerCatcher);
             ScorePoint(playerCatcher);
         }        
     }
 
     public void TriggerOnPlayerEvade(Player evadedPlayer, Player catcher) {
+        if(!IsServer) return;
         if(OnPlayerEvade != null) OnPlayerEvade(evadedPlayer, catcher);
     }
     
     public void TriggerOnPlayerFreed(Player playerFreed, Player playerFreedBy) {
+        if(!IsServer) return;
         if(OnPlayerFreed!=null) OnPlayerFreed(playerFreed, playerFreedBy);
     }
 

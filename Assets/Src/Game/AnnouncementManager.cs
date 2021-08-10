@@ -24,7 +24,7 @@ public class AnnouncementManager : NetworkBehaviour
         //server side announcement trigger
         if(!IsServer) return;
         GameManager.Instance.OnFlagCaptured += OnFlagCaptured;
-        GameManager.Instance.OnPlayerScored += OnPlayerScored;
+        GameManager.Instance.OnFlagScored += OnFlagScored;
         GameManager.Instance.OnPlayerJailed += OnPlayerJailed;
         GameManager.Instance.OnPlayerFreed += OnPlayerFreed;
         // announcements.Enqueue(new Announcement{content="mooselliot has been captured!"});
@@ -38,7 +38,7 @@ public class AnnouncementManager : NetworkBehaviour
         AnnounceFlagCapturedClientRpc(player.GetTeam());
     }    
 
-    void OnPlayerScored(Player player) {
+    void OnFlagScored(Player player) {
         if(!IsServer) return;        
         string teamString = (player.GetTeam() == Team.BLUE) ? "Blue" : "Red";
         // AnnounceStringClientRpc($"{teamString} team scores!", clearOld:true);

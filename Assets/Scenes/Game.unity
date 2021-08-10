@@ -16159,7 +16159,7 @@ MonoBehaviour:
     m_InternalValue: 0
   redTeamScore:
     m_InternalValue: 0
-  winScore: 1
+  winScore: 3
   gameTime: 0
   serverState: 0
   clientState: 0
@@ -16381,8 +16381,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   username: 
   mouseSensitivity: 2
-  musicVolume: 6
-  vfxVolume: 6
+  musicVolume: 1
+  vfxVolume: 1
   musicVolumeSlider: {fileID: 1802757934}
   vfxVolumeSlider: {fileID: 1905482462}
   mouseSensSlider: {fileID: 1323096345}
@@ -49348,7 +49348,7 @@ GameObject:
   - component: {fileID: 1476335916}
   - component: {fileID: 1476335915}
   m_Layer: 5
-  m_Name: Flags Scored
+  m_Name: Points Scored
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -49433,7 +49433,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Flags Scored
+  m_text: Points Scored
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 3e55ee3d28661414fa65bdd69258b8f8, type: 2}
   m_sharedMaterial: {fileID: 2275369376883563324, guid: 3e55ee3d28661414fa65bdd69258b8f8, type: 2}
@@ -62425,7 +62425,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   autoStartConnection: 1
-  twoPlayer: 1
+  twoPlayer: 0
   isHost: 1
   character: 0
 --- !u!1001 &1919001616
