@@ -56,7 +56,7 @@ public class Knockback : Skill
         {
             LocalPlayer target = c.gameObject.GetComponent<LocalPlayer>();
 
-            if (target != null && player != target)
+            if (target != null && player.team != target.team)
             {
                 Debug.Log(target.ToString());
                 Vector3 direction = target.transform.position - player.transform.position;
