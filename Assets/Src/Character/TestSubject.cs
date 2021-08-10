@@ -6,6 +6,6 @@ public class TestSubject : LocalPlayer
 {
     private void Awake()
     {
-        moveSpeed = 10;
+        baseMoveSpeed = 10;
     }
 }

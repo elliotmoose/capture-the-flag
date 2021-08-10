@@ -61,8 +61,8 @@ public class LocalPlayer : NetworkBehaviour
     public Team team => syncPlayer.GetTeam();
 
     //stats
-    public float moveSpeed = 15;
-    float sprintAmount = 18;
+    public float baseMoveSpeed = 15;
+    float sprintSpeed = 18;
     float curStamina = 100;
     float maxStamina = 100;
     protected float staminaBurnFactor = 30;
@@ -90,30 +90,29 @@ public class LocalPlayer : NetworkBehaviour
     #region Getter Setters    
     public float GetMoveSpeed()
     {
-        float computedSpeed = moveSpeed;
+        float computedSpeed = baseMoveSpeed;
         //scale
         foreach(Effect effect in this.effects) {
-            
-            SpeedModifierEffect speedEffect = (SpeedModifierEffect) effect;
-            if(speedEffect != null) {
+            if(effect is SpeedModifierEffect) {
+                SpeedModifierEffect speedEffect = (SpeedModifierEffect) effect;
                 computedSpeed += speedEffect.addSpeed;
             }
         }
         
         //add
         foreach(Effect effect in this.effects) {
-            SpeedModifierEffect speedEffect = (SpeedModifierEffect) effect;
-            if(speedEffect != null) {
+            if(effect is SpeedModifierEffect) {
+                SpeedModifierEffect speedEffect = (SpeedModifierEffect) effect;
                 computedSpeed *= speedEffect.scaleSpeed;
             }
         }
 
-        return computedSpeed;
+        return computedSpeed + (isSprinting ? sprintSpeed : 0);
     }
 
     public void SetMoveSpeed(float newSpeed)
     {
-        this.moveSpeed = newSpeed;
+        this.baseMoveSpeed = newSpeed;
     }
 
      public void SetMaxStamina(float maxStamina) {
@@ -184,7 +183,11 @@ public class LocalPlayer : NetworkBehaviour
     private void SetAnimationsSmooth(bool isMoving, bool isSprinting) {
         if(!IsOwner) { return; }
 
-        Vector2 targetMoveDir = moveDir/(isSprinting ? 1 : 2);
+        float msLowerBound = this.baseMoveSpeed;
+        float msUpperBound = this.baseMoveSpeed + this.sprintSpeed;
+        float msFactor = Mathf.Lerp(0.5f, 1, (GetMoveSpeed()-msLowerBound)/(msUpperBound-msLowerBound)); //0.5 means walking, 1 means sprinting
+        Vector2 targetMoveDir = moveDir * Mathf.Clamp(msFactor, 0.5f, 1); 
+
         //animation smoohting
         Animator animator = GetComponent<Animator>();
         Vector2 curMoveDir = new Vector2(animator.GetFloat("HorMovement"), animator.GetFloat("VertMovement")); //current movedir state
@@ -217,8 +220,7 @@ public class LocalPlayer : NetworkBehaviour
         if(isMoving) {                
             float moveDirAngle = Mathf.Atan2(moveDir.x, moveDir.y) * Mathf.Rad2Deg + faceAngle;
             Vector3 positionDelta = Quaternion.Euler(0, moveDirAngle, 0) * Vector3.forward;
-            float finalMoveSpeed = GetMoveSpeed() + (isSprinting ? sprintAmount : 0);
-            GetComponent<CharacterController>().Move(positionDelta.normalized * finalMoveSpeed * Time.fixedDeltaTime);
+            GetComponent<CharacterController>().Move(positionDelta.normalized * GetMoveSpeed() * Time.fixedDeltaTime);
             
         }      
     }

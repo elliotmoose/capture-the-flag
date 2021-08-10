@@ -5,7 +5,7 @@ using UnityEngine;
 public class SpeedZone : MonoBehaviour
 {
     // Start is called before the first frame update
-    const float speedIncrease = 12;
+    const float speedIncrease = 8;
     void Start()
     {
         
