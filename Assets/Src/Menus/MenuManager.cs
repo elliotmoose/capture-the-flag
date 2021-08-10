@@ -25,6 +25,10 @@ public class MenuManager : MonoBehaviour
     public GameObject blueTeamPlayerRows;
     public GameObject startGameButton;
 
+    //Tutorial
+    public GameObject[] tutorialPages;
+    public int currentCount = 0 ;
+
     void Start() {
         //subscribe to room events
         RoomManager.Instance.OnRoomUsersUpdate += UpdateRoomPage;
@@ -76,10 +80,56 @@ public class MenuManager : MonoBehaviour
         startGameButton.SetActive(false);
     }
 
+    public void SetTutorialPage()
+    {
+        SetCurrentPage("Tutorial");
+        foreach (GameObject page in tutorialPages)
+        {
+            page.SetActive(false);
+        }
+        tutorialPages[currentCount].SetActive(true);
+    }
+
+    public void TutorialNext()
+    {
+        currentCount += 1;
+        if (currentCount == 12)
+        {
+            SetCurrentPage("Home");
+        }
+        else
+        {
+            foreach (GameObject page in tutorialPages)
+            {
+                page.SetActive(false);
+            }
+            tutorialPages[currentCount].SetActive(true);
+        }
+        
+    }
+
+    public void TutorialPrev()
+    {
+        currentCount -= 1;
+        if (currentCount == 0 || currentCount == -1)
+        {
+            SetCurrentPage("Home");
+        }
+        else
+        {
+            foreach (GameObject page in tutorialPages)
+            {
+                page.SetActive(false);
+            }
+            tutorialPages[currentCount].SetActive(true);
+        }
+    }
+
     public void SelectCharacter(Character character) {
         UserController.LocalInstance.SelectCharacterServerRpc(NetworkManager.Singleton.LocalClientId, character);
     }
     
+
 
     public void StartGame() {
         RoomManager.Instance.StartGame();
