@@ -111,6 +111,7 @@ public class TeleportEffect : Effect
         _target.OnAnimationCommit -= OnAnimationCommit;
         _target.OnAnimationRelease -= OnAnimationRelease;
         _target.OnAnimationEnd -= OnAnimationEnd;
+        _target.SetDisabled(false);
     }
 
 }

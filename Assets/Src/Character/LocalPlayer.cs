@@ -634,6 +634,8 @@ public class LocalPlayer : NetworkBehaviour
         animator.SetFloat("HorMovement", 0);
         animator.SetFloat("VertMovement", 0);
         animator.SetBool("IsMoving", false);
+
+        SetDisabled(false);
     }
 
     public bool hasReset {
