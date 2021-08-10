@@ -8,7 +8,7 @@ public class Reach : Skill
 
     public Reach()
     {
-        cooldown = 10.0f;
+        cooldown = 12.0f;
         name = "Laser Beam";
         this.icon = PrefabsManager.Instance.extendedReachIcon;
         this.description = "Fires a beam forward, exercising its Catch in a straight line ahead";
@@ -31,17 +31,24 @@ public class ReachEffect : Effect
     {
         this.name = "REACH_EFFECT";
         this.duration = 0.8f;
-        this.referenceAngle = _target.transform.rotation.eulerAngles.y;        
+        this.referenceAngle = _target.transform.rotation.eulerAngles.y;
+        _target.OnAnimationRelease += OnAnimationRelease;
     }
 
     public override void OnEffectApplied()
     {
         _target.GetComponent<Animator>().SetBool("IsReach", true);
     }
+    public void OnAnimationRelease(string animationName)
+    {
+        if (animationName != animation) return;
+        _target.GetComponent<Animator>().SetBool("IsReach", false);
+
+    }
 
     public override void OnEffectEnd()
     {
-        _target.GetComponent<Animator>().SetBool("IsReach", false);
+        
     }
 
 }

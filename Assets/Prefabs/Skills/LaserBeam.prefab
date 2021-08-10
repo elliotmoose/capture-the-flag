@@ -45,8 +45,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 28}
-  m_Center: {x: 0, y: 0, z: 13.1}
+  m_Size: {x: 1, y: 1, z: 18}
+  m_Center: {x: 0, y: 0, z: 8.91}
 --- !u!114 &7833756079518759920
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4997,7 +4997,7 @@ LineRenderer:
   m_SortingOrder: 0
   m_Positions:
   - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 30}
+  - {x: 0, y: 0, z: 20}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 2.2434728

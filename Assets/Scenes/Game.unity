@@ -35174,7 +35174,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 0
-    m_SensorSize: {x: 1.7777778, y: 1}
+    m_SensorSize: {x: 1.7780063, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -51452,7 +51452,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 206805398}
   m_HandleRect: {fileID: 206805397}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -62193,7 +62193,7 @@ MonoBehaviour:
   autoStartConnection: 1
   twoPlayer: 0
   isHost: 1
-  character: 1
+  character: 0
 --- !u!1001 &1919001616
 PrefabInstance:
   m_ObjectHideFlags: 0
