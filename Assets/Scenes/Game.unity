@@ -15555,7 +15555,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &364782582
 RectTransform:
   m_ObjectHideFlags: 0
@@ -16020,7 +16020,7 @@ MonoBehaviour:
   cloneTrail: {fileID: 6950795904565288395, guid: 7f5e4a3a9fe80b84c9b7da8d1786cd59, type: 3}
   freedParticles: {fileID: 6020272176981681460, guid: 5c956ce5dbc6e2b4f94f8da94ef04a7f, type: 3}
   laserSound: {fileID: 8300000, guid: 92d854cdbfdcd40418cdadeda7e8a77e, type: 3}
-  buffSound: {fileID: 8300000, guid: 79b3408cb37430247bcfed9fbf405aa4, type: 3}
+  buffSound: {fileID: 8300000, guid: 37a85b96675a194429107d12e5d77a36, type: 3}
   smokeSound: {fileID: 8300000, guid: 7e0281dc82520d0449bfd4749c34ca4b, type: 3}
   boostSound: {fileID: 8300000, guid: 10a051a8bbc89ed4eb2e384e997da2f8, type: 3}
   slamSound: {fileID: 8300000, guid: d406346a5c000324ba2b4f501215d76d, type: 3}
@@ -16051,6 +16051,7 @@ MonoBehaviour:
   roguePassiveIcon: {fileID: 0}
   lancerPassiveIcon: {fileID: 0}
   minimapPlayerIcon: {fileID: 8420345038447651027, guid: 91557057c047d454c894857229c10682, type: 3}
+  minimapPlayerRadarIcon: {fileID: 14584508655096652, guid: 5dddd735a30a5a94aa87fa58bc915516, type: 3}
   playerUsername: {fileID: 7223234545913753362, guid: 43b04c55078d74c0d8613dc3c0fe21c4, type: 3}
   flag: {fileID: 8062280885767414519, guid: 9c819b117196a4f50b725bb9b3087a87, type: 3}
   soundObject: {fileID: 7773183885647323388, guid: 0a79474b064675b4dae9a089265024a3, type: 3}

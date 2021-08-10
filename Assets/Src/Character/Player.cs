@@ -140,7 +140,8 @@ public class Player : NetworkBehaviour
                 float finalDistance = 15f;
                 float timeTaken = 0.3f;
                 float knockbackDistance = finalDistance - currentDistance;
-                PushEffect effect = new PushEffect(localPlayer, direction, knockbackDistance, timeTaken);
+                //PushEffect effect = new PushEffect(localPlayer, direction, knockbackDistance, timeTaken);
+                KnockbackEffect effect = new KnockbackEffect(localPlayer, direction, knockbackDistance, timeTaken, 1);
                 localPlayer.TakeEffect(effect);
                 break;
             case EffectType.Slow:

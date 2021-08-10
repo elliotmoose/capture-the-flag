@@ -41,7 +41,7 @@ public class MinimapCameraFollower : MonoBehaviour
         camera.transform.localPosition = new Vector3(0, 50, 0);
         camera.transform.localRotation = Quaternion.Euler(90.0f, 0.0f, 0.0f);
 
-        GameObject icon = GameObject.FindGameObjectWithTag("MinimapIcon");
+        //GameObject icon = GameObject.FindGameObjectWithTag("MinimapIcon");
         //icon.transform.parent = target.transform;
         //icon.transform.localRotation = Quaternion.Euler(90.0f, 0.0f, 0.0f);
 
@@ -57,6 +57,12 @@ public class MinimapCameraFollower : MonoBehaviour
             GameObject iconGO = GameObject.Instantiate(PrefabsManager.Instance.minimapPlayerIcon, minimapCanvas);
             iconGO.GetComponent<Image>().color = (localPlayer.team == Team.BLUE ? UIManager.Instance.colors.textBlue : UIManager.Instance.colors.textRed);
             iconGO.GetComponent<MinimapIcon>().target = localPlayer;
+
+            GameObject iconRadar = GameObject.Instantiate(PrefabsManager.Instance.minimapPlayerRadarIcon, minimapCanvas);
+            iconRadar.GetComponent<Image>().color = (localPlayer.team == Team.BLUE ? UIManager.Instance.colors.textBlue : UIManager.Instance.colors.textRed);
+            iconRadar.GetComponent<MinimapRadarIcon>().target = localPlayer;
+            iconRadar.GetComponent<MinimapRadarIcon>().ref_target = NetworkSpawnManager.GetLocalPlayerObject().gameObject.GetComponent<PlayerController>().GetPlayer(); 
+
         }
     }
 }
