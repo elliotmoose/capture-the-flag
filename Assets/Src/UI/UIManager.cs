@@ -190,7 +190,7 @@ public class UIManager : MonoBehaviour
             statRow.transform.Find("Times In Jail").GetComponent<TMP_Text>().text = stat.timesInJail.ToString();
             statRow.transform.Find("Time In Opponent Territory").GetComponent<TMP_Text>().text = stat.timeInEnemyTerritory.ToString("F1")+"s";
             statRow.transform.Find("Time with Flag").GetComponent<TMP_Text>().text = stat.timeWithFlag.ToString("F1")+"s";
-            statRow.transform.Find("MVP").GetComponent<TMP_Text>().text = stat.isMVP ? "MVP" : "";
+            statRow.transform.Find("MVP").GetComponent<TMP_Text>().text = stat.computedScore.ToString();
         }        
     }
 

@@ -62,7 +62,7 @@ public class LocalPlayer : NetworkBehaviour
 
     //stats
     public float moveSpeed = 15;
-    float sprintMultiplier = 2.0f;
+    float sprintAmount = 18;
     float curStamina = 100;
     float maxStamina = 100;
     protected float staminaBurnFactor = 30;
@@ -220,13 +220,8 @@ public class LocalPlayer : NetworkBehaviour
         if(isMoving) {                
             float moveDirAngle = Mathf.Atan2(moveDir.x, moveDir.y) * Mathf.Rad2Deg + faceAngle;
             Vector3 positionDelta = Quaternion.Euler(0, moveDirAngle, 0) * Vector3.forward;
-
-            if(isSprinting) {
-                GetComponent<CharacterController>().Move(positionDelta.normalized * GetMoveSpeed() * sprintMultiplier * Time.fixedDeltaTime);
-            }
-            else {
-                GetComponent<CharacterController>().Move(positionDelta.normalized * GetMoveSpeed() * Time.fixedDeltaTime);
-            }
+            float finalMoveSpeed = GetMoveSpeed() + (isSprinting ? sprintAmount : 0);
+            GetComponent<CharacterController>().Move(positionDelta.normalized * finalMoveSpeed * Time.fixedDeltaTime);
             
         }      
     }

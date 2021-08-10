@@ -12,7 +12,7 @@ public class SettingsManager : MonoBehaviour
 
     float minMouseSensitivity = 2;
     float maxMouseSensitivity = 30;
-    public float mouseSensitivity = 6;
+    public float mouseSensitivity = 2;
     public float mouseSensitivityPercentage => (mouseSensitivity - minMouseSensitivity)/(maxMouseSensitivity - minMouseSensitivity); 
     float minVolume = 0.0001f;
     float maxVolume = 1;
