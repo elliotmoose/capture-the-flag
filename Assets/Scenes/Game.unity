@@ -16159,7 +16159,7 @@ MonoBehaviour:
     m_InternalValue: 0
   redTeamScore:
     m_InternalValue: 0
-  winScore: 3
+  winScore: 15
   gameTime: 0
   serverState: 0
   clientState: 0
