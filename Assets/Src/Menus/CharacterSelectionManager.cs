@@ -15,6 +15,8 @@ public class CharacterSelectionManager : MonoBehaviour
     public TextMeshProUGUI skillName;
     public TextMeshProUGUI skillDescription;
     public TextMeshProUGUI skillCooldown;
+    public TextMeshProUGUI characterName;
+    
 
     private Skill[] displaySkills = new Skill[3];
     // Start is called before the first frame update
@@ -37,9 +39,10 @@ public class CharacterSelectionManager : MonoBehaviour
         }
 
         Character[] characters = {Character.Berserker, Character.Adept, Character.Rogue, Character.Lancer};
-        UserController.LocalInstance.SelectCharacterServerRpc(NetworkManager.Singleton.LocalClientId, characters[characterIndex]);
-
-        switch (characters[characterIndex])
+        Character selectedCharacter = characters[characterIndex];
+        UserController.LocalInstance.SelectCharacterServerRpc(NetworkManager.Singleton.LocalClientId, selectedCharacter);
+        characterName.text = selectedCharacter.ToString().ToUpper();
+        switch (selectedCharacter)
         {
             case Character.Berserker:
                 displaySkills[0] = new SkillDescription("Passive: Overcharge", PrefabsManager.Instance.berserkerPassiveIcon, "Berserker's max stamina is increased from 100 to 130");//passive
