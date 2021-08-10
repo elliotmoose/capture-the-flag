@@ -39,7 +39,7 @@ public class GameManager : NetworkBehaviour
         WritePermission = NetworkVariablePermission.ServerOnly
     });
 
-    int winScore = 15;
+    int winScore = 1;
     public float gameTime = 0;
     public int currentRoundNumber => blueTeamScore.Value + redTeamScore.Value + 1;
 

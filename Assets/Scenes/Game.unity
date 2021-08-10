@@ -15999,7 +15999,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   roomSize:
-    m_InternalValue: 3
+    m_InternalValue: 5
   userControllerPrefab: {fileID: 7218106968360669568, guid: bc6b7535a316c4ca58a1df71a1f5fc3e, type: 3}
 --- !u!114 &368055230
 MonoBehaviour:
@@ -16203,7 +16203,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   username: 
-  mouseSensitivity: 6
+  mouseSensitivity: 2
   musicVolume: 6
   vfxVolume: 6
   musicVolumeSlider: {fileID: 1802757934}
@@ -35231,7 +35231,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 0
-    m_SensorSize: {x: 1.7780063, y: 1}
+    m_SensorSize: {x: 1.7777778, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -51509,7 +51509,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 206805398}
   m_HandleRect: {fileID: 206805397}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:

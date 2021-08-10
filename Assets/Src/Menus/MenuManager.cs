@@ -133,6 +133,7 @@ public class MenuManager : MonoBehaviour
     }
 
     void GenerateRoomPage(int noOfPlayersPerTeam) {
+        Debug.Log(noOfPlayersPerTeam);
         //remove unwanted children
         for(int x=redTeamPlayerRows.transform.childCount-1; x>=0; x--) {
             if(x > 1) {

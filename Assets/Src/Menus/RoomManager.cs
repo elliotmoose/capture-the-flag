@@ -30,7 +30,7 @@ public class RoomManager : NetworkBehaviour
     public NetworkVariableInt roomSize = new NetworkVariableInt(new NetworkVariableSettings {
         WritePermission=NetworkVariablePermission.ServerOnly,
         SendTickrate=3
-    }, 3);
+    }, 5);
 
     public delegate void RoomManagerEvent();
     public RoomManagerEvent OnRoomUsersUpdate;

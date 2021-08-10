@@ -13214,7 +13214,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   roomSize:
-    m_InternalValue: 3
+    m_InternalValue: 5
   userControllerPrefab: {fileID: 7218106968360669568, guid: bc6b7535a316c4ca58a1df71a1f5fc3e, type: 3}
 --- !u!4 &478187859
 Transform:
@@ -13280,6 +13280,7 @@ MonoBehaviour:
   roguePassiveIcon: {fileID: 21300000, guid: 8acec8c65b9297a4c8370d37589c2076, type: 3}
   lancerPassiveIcon: {fileID: 21300000, guid: aefd153ec13e2be45be64883011874a9, type: 3}
   minimapPlayerIcon: {fileID: 0}
+  minimapPlayerRadarIcon: {fileID: 0}
   playerUsername: {fileID: 0}
   flag: {fileID: 0}
   soundObject: {fileID: 0}
