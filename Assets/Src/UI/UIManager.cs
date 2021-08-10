@@ -49,6 +49,7 @@ public class UIManager : MonoBehaviour
         catchButton = this.transform.Find("PlayerUI/CatchButton").GetComponent<SkillButton>();
 
         Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Confined;
     }
 
     void OnDestroy() {
