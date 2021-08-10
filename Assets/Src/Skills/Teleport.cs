@@ -47,7 +47,6 @@ public class TeleportEffect : Effect
     public override void OnEffectApplied()
     {        
         _target.SetDisabled(true);
-        col.enabled = false;
         
         animator.SetBool("IsTeleporting", true);
         _target.OnAnimationStart += OnAnimationStart;
@@ -108,13 +107,12 @@ public class TeleportEffect : Effect
 
     public override void OnEffectEnd()
     {
+        animator.SetBool("IsTeleporting", false);
+        _target.SetDisabled(false);
         _target.OnAnimationStart -= OnAnimationStart;
         _target.OnAnimationCommit -= OnAnimationCommit;
         _target.OnAnimationRelease -= OnAnimationRelease;
         _target.OnAnimationEnd -= OnAnimationEnd;
-        animator.SetBool("IsTeleporting", false);
-        col.enabled = true;
-        _target.SetDisabled(false);
     }
 
 }

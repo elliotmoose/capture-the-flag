@@ -108,9 +108,6 @@ public class LocalPlayer : NetworkBehaviour
             }
         }
 
-        Debug.Log(moveSpeed);
-        Debug.Log(computedSpeed);
-
         return computedSpeed;
     }
 
@@ -351,17 +348,18 @@ public class LocalPlayer : NetworkBehaviour
         
     }
 
-        public void UpdateEffects()
+    public void UpdateEffects()
     {        
         if(!GameManager.Instance.roundInProgress) { return; }
 
-        for(int i=this.effects.Count-1; i>=0 && i<this.effects.Count; i++)
+        for(int i=this.effects.Count-1; i>=0 && i<this.effects.Count; i--)
         {
             Effect effect = this.effects[i];
             effect.Update();
             
             if (effect.effectEnded)
             {
+                Debug.Log(effect.name + " ended");
                 effects.Remove(effect);
             } 
         }
@@ -371,7 +369,7 @@ public class LocalPlayer : NetworkBehaviour
     {        
         if(!GameManager.Instance.roundInProgress) { return; }
 
-        for(int i=this.effects.Count-1; i>=0 && i<this.effects.Count; i++)
+        for(int i=this.effects.Count-1; i>=0 && i<this.effects.Count; i--)
         {
             Effect effect = this.effects[i];
             effect.FixedUpdate();
@@ -484,7 +482,6 @@ public class LocalPlayer : NetworkBehaviour
 
     public void AnimationStart(string animationName) {        
         if(animationName == "Teleport") SpawnTeleportStartParticle();
-        Debug.Log($"catch radius: {syncPlayer.GetCatchRadius()}");
         if (animationName == "Catch") this.transform.Find("Catch").localScale = Vector3.one * syncPlayer.GetCatchRadius()*2; //we need this to be here so that it is replicated across all
         if (animationName == "Smoke") SpawnSmokeParticle();
         if (animationName == "Knockback") SpawnKnockbackParticle();
