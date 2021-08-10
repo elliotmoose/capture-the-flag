@@ -170,6 +170,7 @@ public class UIManager : MonoBehaviour
 
     public void GenerateScoreboard() {
         List<GameStat> stats = StatsManager.Instance.GetStats();
+        stats.Sort((GameStat a, GameStat b) => a.computedScore.CompareTo(b.computedScore)); //sort by score
 
         //destroy old
         for(int i=scoreboardRowsParent.childCount-1; i>=1 && i < scoreboardRowsParent.childCount; i--) {
@@ -184,13 +185,14 @@ public class UIManager : MonoBehaviour
             statRow.transform.Find("Icon").GetComponent<Image>().color = Color.white;
             statRow.transform.Find("Username").GetComponent<TMP_Text>().text = stat.user.username;
             statRow.transform.Find("Username").GetComponent<TMP_Text>().color = (stat.user.team == Team.BLUE) ? colors.textBlue : colors.textRed;
+            statRow.transform.Find("Score").GetComponent<TMP_Text>().text = stat.computedScore.ToString();
             statRow.transform.Find("Flags Scored").GetComponent<TMP_Text>().text = stat.flagsScored.ToString();
             statRow.transform.Find("Players Captured").GetComponent<TMP_Text>().text = stat.playersCaptured.ToString();
             statRow.transform.Find("Players Freed").GetComponent<TMP_Text>().text = stat.playersFreed.ToString();
             statRow.transform.Find("Times In Jail").GetComponent<TMP_Text>().text = stat.timesInJail.ToString();
             statRow.transform.Find("Time In Opponent Territory").GetComponent<TMP_Text>().text = stat.timeInEnemyTerritory.ToString("F1")+"s";
             statRow.transform.Find("Time with Flag").GetComponent<TMP_Text>().text = stat.timeWithFlag.ToString("F1")+"s";
-            statRow.transform.Find("MVP").GetComponent<TMP_Text>().text = stat.computedScore.ToString();
+            statRow.transform.Find("MVP").GetComponent<TMP_Text>().text = stat.isMVP ? "MVP" : "";
         }        
     }
 

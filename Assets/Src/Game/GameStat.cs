@@ -1,4 +1,5 @@
 using MLAPI.Serialization;
+using System;
 
 public struct GameStat : INetworkSerializable {
     public User user;
@@ -40,8 +41,8 @@ public struct GameStat : INetworkSerializable {
     }
 
     public float computedScore {
-        get {
-            return this.flagsScored * 10 + this.playersCaptured * 7 + this.playersFreed * 5 - this.timesInJail * 3;
+        get {            
+            return Convert.ToSingle(this.flagsScored) * 10 + Convert.ToSingle(this.playersCaptured) * 7 + Convert.ToSingle(this.playersFreed) * 5 - Convert.ToSingle(this.timesInJail) * 3;
         }
     }
 }
