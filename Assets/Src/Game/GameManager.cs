@@ -97,7 +97,8 @@ public class GameManager : NetworkBehaviour
         yield return new WaitForSeconds(1);
         CountdownClientRpc(1);
         yield return new WaitForSeconds(1);
-        CountdownClientRpc(0);
+        CountdownClientRpc(0);        
+        if(OnRoundStart != null) OnRoundStart();
         ServerUpdateGameState(GameState.PLAY);
     }
 
@@ -147,7 +148,6 @@ public class GameManager : NetworkBehaviour
             case GameState.COMPLETED_RESET: //completed by ClientResetRound
                 break;
             case GameState.COUNTDOWN:
-                if(OnRoundStart != null) OnRoundStart();
                 StartCoroutine(RoundCountdown());
                 break;
             case GameState.PLAY:
