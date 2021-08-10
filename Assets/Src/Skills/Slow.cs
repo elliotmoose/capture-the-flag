@@ -32,13 +32,14 @@ public class Slow : Skill
         caster.OnAnimationEnd += OnAnimationEnd;
         caster.SetDisabled(true);
         animator.SetBool("IsEMPing", true);
-        col.enabled = false;
+        
         
     }
 
     public void OnAnimationStart(string animationName) {
         if(animationName != animation) return;
         Debug.Log("Animation started: " + animation);
+        col.enabled = false;
     }
 
     public void OnAnimationCommit(string animationName) {
@@ -49,12 +50,12 @@ public class Slow : Skill
     public void OnAnimationRelease(string animationName) {
         if(animationName != animation) return;
         caster.SetDisabled(false);        
-        col.enabled = true;
     }
     
     public void OnAnimationEnd(string animationName) {
         if(animationName != animation) return;
         animator.SetBool("IsEMPing", false);
+        col.enabled = true;
     }
     private void Trigger() {
         Debug.Log(name + " skill is used");

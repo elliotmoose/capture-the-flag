@@ -8,7 +8,7 @@ public class Invisibility : Skill
 
     public Invisibility()
     {
-        cooldown = 10.0f;
+        cooldown = 12.0f;
         name = "Invisibility";
         this.icon = PrefabsManager.Instance.invisibilityIcon;
         this.description = "The Rogue dematerialises, entering into a state of invisibility and remaining unseen";
