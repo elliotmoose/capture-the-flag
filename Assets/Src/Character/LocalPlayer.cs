@@ -90,7 +90,28 @@ public class LocalPlayer : NetworkBehaviour
     #region Getter Setters    
     public float GetMoveSpeed()
     {
-        return moveSpeed;
+        float computedSpeed = moveSpeed;
+        //scale
+        foreach(Effect effect in this.effects) {
+            
+            SpeedModifierEffect speedEffect = (SpeedModifierEffect) effect;
+            if(speedEffect != null) {
+                computedSpeed += speedEffect.addSpeed;
+            }
+        }
+        
+        //add
+        foreach(Effect effect in this.effects) {
+            SpeedModifierEffect speedEffect = (SpeedModifierEffect) effect;
+            if(speedEffect != null) {
+                computedSpeed *= speedEffect.scaleSpeed;
+            }
+        }
+
+        Debug.Log(moveSpeed);
+        Debug.Log(computedSpeed);
+
+        return computedSpeed;
     }
 
     public void SetMoveSpeed(float newSpeed)
@@ -193,7 +214,7 @@ public class LocalPlayer : NetworkBehaviour
         FixedUpdateMovement();
     }   
 
-    void FixedUpdateMovement() {
+    void FixedUpdateMovement() { 
         if(!IsOwner) return;
         if(!GameManager.Instance.roundInProgress) { return; }
         if(isMoving) {                
@@ -201,12 +222,10 @@ public class LocalPlayer : NetworkBehaviour
             Vector3 positionDelta = Quaternion.Euler(0, moveDirAngle, 0) * Vector3.forward;
 
             if(isSprinting) {
-                // transform.position += positionDelta.normalized * Time.deltaTime * moveSpeed * sprintMultiplier;
-                GetComponent<CharacterController>().Move(positionDelta.normalized * moveSpeed * sprintMultiplier * Time.fixedDeltaTime);
+                GetComponent<CharacterController>().Move(positionDelta.normalized * GetMoveSpeed() * sprintMultiplier * Time.fixedDeltaTime);
             }
             else {
-                GetComponent<CharacterController>().Move(positionDelta.normalized * moveSpeed * Time.fixedDeltaTime);
-                // transform.position += positionDelta.normalized * Time.deltaTime * moveSpeed;
+                GetComponent<CharacterController>().Move(positionDelta.normalized * GetMoveSpeed() * Time.fixedDeltaTime);
             }
             
         }      
@@ -296,7 +315,17 @@ public class LocalPlayer : NetworkBehaviour
         effect.OnEffectApplied();
         this.effects.Add(effect);
         Debug.Log(effect.name + " effect taken");
-        
+    }
+
+    public void RemoveEffectWithName(string effectName) {
+        for(int i=0; i<effects.Count; i++) {
+            Effect effect = effects[i];
+            if(effect.name == effectName) {
+                effect.OnEffectEnd();
+                effects.RemoveAt(i);
+                return;
+            }
+        }
     }
 
     void UpdateStamina()

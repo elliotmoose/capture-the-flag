@@ -144,7 +144,7 @@ public class Player : NetworkBehaviour
                 localPlayer.TakeEffect(effect);
                 break;
             case EffectType.Slow:
-                SlowEffect slow = new SlowEffect(localPlayer, 3, 2);
+                SlowEffect slow = new SlowEffect(localPlayer, 0.33f, 2);
                 localPlayer.TakeEffect(slow);
                 break;
             case EffectType.Cloned:

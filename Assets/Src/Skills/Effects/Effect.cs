@@ -27,7 +27,6 @@ public abstract class Effect
         {
             effectEnded = false;
             UpdateEffect();
-            //Debug.Log(_target.GetMoveSpeed().ToString());
         }
         else
         {

@@ -75,14 +75,12 @@ public class Slow : Skill
 }
 
 
-public class SlowEffect : Effect
-{
-    public float percentageDecrease = 0;
+public class SlowEffect : SpeedModifierEffect
+{   
     private Animator animator;
 
-    public SlowEffect(LocalPlayer _target, float percentageDecrease, float duration) :base(_target)
+    public SlowEffect(LocalPlayer _target, float scaleSpeed, float duration) : base(_target, scaleSpeed: scaleSpeed)
     {
-        this.percentageDecrease = percentageDecrease; // float > 1.0f
         this.duration = duration;
         this.name = "SLOW_EFFECT";
         this.animator = _target.GetComponent<Animator>();
@@ -90,16 +88,11 @@ public class SlowEffect : Effect
 
     public override void OnEffectApplied()
     {
-        float newSpeed = _target.GetMoveSpeed() / percentageDecrease;
-        _target.SetMoveSpeed(newSpeed);
         animator.SetBool("IsSlowed", true);
     }
 
     public override void OnEffectEnd()
     {
-        // revert movement speed
-        float originalSpeed = _target.GetMoveSpeed() * percentageDecrease;
-        _target.SetMoveSpeed(originalSpeed);
         animator.SetBool("IsSlowed", false);
     }
 
