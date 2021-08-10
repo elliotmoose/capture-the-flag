@@ -283,6 +283,7 @@ public class LocalPlayer : NetworkBehaviour
 
     public void SetDisabled(bool disabled)
     {
+        Debug.Log("Set disabled: " + disabled.ToString());
         this.isDisabled = disabled;
     }
 
