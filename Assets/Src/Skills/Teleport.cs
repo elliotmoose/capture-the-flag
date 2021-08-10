@@ -90,6 +90,7 @@ public class TeleportEffect : Effect
 
     public void OnAnimationEnd(string animationName) {
         if(animationName != animation) return;
+        _target.SetDisabled(false);
         finished = true;
     }
 
@@ -106,7 +107,6 @@ public class TeleportEffect : Effect
     public override void OnEffectEnd()
     {
         animator.SetBool("IsTeleporting", false);
-        _target.SetDisabled(false);
         _target.OnAnimationStart -= OnAnimationStart;
         _target.OnAnimationCommit -= OnAnimationCommit;
         _target.OnAnimationRelease -= OnAnimationRelease;

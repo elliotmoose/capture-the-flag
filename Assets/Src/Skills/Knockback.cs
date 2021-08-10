@@ -24,6 +24,7 @@ public class Knockback : Skill
         this.player = player;
         player.OnAnimationStart += OnAnimationStart;
         player.OnAnimationEnd += OnAnimationEnd;
+        player.OnAnimationRelease += OnAnimationRelease;
         player.OnAnimationCommit += OnAnimationCommit;
         player.GetComponent<Animator>().SetBool("IsKnockback", true);
         player.SetDisabled(true);
@@ -37,13 +38,16 @@ public class Knockback : Skill
         if (animationName != animation) return;
     }
 
+    public void OnAnimationRelease(string animationName)
+    {
+        if (animationName != animation) return;
+        player.SetDisabled(false);
+    }
+
     public void OnAnimationEnd(string animationName)
     {
         if (animationName != animation) return;
-
         player.GetComponent<Animator>().SetBool("IsKnockback", false);
-        player.SetDisabled(false);
-
     }
 
     public void OnAnimationCommit(string animationName)

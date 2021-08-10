@@ -107,7 +107,7 @@ public class AnnouncementManager : NetworkBehaviour
         LocalPlayer thisClientPlayer = PlayerController.LocalInstance.GetPlayer();
         AudioClip audioClip = (winningTeam == Team.RED ? redTeamWinAudio : blueTeamWinAudio);
         bool isMyTeam = (winningTeam == thisClientPlayer.team);
-        announcements.Enqueue(new Announcement{content=isMyTeam ? "Round Won!" : "Round Lost", audioClip=audioClip});
+        announcements.Enqueue(new Announcement{content="", audioClip=audioClip});
     }
 
     [ClientRpc] 
