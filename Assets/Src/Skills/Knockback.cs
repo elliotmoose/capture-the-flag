@@ -92,7 +92,6 @@ public class StunEffect : Effect
     {
         _target.GetComponent<Animator>().SetBool("IsStunned", false);
         _target.SetDisabled(false);
-        
     }
 
 }
@@ -110,13 +109,7 @@ public class KnockbackEffect : PushEffect
     public override void OnEffectApplied()
     {
         base.OnEffectApplied();
-        _target.GetComponent<Animator>().SetBool("IsStunned", true);
-    }
-
-    public override void OnEffectEnd()
-    {
         StunEffect effect = new StunEffect(_target, stunDuration);
         _target.TakeEffect(effect);
     }
-
 }
