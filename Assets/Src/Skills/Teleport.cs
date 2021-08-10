@@ -18,8 +18,6 @@ public class Teleport : Skill
 
     public override void UseSkill(LocalPlayer player)
     {
-        Debug.Log(name + " skill is used");
-
         TeleportEffect effect = new TeleportEffect(player, teleportFactor);
         player.TakeEffect(effect);
     }

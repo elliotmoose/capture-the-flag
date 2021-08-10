@@ -66,7 +66,7 @@ public class Player : NetworkBehaviour
     }
 
     public void SetTeam(Team team) {        
-        OnTeamChange(this._team.Value, team);
+        OnTeamChange(this._team.Value, team);//for server to update team
         this._team.Value = team;
     }
 
@@ -90,7 +90,7 @@ public class Player : NetworkBehaviour
 
     public void OnTeamChange(Team oldTeam, Team newTeam) {
         Debug.Log("Player: Team set! Setting gameobject layer..");
-        this.gameObject.layer = (newTeam == Team.RED ? 9 : 10);
+        this.gameObject.layer = (newTeam == Team.RED ? LayerMask.NameToLayer("RedPlayer") : LayerMask.NameToLayer("BluePlayer"));
     }
 
     public float SetCatchRadius(float radius) {
