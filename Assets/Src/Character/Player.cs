@@ -65,7 +65,8 @@ public class Player : NetworkBehaviour
         return _team.Value;
     }
 
-    public void SetTeam(Team team) {
+    public void SetTeam(Team team) {        
+        OnTeamChange(this._team.Value, team);
         this._team.Value = team;
     }
 
