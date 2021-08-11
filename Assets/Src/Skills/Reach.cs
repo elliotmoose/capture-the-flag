@@ -8,7 +8,7 @@ public class Reach : Skill
 
     public Reach()
     {
-        cooldown = 12.0f;
+        cooldown = 8.0f;
         name = "Laser Beam";
         this.icon = PrefabsManager.Instance.extendedReachIcon;
         this.description = "Fires a beam forward, exercising its Catch in a straight line ahead";
