@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class StaminaBuff : Skill
 {
-    private float duration = 2.0f;
+    private float duration = 2.5f;
 
     public StaminaBuff()
     {
