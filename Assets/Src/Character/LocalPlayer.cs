@@ -28,7 +28,17 @@ public class LocalPlayer : NetworkBehaviour
     //player states
     public Player syncPlayer => GetComponent<Player>();
     public bool isDisabled = false;  
-    public bool isJailed = false;  
+
+    private bool _isJailed = false;
+    public bool isJailed {
+        get {
+            return _isJailed;
+        }
+        set {
+            this.GetComponent<Animator>().SetBool("IsJailed", value);
+            _isJailed = value;
+        }
+    }  
     public bool isInvisToLocalPlayer {
         get {
             bool isInvis = this.GetComponent<Animator>().GetBool("IsInvisible");

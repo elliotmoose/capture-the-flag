@@ -171,7 +171,7 @@ public class UIManager : MonoBehaviour
 
     public void GenerateScoreboard() {
         List<GameStat> stats = StatsManager.Instance.GetStats();
-        stats.Sort((GameStat a, GameStat b) => a.computedScore.CompareTo(b.computedScore)); //sort by score
+        stats.Sort((GameStat a, GameStat b) => b.computedScore.CompareTo(a.computedScore)); //sort by score
 
         //destroy old
         for(int i=scoreboardRowsParent.childCount-1; i>=1 && i < scoreboardRowsParent.childCount; i--) {
