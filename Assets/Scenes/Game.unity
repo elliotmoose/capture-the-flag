@@ -16176,7 +16176,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   roomSize:
-    m_InternalValue: 5
+    m_InternalValue: 3
   userControllerPrefab: {fileID: 7218106968360669568, guid: bc6b7535a316c4ca58a1df71a1f5fc3e, type: 3}
 --- !u!114 &368055230
 MonoBehaviour:
