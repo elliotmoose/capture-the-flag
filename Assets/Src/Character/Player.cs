@@ -215,14 +215,12 @@ public class Player : NetworkBehaviour
         
         
         localPlayer.isJailed = true; //server needs to register this immediately, in order to end the round
-        GameManager.Instance.TriggerOnPlayerJailed(this, by); //IMPORTANT: we trigger event to check if round ends. If this wins the round, game is no longer in progress, so no need to imprison
+        //GameManager.Instance.TriggerOnPlayerJailed(this, by); //IMPORTANT: we trigger event to check if round ends. If this wins the round, game is no longer in progress, so no need to imprison
         if(!GameManager.Instance.roundInProgress) return;
         ImprisonClientRpc();
-        
+
         // play caught sfx
-        GameObject soundObj = GameObject.Instantiate(PrefabsManager.Instance.soundObject, by.transform.position, Quaternion.identity);
-        SoundObject soundObject = soundObj.GetComponent<SoundObject>();
-        soundObject.audioSource.clip = PrefabsManager.Instance.caughtSound;
+        CaughtSoundClientRpc(by.OwnerClientId);
     }
 
     [ClientRpc]
@@ -239,6 +237,17 @@ public class Player : NetworkBehaviour
             playerAudio.Play();
         }
         
+    }
+
+    [ClientRpc]
+    private void CaughtSoundClientRpc(ulong byClientId)
+    {
+        if (!GameManager.Instance.roundInProgress) return;
+        LocalPlayer by = LocalPlayer.WithClientId(byClientId);
+        // play caught sfx
+        GameObject soundObj = GameObject.Instantiate(PrefabsManager.Instance.soundObject, by.transform.position, Quaternion.identity);
+        SoundObject soundObject = soundObj.GetComponent<SoundObject>();
+        soundObject.audioSource.clip = PrefabsManager.Instance.caughtSound;
     }
 
     //onserver
