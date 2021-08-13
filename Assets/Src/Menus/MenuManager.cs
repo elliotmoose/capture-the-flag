@@ -91,6 +91,7 @@ public class MenuManager : MonoBehaviour
         if (currentCount == 13)
         {
             SetCurrentPage("Home");
+            currentCount = 0;
         }
         UpdateTutorialPage();
     }
@@ -101,6 +102,7 @@ public class MenuManager : MonoBehaviour
         if (currentCount == -1)
         {
             SetCurrentPage("Home");
+            currentCount = 0;
         }
         UpdateTutorialPage();
     }
