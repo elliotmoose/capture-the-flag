@@ -30,7 +30,7 @@ public class ReachEffect : Effect
     public ReachEffect(LocalPlayer _target) : base(_target)
     {
         this.name = "REACH_EFFECT";
-        this.duration = 0.8f;
+        this.duration = 1.0f;
         this.referenceAngle = _target.transform.rotation.eulerAngles.y;
         _target.OnAnimationRelease += OnAnimationRelease;
     }
