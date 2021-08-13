@@ -85,7 +85,7 @@ public class EventLogManager : NetworkBehaviour
 
     void OnAwaitingPlayer(string playerName) {
         if(!IsServer) return;    
-        LogEventClientRpc(GetTime()+$"<color=orange>Waiting for {playerName}...</color>>");
+        LogEventClientRpc(GetTime()+$"<color=orange>Waiting for {playerName}...</color>");
     }
 
 

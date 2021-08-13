@@ -217,6 +217,7 @@ public class GameManager : NetworkBehaviour
     
     float awaitResetTimer = 0;
     float awaitResetThreshold = 5;
+    bool hasAnnouncedAwaiting = false;
     // Update is called once per frame
     void Update()
     {
@@ -224,6 +225,7 @@ public class GameManager : NetworkBehaviour
         if(IsServer) {
             if(serverState == GameState.AWAIT_SPAWN_CONFIRMATION) {
                 awaitResetTimer = 0;
+                hasAnnouncedAwaiting = false;
             }
             
             if(serverState == GameState.COMPLETED_RESET) {
@@ -234,7 +236,7 @@ public class GameManager : NetworkBehaviour
                         Debug.Log($"Waiting for user: {controller.GetUser().username}");
                         allClientsCompletedReset = false;
                         
-                        if(awaitResetTimer > awaitResetThreshold) {
+                        if(awaitResetTimer > awaitResetThreshold && !hasAnnouncedAwaiting) {
                             if (OnAwaitingPlayer != null) OnAwaitingPlayer(controller.GetUser().username);
                         }
                     }
@@ -247,6 +249,10 @@ public class GameManager : NetworkBehaviour
                     ServerUpdateGameState(GameState.COUNTDOWN); //start round
                 }
                 else {
+                    if(awaitResetTimer > awaitResetThreshold) {
+                       hasAnnouncedAwaiting = true;
+                    }
+
                     awaitResetTimer += Time.deltaTime;
                 }
             }
