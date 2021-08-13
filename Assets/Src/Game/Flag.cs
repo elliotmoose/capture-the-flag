@@ -20,10 +20,12 @@ public class Flag : NetworkBehaviour
     private Vector3 spawnPos => (new Vector3(0,1.25f,120 * ((GetTeam() == Team.BLUE) ? 1 : -1)));
 
     Renderer rendererComponent;
+    Renderer[] rendererComponents;
     // Start is called before the first frame update
     void Start()
     {
-        rendererComponent = this.transform.GetChild(1).GetComponent<Renderer>();        
+        rendererComponent = this.transform.GetChild(1).GetComponent<Renderer>();   
+        rendererComponents = this.GetComponentsInChildren<Renderer>();
     }
 
     // Update is called once per frame
@@ -33,8 +35,13 @@ public class Flag : NetworkBehaviour
         rendererComponent.material.SetColor("_EmissionColor", (GetTeam() == Team.BLUE) ? new Color32(34,148,197,255) : new Color32(191,7,5,255));
 
         if(capturer != null) {
-            foreach(Renderer renderer in this.transform.GetComponentsInChildren<Renderer>()) {
+            foreach(Renderer renderer in rendererComponents) {
                 renderer.enabled = !capturer.isInvisToLocalPlayer;
+            }
+        }
+        else {
+            foreach(Renderer renderer in rendererComponents) {
+                renderer.enabled = true;
             }
         }
     }
