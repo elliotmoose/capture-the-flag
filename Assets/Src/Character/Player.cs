@@ -215,7 +215,7 @@ public class Player : NetworkBehaviour
         
         
         localPlayer.isJailed = true; //server needs to register this immediately, in order to end the round
-        //GameManager.Instance.TriggerOnPlayerJailed(this, by); //IMPORTANT: we trigger event to check if round ends. If this wins the round, game is no longer in progress, so no need to imprison
+        GameManager.Instance.TriggerOnPlayerJailed(this, by); //IMPORTANT: we trigger event to check if round ends. If this wins the round, game is no longer in progress, so no need to imprison
         if(!GameManager.Instance.roundInProgress) return;
         ImprisonClientRpc();
 
