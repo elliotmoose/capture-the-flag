@@ -149,12 +149,6 @@ public class Player : NetworkBehaviour
                 SlowEffect slow = new SlowEffect(localPlayer, 0.33f, 2);
                 localPlayer.TakeEffect(slow);
                 break;
-            case EffectType.Cloned:
-                GameObject trail = GameObject.Instantiate(PrefabsManager.Instance.cloneTrail, this.transform.position, Quaternion.identity);
-                LocalPlayer by = LocalPlayer.WithClientId(byClientId);
-                trail.GetComponent<FollowPlayer>().fromPlayer = this.gameObject;
-                trail.GetComponent<FollowPlayer>().toPlayer = by.gameObject;
-                break;
         }
     }
     
@@ -206,7 +200,7 @@ public class Player : NetworkBehaviour
             this.ServerRelease(by);
         }
     }
-    
+
     //onserver
     public void ServerImprison(Player by) {
         if(!IsServer) return;
@@ -224,6 +218,7 @@ public class Player : NetworkBehaviour
         GameManager.Instance.TriggerOnPlayerJailed(this, by); //IMPORTANT: we trigger event to check if round ends. If this wins the round, game is no longer in progress, so no need to imprison
         if(!GameManager.Instance.roundInProgress) return;
         ImprisonClientRpc();
+        
         // play caught sfx
         GameObject soundObj = GameObject.Instantiate(PrefabsManager.Instance.soundObject, by.transform.position, Quaternion.identity);
         SoundObject soundObject = soundObj.GetComponent<SoundObject>();

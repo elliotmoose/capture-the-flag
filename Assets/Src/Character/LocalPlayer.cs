@@ -502,7 +502,8 @@ public class LocalPlayer : NetworkBehaviour
     }
 
     public void AnimationCommit(string animationName) {
-        if (OnAnimationCommit!=null) OnAnimationCommit(animationName);
+        if (OnAnimationCommit!=null) OnAnimationCommit(animationName);        
+        if(animationName == "Catch") ExecuteCatchSphere();
     }
     
     public void AnimationRelease(string animationName) {
@@ -512,6 +513,13 @@ public class LocalPlayer : NetworkBehaviour
     public void AnimationEnd(string animationName) {
         if(animationName == "Teleport") SpawnTeleportEndParticle();
         if (OnAnimationEnd!=null) OnAnimationEnd(animationName);
+    }
+
+    void ExecuteCatchSphere() {
+        if(!IsServer) return;
+        if(this.catchSkill is Catch) {
+            ((Catch)this.catchSkill).Execute(this);
+        }
     }
 
     public void AnimationSound(string animationName)
