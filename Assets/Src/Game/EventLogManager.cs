@@ -15,7 +15,9 @@ public class EventLogManager : NetworkBehaviour
         //server side announcement trigger
         if(!IsServer) return;
         GameManager.Instance.OnFlagCaptured += OnFlagCaptured;
-        GameManager.Instance.OnPlayerScored += OnPlayerScored;
+        GameManager.Instance.OnFlagPassed += OnFlagPassed;
+        GameManager.Instance.OnFlagScored += OnFlagScored;
+        GameManager.Instance.OnCaughtLastPlayer += OnCaughtLastPlayer;
         GameManager.Instance.OnPlayerJailed += OnPlayerJailed;
         GameManager.Instance.OnPlayerEvade += OnPlayerEvade;
         GameManager.Instance.OnPlayerFreed += OnPlayerFreed;
@@ -46,9 +48,18 @@ public class EventLogManager : NetworkBehaviour
         LogEventClientRpc(GetTime()+$"<color={HtmlColorForTeam(player.team)}>{player.username}</color> has captured the <color={HtmlColorForTeam(opponentTeam)}>flag</color>");
     }    
 
-    void OnPlayerScored(Player player) {
+    void OnFlagPassed(Player player, Player by) {
         if(!IsServer) return;        
-        LogEventClientRpc(GetTime()+$"<color={HtmlColorForTeam(player.team)}>{player.username}</color> has scored a point!");
+        LogEventClientRpc(GetTime()+$"<color={HtmlColorForTeam(player.team)}>{player.username}</color> has passed the flag to <color={HtmlColorForTeam(by.team)}>{by.username}</color>");
+    }    
+
+    void OnFlagScored(Player player) {
+        if(!IsServer) return;        
+        LogEventClientRpc(GetTime()+$"<color={HtmlColorForTeam(player.team)}>{player.username}</color> has scored the flag!");
+    }
+    void OnCaughtLastPlayer(Player player) {
+        if(!IsServer) return;        
+        LogEventClientRpc(GetTime()+$"<color={HtmlColorForTeam(player.team)}>{player.username}</color> scored by catching the last enemy!");
     }
 
     void OnPlayerJailed(Player player, Player capturedBy) {

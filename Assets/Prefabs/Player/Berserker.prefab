@@ -16,8 +16,7 @@ MonoBehaviour:
   faceAngle: 0
   sprinting: 0
   isDisabled: 0
-  isJailed: 0
-  moveSpeed: 15
+  baseMoveSpeed: 15
   skill1CooldownTime: 0
   skill2CooldownTime: 0
   catchCooldownTime: 0
@@ -277,10 +276,18 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: d9c22e7f6130d458c92d2ec39166a06f, type: 2}
+    - target: {fileID: 2336980058384988297, guid: 9cb4daa18f4b34bcfb909ca9cd4de466, type: 3}
+      propertyPath: m_RootOrder
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 2790231969013194944, guid: 9cb4daa18f4b34bcfb909ca9cd4de466, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: d9c22e7f6130d458c92d2ec39166a06f, type: 2}
+    - target: {fileID: 5668077312208046955, guid: 9cb4daa18f4b34bcfb909ca9cd4de466, type: 3}
+      propertyPath: m_RootOrder
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 6294791109381138747, guid: 9cb4daa18f4b34bcfb909ca9cd4de466, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -340,6 +347,10 @@ PrefabInstance:
     - target: {fileID: 7609006731988850574, guid: 9cb4daa18f4b34bcfb909ca9cd4de466, type: 3}
       propertyPath: PrefabHashGenerator
       value: Berserker
+      objectReference: {fileID: 0}
+    - target: {fileID: 8196610527573146205, guid: 9cb4daa18f4b34bcfb909ca9cd4de466, type: 3}
+      propertyPath: m_RootOrder
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8397695126930428565, guid: 9cb4daa18f4b34bcfb909ca9cd4de466, type: 3}
       propertyPath: m_LocalScale.x

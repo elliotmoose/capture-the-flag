@@ -20,18 +20,20 @@ public class CameraWallClipper : MonoBehaviour
 
         lastFrameMeshRenderers.Clear();
         
+        if(!PlayerController.LocalInstance) return;
         LocalPlayer player = PlayerController.LocalInstance.GetPlayer();
         if(!player) return;
-        List<float> rayAngles = new List<float>{0, -10, 10, -20, 20, -30, 30};
+        List<float> rayAngles = new List<float>{0};
         float rayDistanceFraction = 0.95f; //fix bugs where the wall is infront of player but still gets culled
         foreach(float angle in rayAngles) {
-            RaycastHit[] hits = Physics.RaycastAll(this.transform.position, Quaternion.Euler(0, angle, 0) * this.transform.rotation * Vector3.forward, (this.transform.position - player.transform.position).magnitude * rayDistanceFraction);
+            RaycastHit[] hits = Physics.RaycastAll(player.transform.position, Quaternion.Euler(0, angle, 0) * this.transform.rotation * Vector3.back, (this.transform.position - player.transform.position).magnitude * rayDistanceFraction);
             DeactivateMeshRenderers(hits);            
         }
     }
 
     void DeactivateMeshRenderers(RaycastHit[] hits) {
         foreach(RaycastHit hit in hits) {
+            if(hit.collider.gameObject.layer != LayerMask.NameToLayer("Terrain")) continue;
             if(hit.collider.gameObject.GetComponentInChildren<IgnoreTerrainClipping>()) continue;
             MeshRenderer[] hitRenderers = hit.collider.gameObject.GetComponentsInChildren<MeshRenderer>();
             foreach(MeshRenderer renderer in hitRenderers) {

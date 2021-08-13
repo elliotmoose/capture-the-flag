@@ -9,17 +9,6 @@ using MLAPI.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
 
-
-
-public enum MenuPage {
-    Null,
-    SetUsername,
-    Home,
-    JoinRoom,
-    Room,
-    Connecting
-}
-
 public class MenuManager : MonoBehaviour
 {
     public static MenuManager Instance;
@@ -27,7 +16,7 @@ public class MenuManager : MonoBehaviour
         Instance = this;
     }
     // Start is called before the first frame update
-    MenuPage currentPage = MenuPage.SetUsername;
+    string currentPage = "SetUsername";
     public TMP_InputField playerNameInput;
     public TMP_InputField IpAddressInput;
     
@@ -35,6 +24,10 @@ public class MenuManager : MonoBehaviour
     public GameObject redTeamPlayerRows;
     public GameObject blueTeamPlayerRows;
     public GameObject startGameButton;
+
+    //Tutorial
+    public GameObject[] tutorialPages;
+    public int currentCount = 0 ;
 
     void Start() {
         //subscribe to room events
@@ -50,19 +43,16 @@ public class MenuManager : MonoBehaviour
     }
 
     public void SetCurrentPage(string pageName) {
-        MenuPage result;
-        System.Enum.TryParse<MenuPage>(pageName, true, out result);
-        if(result == MenuPage.Null) {
-            Debug.LogError($"SetCurrentPage failed: No page with name {pageName}");
-            return;
-        }
-        
-        MenuPage previousPage = currentPage;
-        currentPage = result;
+        currentPage = pageName;
         
         foreach(Transform child in transform) {
-            child.gameObject.SetActive(child.gameObject.name == currentPage.ToString());
-        }        
+            child.gameObject.SetActive(child.gameObject.name == currentPage);
+        }
+
+        if(pageName == "Tutorial") {
+            currentCount = 0;
+            UpdateTutorialPage();
+        }
     }
 
     public void UpdatePlayerName()
@@ -95,10 +85,44 @@ public class MenuManager : MonoBehaviour
         startGameButton.SetActive(false);
     }
 
+    public void TutorialNext()
+    {
+        currentCount += 1;
+        if (currentCount == 13)
+        {
+            SetCurrentPage("Home");
+        }
+        UpdateTutorialPage();
+    }
+
+    public void TutorialPrev()
+    {
+        currentCount -= 1;
+        if (currentCount == -1)
+        {
+            SetCurrentPage("Home");
+        }
+        UpdateTutorialPage();
+    }
+
+    public void SkipTutorial()
+    {
+        SetCurrentPage("Home");
+    }
+
+    void UpdateTutorialPage() {
+        foreach (GameObject page in tutorialPages)
+        {
+            page.SetActive(false);
+        }
+        tutorialPages[currentCount].SetActive(true);
+    }
+
     public void SelectCharacter(Character character) {
         UserController.LocalInstance.SelectCharacterServerRpc(NetworkManager.Singleton.LocalClientId, character);
     }
     
+
 
     public void StartGame() {
         RoomManager.Instance.StartGame();
@@ -152,6 +176,7 @@ public class MenuManager : MonoBehaviour
     }
 
     void GenerateRoomPage(int noOfPlayersPerTeam) {
+        Debug.Log(noOfPlayersPerTeam);
         //remove unwanted children
         for(int x=redTeamPlayerRows.transform.childCount-1; x>=0; x--) {
             if(x > 1) {
@@ -193,4 +218,5 @@ public class MenuManager : MonoBehaviour
     }
 
     #endregion
+
 }

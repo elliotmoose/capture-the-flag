@@ -50,7 +50,7 @@ public class Player : NetworkBehaviour
     private NetworkVariableFloat _catchRadius = new NetworkVariableFloat(new NetworkVariableSettings{
         SendTickrate = 0,
         WritePermission = NetworkVariablePermission.ServerOnly
-    }, 8);
+    }, 4);
     
     private NetworkVariable<Team> _team = new NetworkVariable<Team>(new NetworkVariableSettings{
         SendTickrate = 0,
@@ -65,7 +65,8 @@ public class Player : NetworkBehaviour
         return _team.Value;
     }
 
-    public void SetTeam(Team team) {
+    public void SetTeam(Team team) {        
+        OnTeamChange(this._team.Value, team);//for server to update team
         this._team.Value = team;
     }
 
@@ -89,7 +90,7 @@ public class Player : NetworkBehaviour
 
     public void OnTeamChange(Team oldTeam, Team newTeam) {
         Debug.Log("Player: Team set! Setting gameobject layer..");
-        this.gameObject.layer = (newTeam == Team.RED ? 9 : 10);
+        this.gameObject.layer = (newTeam == Team.RED ? LayerMask.NameToLayer("RedPlayer") : LayerMask.NameToLayer("BluePlayer"));
     }
 
     public float SetCatchRadius(float radius) {
@@ -101,6 +102,10 @@ public class Player : NetworkBehaviour
 
     void Start()
     {
+        
+    }
+
+    void Update() {
         
     }
 
@@ -136,18 +141,13 @@ public class Player : NetworkBehaviour
                 float finalDistance = 15f;
                 float timeTaken = 0.3f;
                 float knockbackDistance = finalDistance - currentDistance;
-                PushEffect effect = new PushEffect(localPlayer, direction, knockbackDistance, timeTaken);
+                //PushEffect effect = new PushEffect(localPlayer, direction, knockbackDistance, timeTaken);
+                KnockbackEffect effect = new KnockbackEffect(localPlayer, direction, knockbackDistance, timeTaken, 1);
                 localPlayer.TakeEffect(effect);
                 break;
             case EffectType.Slow:
-                SlowEffect slow = new SlowEffect(localPlayer, 3, 2);
+                SlowEffect slow = new SlowEffect(localPlayer, 0.33f, 2);
                 localPlayer.TakeEffect(slow);
-                break;
-            case EffectType.Cloned:
-                GameObject trail = GameObject.Instantiate(PrefabsManager.Instance.cloneTrail, this.transform.position, Quaternion.identity);
-                LocalPlayer by = LocalPlayer.WithClientId(byClientId);
-                trail.GetComponent<FollowPlayer>().fromPlayer = this.gameObject;
-                trail.GetComponent<FollowPlayer>().toPlayer = by.gameObject;
                 break;
         }
     }
@@ -164,7 +164,7 @@ public class Player : NetworkBehaviour
     public void ServerContact(Player by) {
         if(!IsServer) return; //contact happens on server only
         if(by.OwnerClientId == this.OwnerClientId) return; //cannot contact self
-
+        
         if (this.team != by.team)
         {
             if(!this.localPlayer.isCatchable) {
@@ -200,7 +200,7 @@ public class Player : NetworkBehaviour
             this.ServerRelease(by);
         }
     }
-    
+
     //onserver
     public void ServerImprison(Player by) {
         if(!IsServer) return;
@@ -218,6 +218,11 @@ public class Player : NetworkBehaviour
         GameManager.Instance.TriggerOnPlayerJailed(this, by); //IMPORTANT: we trigger event to check if round ends. If this wins the round, game is no longer in progress, so no need to imprison
         if(!GameManager.Instance.roundInProgress) return;
         ImprisonClientRpc();
+        
+        // play caught sfx
+        GameObject soundObj = GameObject.Instantiate(PrefabsManager.Instance.soundObject, by.transform.position, Quaternion.identity);
+        SoundObject soundObject = soundObj.GetComponent<SoundObject>();
+        soundObject.audioSource.clip = PrefabsManager.Instance.caughtSound;
     }
 
     [ClientRpc]
@@ -249,5 +254,12 @@ public class Player : NetworkBehaviour
     private void ReleaseClientRpc() {
         if(!GameManager.Instance.roundInProgress) return;
         localPlayer.isJailed = false;
+
+        //spawn sparkle particle effect to show successful release
+        GameObject.Instantiate(PrefabsManager.Instance.freedParticles, localPlayer.transform.position+new Vector3(0,1.25f), Quaternion.identity);
+        // play freed sfx
+        GameObject soundObj = GameObject.Instantiate(PrefabsManager.Instance.soundObject, localPlayer.transform.position, Quaternion.identity);
+        SoundObject soundObject = soundObj.GetComponent<SoundObject>();
+        soundObject.audioSource.clip = PrefabsManager.Instance.freedSound;
     }
 }

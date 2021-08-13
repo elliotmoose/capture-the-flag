@@ -30,11 +30,14 @@ public class Slow : Skill
         caster.OnAnimationEnd += OnAnimationEnd;
         caster.SetDisabled(true);
         animator.SetBool("IsEMPing", true);
+        
+        
     }
 
     public void OnAnimationStart(string animationName) {
         if(animationName != animation) return;
         Debug.Log("Animation started: " + animation);
+     
     }
 
     public void OnAnimationCommit(string animationName) {
@@ -44,7 +47,7 @@ public class Slow : Skill
 
     public void OnAnimationRelease(string animationName) {
         if(animationName != animation) return;
-        caster.SetDisabled(false);
+        caster.SetDisabled(false);        
     }
     
     public void OnAnimationEnd(string animationName) {
@@ -70,14 +73,12 @@ public class Slow : Skill
 }
 
 
-public class SlowEffect : Effect
-{
-    public float percentageDecrease = 0;
+public class SlowEffect : SpeedModifierEffect
+{   
     private Animator animator;
 
-    public SlowEffect(LocalPlayer _target, float percentageDecrease, float duration) :base(_target)
+    public SlowEffect(LocalPlayer _target, float scaleSpeed, float duration) : base(_target, scaleSpeed: scaleSpeed)
     {
-        this.percentageDecrease = percentageDecrease; // float > 1.0f
         this.duration = duration;
         this.name = "SLOW_EFFECT";
         this.animator = _target.GetComponent<Animator>();
@@ -85,16 +86,11 @@ public class SlowEffect : Effect
 
     public override void OnEffectApplied()
     {
-        float newSpeed = _target.GetMoveSpeed() / percentageDecrease;
-        _target.SetMoveSpeed(newSpeed);
         animator.SetBool("IsSlowed", true);
     }
 
     public override void OnEffectEnd()
     {
-        // revert movement speed
-        float originalSpeed = _target.GetMoveSpeed() * percentageDecrease;
-        _target.SetMoveSpeed(originalSpeed);
         animator.SetBool("IsSlowed", false);
     }
 

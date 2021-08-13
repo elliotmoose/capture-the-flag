@@ -28,7 +28,24 @@ public class LocalPlayer : NetworkBehaviour
     //player states
     public Player syncPlayer => GetComponent<Player>();
     public bool isDisabled = false;  
-    public bool isJailed = false;  
+
+    private bool _isJailed = false;
+    public bool isJailed {
+        get {
+            return _isJailed;
+        }
+        set {
+            this.GetComponent<Animator>().SetBool("IsJailed", value);
+            _isJailed = value;
+        }
+    }  
+    public bool isInvisToLocalPlayer {
+        get {
+            bool isInvis = this.GetComponent<Animator>().GetBool("IsInvisible");
+            bool shouldBeInvis = (isInvis && this.team != PlayerController.LocalInstance.GetPlayer().team);
+            return shouldBeInvis;
+        }        
+    }
     private bool _transportedToJail = false;
     private bool isMoving => (moveDir.magnitude > 0.01f && !isDisabled);
     private bool canSprint => (GetStaminaFraction() > 0 && isMoving);
@@ -54,8 +71,8 @@ public class LocalPlayer : NetworkBehaviour
     public Team team => syncPlayer.GetTeam();
 
     //stats
-    public float moveSpeed = 15;
-    float sprintMultiplier = 2.4f;
+    public float baseMoveSpeed = 15;
+    float sprintSpeed = 18;
     float curStamina = 100;
     float maxStamina = 100;
     protected float staminaBurnFactor = 30;
@@ -83,12 +100,29 @@ public class LocalPlayer : NetworkBehaviour
     #region Getter Setters    
     public float GetMoveSpeed()
     {
-        return moveSpeed;
+        float computedSpeed = baseMoveSpeed;
+        //scale
+        foreach(Effect effect in this.effects) {
+            if(effect is SpeedModifierEffect) {
+                SpeedModifierEffect speedEffect = (SpeedModifierEffect) effect;
+                computedSpeed += speedEffect.addSpeed;
+            }
+        }
+        
+        //add
+        foreach(Effect effect in this.effects) {
+            if(effect is SpeedModifierEffect) {
+                SpeedModifierEffect speedEffect = (SpeedModifierEffect) effect;
+                computedSpeed *= speedEffect.scaleSpeed;
+            }
+        }
+
+        return computedSpeed + (isSprinting ? sprintSpeed : 0);
     }
 
     public void SetMoveSpeed(float newSpeed)
     {
-        this.moveSpeed = newSpeed;
+        this.baseMoveSpeed = newSpeed;
     }
 
      public void SetMaxStamina(float maxStamina) {
@@ -142,9 +176,7 @@ public class LocalPlayer : NetworkBehaviour
     }
 
     private void ClientsUpdateUsername() {
-        bool isInvis = this.GetComponent<Animator>().GetBool("IsInvisible");
-        bool shouldShowUsername = (!isInvis || this.team == PlayerController.LocalInstance.GetPlayer().team);
-        usernameTextTransform.gameObject.SetActive(shouldShowUsername); //for invis
+        usernameTextTransform.gameObject.SetActive(!isInvisToLocalPlayer); //for invis
         TMPro.TextMeshPro textMesh = usernameTextTransform.GetComponent<TMPro.TextMeshPro>();
         textMesh.text = syncPlayer.GetUser().username;
         textMesh.color = this.team == Team.BLUE ? UIManager.Instance.colors.textBlue : UIManager.Instance.colors.textRed;
@@ -161,7 +193,11 @@ public class LocalPlayer : NetworkBehaviour
     private void SetAnimationsSmooth(bool isMoving, bool isSprinting) {
         if(!IsOwner) { return; }
 
-        Vector2 targetMoveDir = moveDir/(isSprinting ? 1 : 2);
+        float msLowerBound = this.baseMoveSpeed;
+        float msUpperBound = this.baseMoveSpeed + this.sprintSpeed;
+        float msFactor = Mathf.Lerp(0.5f, 1, (GetMoveSpeed()-msLowerBound)/(msUpperBound-msLowerBound)); //0.5 means walking, 1 means sprinting
+        Vector2 targetMoveDir = moveDir * Mathf.Clamp(msFactor, 0.5f, 1); 
+
         //animation smoohting
         Animator animator = GetComponent<Animator>();
         Vector2 curMoveDir = new Vector2(animator.GetFloat("HorMovement"), animator.GetFloat("VertMovement")); //current movedir state
@@ -188,21 +224,13 @@ public class LocalPlayer : NetworkBehaviour
         FixedUpdateMovement();
     }   
 
-    void FixedUpdateMovement() {
+    void FixedUpdateMovement() { 
         if(!IsOwner) return;
         if(!GameManager.Instance.roundInProgress) { return; }
         if(isMoving) {                
             float moveDirAngle = Mathf.Atan2(moveDir.x, moveDir.y) * Mathf.Rad2Deg + faceAngle;
             Vector3 positionDelta = Quaternion.Euler(0, moveDirAngle, 0) * Vector3.forward;
-
-            if(isSprinting) {
-                // transform.position += positionDelta.normalized * Time.deltaTime * moveSpeed * sprintMultiplier;
-                GetComponent<CharacterController>().Move(positionDelta.normalized * moveSpeed * sprintMultiplier * Time.fixedDeltaTime);
-            }
-            else {
-                GetComponent<CharacterController>().Move(positionDelta.normalized * moveSpeed * Time.fixedDeltaTime);
-                // transform.position += positionDelta.normalized * Time.deltaTime * moveSpeed;
-            }
+            GetComponent<CharacterController>().Move(positionDelta.normalized * GetMoveSpeed() * Time.fixedDeltaTime);
             
         }      
     }
@@ -265,6 +293,7 @@ public class LocalPlayer : NetworkBehaviour
 
     public void SetDisabled(bool disabled)
     {
+        Debug.Log("Set disabled: " + disabled.ToString());
         this.isDisabled = disabled;
     }
 
@@ -291,7 +320,17 @@ public class LocalPlayer : NetworkBehaviour
         effect.OnEffectApplied();
         this.effects.Add(effect);
         Debug.Log(effect.name + " effect taken");
-        
+    }
+
+    public void RemoveEffectWithName(string effectName) {
+        for(int i=0; i<effects.Count; i++) {
+            Effect effect = effects[i];
+            if(effect.name == effectName) {
+                effect.OnEffectEnd();
+                effects.RemoveAt(i);
+                return;
+            }
+        }
     }
 
     void UpdateStamina()
@@ -322,17 +361,18 @@ public class LocalPlayer : NetworkBehaviour
         
     }
 
-        public void UpdateEffects()
+    public void UpdateEffects()
     {        
         if(!GameManager.Instance.roundInProgress) { return; }
 
-        for(int i=this.effects.Count-1; i>=0 && i<this.effects.Count; i++)
+        for(int i=this.effects.Count-1; i>=0 && i<this.effects.Count; i--)
         {
             Effect effect = this.effects[i];
             effect.Update();
             
             if (effect.effectEnded)
             {
+                Debug.Log(effect.name + " ended");
                 effects.Remove(effect);
             } 
         }
@@ -342,7 +382,7 @@ public class LocalPlayer : NetworkBehaviour
     {        
         if(!GameManager.Instance.roundInProgress) { return; }
 
-        for(int i=this.effects.Count-1; i>=0 && i<this.effects.Count; i++)
+        for(int i=this.effects.Count-1; i>=0 && i<this.effects.Count; i--)
         {
             Effect effect = this.effects[i];
             effect.FixedUpdate();
@@ -354,11 +394,30 @@ public class LocalPlayer : NetworkBehaviour
         }
     }
 
+    public Effect GetEffectWithName(string effectName) {
+        foreach(Effect effect in effects) {
+            if(effect.name == effectName) return effect;
+        }
+
+        return null;
+    }
+
+    public bool HasEffect(string effectName) {
+        return GetEffectWithName(effectName) != null;
+    }
+
     public void Catch()
     {
         if(!GameManager.Instance.roundInProgress) { return; }
 
-        if(catchCooldownTime < 0)
+        if (isDisabled)
+        {
+            Debug.Log("Player is stunned.");
+            return;
+        }
+
+
+        if (catchCooldownTime < 0)
         {
             catchSkill.UseSkill(this);
             catchCooldownTime = catchSkill.cooldown;
@@ -369,6 +428,12 @@ public class LocalPlayer : NetworkBehaviour
         }
     }
 
+    public void PassFlag() {
+        if(!GameManager.Instance.roundInProgress) return;
+        Flag flag = GameManager.Instance.FlagForPlayer(this);
+        if(flag != null) flag.ClientHandoverFlag();
+    }
+
     public void CastSkillAtIndex(int index)
     {
         if (!GameManager.Instance.roundInProgress) { return; }
@@ -376,6 +441,12 @@ public class LocalPlayer : NetworkBehaviour
         if (index >= skills.Count)
         {
             Debug.LogWarning($"Skill index out of range: {index}");
+            return;
+        }
+
+        if (isDisabled)
+        {
+            Debug.Log("Player is disabled.");
             return;
         }
 
@@ -424,14 +495,15 @@ public class LocalPlayer : NetworkBehaviour
 
     public void AnimationStart(string animationName) {        
         if(animationName == "Teleport") SpawnTeleportStartParticle();
-        if (animationName == "Catch") this.transform.Find("Catch").localScale = Vector3.one * syncPlayer.GetCatchRadius(); //we need this to be here so that it is replicated across all
+        if (animationName == "Catch") this.transform.Find("Catch").localScale = Vector3.one * syncPlayer.GetCatchRadius()*2; //we need this to be here so that it is replicated across all
         if (animationName == "Smoke") SpawnSmokeParticle();
         if (animationName == "Knockback") SpawnKnockbackParticle();
         if (OnAnimationStart!=null) OnAnimationStart(animationName);
     }
 
     public void AnimationCommit(string animationName) {
-        if (OnAnimationCommit!=null) OnAnimationCommit(animationName);
+        if (OnAnimationCommit!=null) OnAnimationCommit(animationName);        
+        if(animationName == "Catch") ExecuteCatchSphere();
     }
     
     public void AnimationRelease(string animationName) {
@@ -441,6 +513,13 @@ public class LocalPlayer : NetworkBehaviour
     public void AnimationEnd(string animationName) {
         if(animationName == "Teleport") SpawnTeleportEndParticle();
         if (OnAnimationEnd!=null) OnAnimationEnd(animationName);
+    }
+
+    void ExecuteCatchSphere() {
+        if(!IsServer) return;
+        if(this.catchSkill is Catch) {
+            ((Catch)this.catchSkill).Execute(this);
+        }
     }
 
     public void AnimationSound(string animationName)
@@ -574,6 +653,8 @@ public class LocalPlayer : NetworkBehaviour
         animator.SetFloat("HorMovement", 0);
         animator.SetFloat("VertMovement", 0);
         animator.SetBool("IsMoving", false);
+
+        SetDisabled(false);
     }
 
     public bool hasReset {

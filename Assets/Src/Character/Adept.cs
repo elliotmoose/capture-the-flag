@@ -7,9 +7,9 @@ public class Adept : LocalPlayer
 {
     void Awake()
     {
-        moveSpeed = 15;            
+        baseMoveSpeed = 18;            
         if(IsServer) {
-            this.syncPlayer.SetCatchRadius(10);
+            this.syncPlayer.SetCatchRadius(5);
         }
         catchSkill = new Catch();
         skills.Add(new Teleport());

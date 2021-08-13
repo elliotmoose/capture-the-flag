@@ -39,7 +39,7 @@ public class GameManager : NetworkBehaviour
         WritePermission = NetworkVariablePermission.ServerOnly
     });
 
-    int winScore = 15;
+    public int winScore = 15;
     public float gameTime = 0;
     public int currentRoundNumber => blueTeamScore.Value + redTeamScore.Value + 1;
 
@@ -50,8 +50,10 @@ public class GameManager : NetworkBehaviour
     public bool gameInProgress => (clientState >= GameState.COUNTDOWN) && (clientState != GameState.SCORESCREEN);
 
     public event GameStateEvent OnRoundStart;
-    public event GameEvent OnPlayerScored;
+    public event GameEvent OnFlagScored;
+    public event GameEvent OnCaughtLastPlayer;
     public event GameEvent OnFlagCaptured;
+    public event GameEventInteraction OnFlagPassed;
     public event GameEventInteraction OnPlayerEvade;
     public event GameEventInteraction OnPlayerJailed;
     public event GameEventInteraction OnPlayerFreed;
@@ -95,7 +97,8 @@ public class GameManager : NetworkBehaviour
         yield return new WaitForSeconds(1);
         CountdownClientRpc(1);
         yield return new WaitForSeconds(1);
-        CountdownClientRpc(0);
+        CountdownClientRpc(0);        
+        if(OnRoundStart != null) OnRoundStart();
         ServerUpdateGameState(GameState.PLAY);
     }
 
@@ -145,7 +148,6 @@ public class GameManager : NetworkBehaviour
             case GameState.COMPLETED_RESET: //completed by ClientResetRound
                 break;
             case GameState.COUNTDOWN:
-                if(OnRoundStart != null) OnRoundStart();
                 StartCoroutine(RoundCountdown());
                 break;
             case GameState.PLAY:
@@ -184,9 +186,12 @@ public class GameManager : NetworkBehaviour
         if(OnFlagCaptured != null) OnFlagCaptured(player);
     }
     
+    public void FlagPassed(Player player, Player by) {
+        if(OnFlagPassed != null) OnFlagPassed(player, by);
+    }
+    
     public void ScorePoint(Player player) {
         if(!IsServer) {return;}
-        if(OnPlayerScored != null) OnPlayerScored(player);
 
         Team team = player.GetTeam();
         if(team == Team.BLUE) {
@@ -194,7 +199,7 @@ public class GameManager : NetworkBehaviour
         }
         else {
             redTeamScore.Value += 1;
-        }        
+        }
 
         if(blueTeamScore.Value >= winScore) {
             GameOver(Team.BLUE);
@@ -202,7 +207,7 @@ public class GameManager : NetworkBehaviour
         else if(redTeamScore.Value >= winScore) {
             GameOver(Team.RED);
         }
-        else {            
+        else {
             ServerUpdateGameState(GameState.TRIGGER_RESET);
         }
     }
@@ -284,7 +289,14 @@ public class GameManager : NetworkBehaviour
 
     #region Event Triggers
 
+    public void TriggerOnFlagScored(Player player) {
+        if(!IsServer) return;
+        if(OnFlagScored != null) OnFlagScored(player);
+        ScorePoint(player);
+    }
+
     public void TriggerOnPlayerJailed(Player playerJailed, Player playerCatcher) {
+        if(!IsServer) return;
         if(OnPlayerJailed!=null) OnPlayerJailed(playerJailed, playerCatcher);
 
         //check if any free players
@@ -302,15 +314,18 @@ public class GameManager : NetworkBehaviour
 
         if(!shouldContinueRound) {
             //end round
+            if(OnCaughtLastPlayer != null) OnCaughtLastPlayer(playerCatcher);
             ScorePoint(playerCatcher);
         }        
     }
 
     public void TriggerOnPlayerEvade(Player evadedPlayer, Player catcher) {
+        if(!IsServer) return;
         if(OnPlayerEvade != null) OnPlayerEvade(evadedPlayer, catcher);
     }
     
     public void TriggerOnPlayerFreed(Player playerFreed, Player playerFreedBy) {
+        if(!IsServer) return;
         if(OnPlayerFreed!=null) OnPlayerFreed(playerFreed, playerFreedBy);
     }
 
@@ -320,6 +335,13 @@ public class GameManager : NetworkBehaviour
         if(player.team == Team.BLUE && redTeamFlag.capturer == player) return true;
         if(player.team == Team.RED && blueTeamFlag.capturer == player) return true;
         return false;
+    }
+
+    public Flag FlagForPlayer(LocalPlayer player) {
+        if(!PlayerHasFlag(player)) return null;
+
+        if(player.team == Team.BLUE) return redTeamFlag;
+        else return blueTeamFlag;
     }
 
     void Awake() {

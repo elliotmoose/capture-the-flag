@@ -16,7 +16,6 @@ public class UserManager : MonoBehaviour
         }
         username = PlayerPrefs.GetString("username");
         Instance = this;
-
     }
 
     public void SetUsername(string newUsername) {
