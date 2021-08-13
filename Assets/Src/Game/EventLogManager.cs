@@ -22,6 +22,7 @@ public class EventLogManager : NetworkBehaviour
         GameManager.Instance.OnPlayerEvade += OnPlayerEvade;
         GameManager.Instance.OnPlayerFreed += OnPlayerFreed;
         GameManager.Instance.OnRoundStart += OnRoundStart;
+        GameManager.Instance.OnAwaitingPlayer += OnAwaitingPlayer;
         // announcements.Enqueue(new Announcement{content="mooselliot has been captured!"});
         // announcements.Enqueue(new Announcement{content="Your team has captured the enemy flag!"});
         // announcements.Enqueue(new Announcement{content="Your flag has been captured!"});
@@ -80,6 +81,11 @@ public class EventLogManager : NetworkBehaviour
     void OnPlayerEvade(Player player, Player catcher) {
         if(!IsServer) return;    
         LogEventClientRpc(GetTime()+$"<color={HtmlColorForTeam(player.team)}>{player.username}</color> has evaded <color={HtmlColorForTeam(catcher.team)}>{catcher.username}</color>");
+    }
+
+    void OnAwaitingPlayer(string playerName) {
+        if(!IsServer) return;    
+        LogEventClientRpc(GetTime()+$"<color=orange>Waiting for {playerName}...</color>>");
     }
 
 

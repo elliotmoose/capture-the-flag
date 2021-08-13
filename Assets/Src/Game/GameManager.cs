@@ -10,6 +10,7 @@ public delegate void GameStateEvent();
 public delegate void GameEvent(Player player);
 public delegate void GameEventInteraction(Player receiver, Player giver);
 
+public delegate void GameEventLog(string value);
 public enum GameState {
     AWAITING_CONNECTIONS,
     INIT_GAME_SERVER, //init stats, generate summary ui for host player
@@ -57,6 +58,7 @@ public class GameManager : NetworkBehaviour
     public event GameEventInteraction OnPlayerEvade;
     public event GameEventInteraction OnPlayerJailed;
     public event GameEventInteraction OnPlayerFreed;
+    public event GameEventLog OnAwaitingPlayer;//when waiting for player too long
 
     [SerializeField]
     GameState serverState = GameState.AWAITING_CONNECTIONS;
@@ -213,13 +215,15 @@ public class GameManager : NetworkBehaviour
     }
 
     
+    float awaitResetTimer = 0;
+    float awaitResetThreshold = 5;
     // Update is called once per frame
     void Update()
     {
         gameTime += Time.deltaTime;
         if(IsServer) {
             if(serverState == GameState.AWAIT_SPAWN_CONFIRMATION) {
-                
+                awaitResetTimer = 0;
             }
             
             if(serverState == GameState.COMPLETED_RESET) {
@@ -229,6 +233,10 @@ public class GameManager : NetworkBehaviour
                     if(controller.playerGameState != GameState.COMPLETED_RESET) {
                         Debug.Log($"Waiting for user: {controller.GetUser().username}");
                         allClientsCompletedReset = false;
+                        
+                        if(awaitResetTimer > awaitResetThreshold) {
+                            if (OnAwaitingPlayer != null) OnAwaitingPlayer(controller.GetUser().username);
+                        }
                     }
                     else {
                         Debug.Log($"User successfully reset: {controller.GetUser().username}");
@@ -237,6 +245,9 @@ public class GameManager : NetworkBehaviour
 
                 if(allClientsCompletedReset) {
                     ServerUpdateGameState(GameState.COUNTDOWN); //start round
+                }
+                else {
+                    awaitResetTimer += Time.deltaTime;
                 }
             }
         }
