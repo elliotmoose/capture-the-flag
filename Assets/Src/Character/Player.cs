@@ -245,9 +245,13 @@ public class Player : NetworkBehaviour
         if (!GameManager.Instance.roundInProgress) return;
         LocalPlayer by = LocalPlayer.WithClientId(byClientId);
         // play caught sfx
-        GameObject soundObj = GameObject.Instantiate(PrefabsManager.Instance.soundObject, by.transform.position, Quaternion.identity);
-        SoundObject soundObject = soundObj.GetComponent<SoundObject>();
-        soundObject.audioSource.clip = PrefabsManager.Instance.caughtSound;
+        if (by == PlayerController.LocalInstance.GetPlayer())
+        {
+            GameObject soundObj = GameObject.Instantiate(PrefabsManager.Instance.soundObject, by.transform.position, Quaternion.identity);
+            SoundObject soundObject = soundObj.GetComponent<SoundObject>();
+            soundObject.audioSource.clip = PrefabsManager.Instance.caughtSound;
+        }
+        
     }
 
     //onserver
