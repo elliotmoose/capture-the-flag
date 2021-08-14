@@ -45,12 +45,22 @@ public class CloneCatch : Catch
     //     }
     // }
 
+    bool cloneUsedForThisCast = false;
+    public override void UseSkill(LocalPlayer caster)
+    {
+        base.UseSkill(caster);
+        this.cloneUsedForThisCast = false;
+    }
+
     protected override void OnContact(Player target)
     {
         base.OnContact(target);
 
-        if(caster is Rogue) {
-            ((Rogue) caster).TriggerSkillSteal(target.OwnerClientId);
+        if(!cloneUsedForThisCast) {
+            if(caster is Rogue) {
+                ((Rogue) caster).TriggerSkillSteal(target.OwnerClientId);
+                cloneUsedForThisCast = true;
+            }
         }
     }
 

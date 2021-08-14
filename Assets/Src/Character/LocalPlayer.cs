@@ -91,11 +91,13 @@ public class LocalPlayer : NetworkBehaviour
     private float _animationTransitionTime = 0.15f;
     private float _curTransitionTime = 0f;
 
+    private Animator animator;
     //gameobject
     public GameObject flagSlot;
     protected Renderer[] rends;
     private Transform usernameTextTransform;
     private AudioSource playerAudio;
+
 
     #region Getter Setters    
     public float GetMoveSpeed()
@@ -137,6 +139,8 @@ public class LocalPlayer : NetworkBehaviour
     #endregion
     void Start()
     {
+        
+        this.animator = GetComponent<Animator>();
         this.rends = this.GetComponentsInChildren<Renderer>();
         this.playerAudio = this.GetComponent<AudioSource>();
         this.flagSlot = this.transform.Find("model/body/FlagSlot").gameObject;
@@ -199,7 +203,6 @@ public class LocalPlayer : NetworkBehaviour
         Vector2 targetMoveDir = moveDir * Mathf.Clamp(msFactor, 0.5f, 1); 
 
         //animation smoohting
-        Animator animator = GetComponent<Animator>();
         Vector2 curMoveDir = new Vector2(animator.GetFloat("HorMovement"), animator.GetFloat("VertMovement")); //current movedir state
 
         if(curMoveDir != targetMoveDir) {
@@ -261,7 +264,6 @@ public class LocalPlayer : NetworkBehaviour
 
     void UpdateSfx() {
         AudioSource source = this.transform.Find("sfx_movement").GetComponent<AudioSource>();
-        Animator animator = GetComponent<Animator>();
         //[0, 1]
         float movement = Mathf.Max(Mathf.Abs(animator.GetFloat("HorMovement")), Mathf.Abs(animator.GetFloat("VertMovement")));        
         source.pitch = Mathf.Lerp(1.73f, 2, movement);
@@ -503,7 +505,7 @@ public class LocalPlayer : NetworkBehaviour
 
     public void AnimationCommit(string animationName) {
         if (OnAnimationCommit!=null) OnAnimationCommit(animationName);        
-        if(animationName == "Catch") ExecuteCatchSphere();
+        // if(animationName == "Catch") ExecuteCatchSphere();
     }
     
     public void AnimationRelease(string animationName) {
@@ -515,10 +517,12 @@ public class LocalPlayer : NetworkBehaviour
         if (OnAnimationEnd!=null) OnAnimationEnd(animationName);
     }
 
-    void ExecuteCatchSphere() {
+    public void UpdateCatch() {
         if(!IsServer) return;
-        if(this.catchSkill is Catch) {
-            ((Catch)this.catchSkill).Execute(this);
+        if(this.animator.GetBool("IsCatching") && !isDisabled) {
+            if(this.catchSkill is Catch) {
+                ((Catch)this.catchSkill).Execute(this);
+            }
         }
     }
 

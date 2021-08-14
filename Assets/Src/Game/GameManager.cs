@@ -325,7 +325,7 @@ public class GameManager : NetworkBehaviour
             if(!ally.isJailed) {
                 //as long as one ally is not jailed, the round continues
                 shouldContinueRound = true;
-                break;        
+                break;
             }
         }
 

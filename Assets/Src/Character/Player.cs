@@ -106,8 +106,11 @@ public class Player : NetworkBehaviour
     }
 
     void Update() {
-        
+        if(IsServer) {            
+            localPlayer.UpdateCatch();
+        }
     }
+    
 
     
     /// <summary>
