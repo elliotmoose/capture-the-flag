@@ -48,8 +48,8 @@ public class CloneCatch : Catch
     bool cloneUsedForThisCast = false;
     public override void UseSkill(LocalPlayer caster)
     {
-        base.UseSkill(caster);
         this.cloneUsedForThisCast = false;
+        base.UseSkill(caster);
     }
 
     protected override void OnContact(Player target)
