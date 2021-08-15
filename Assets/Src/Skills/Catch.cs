@@ -43,6 +43,9 @@ public class Catch : Skill
         target.ServerContact(caster.syncPlayer);
     }
 
+    public virtual void Reset() {
+    }
+
     public void OnAnimationStart(string animationName) {
         if(animationName != _animationName) return;        
     }

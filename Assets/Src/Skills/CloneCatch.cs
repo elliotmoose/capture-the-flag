@@ -46,12 +46,19 @@ public class CloneCatch : Catch
     // }
 
     bool cloneUsedForThisCast = false;
+    //only called on client
     public override void UseSkill(LocalPlayer caster)
     {
-        this.cloneUsedForThisCast = false;
         base.UseSkill(caster);
     }
 
+    public override void Reset()
+    {
+        base.Reset();
+        this.cloneUsedForThisCast = false;
+    }
+
+    //called on server
     protected override void OnContact(Player target)
     {
         base.OnContact(target);

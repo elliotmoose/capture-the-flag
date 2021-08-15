@@ -524,6 +524,11 @@ public class LocalPlayer : NetworkBehaviour
                 ((Catch)this.catchSkill).Execute(this);
             }
         }
+        else {
+            if(this.catchSkill is Catch) {
+                ((Catch)this.catchSkill).Reset();
+            }
+        }
     }
 
     public void AnimationSound(string animationName)
