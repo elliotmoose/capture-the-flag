@@ -42,7 +42,7 @@ public struct GameStat : INetworkSerializable {
 
     public float computedScore {
         get {            
-            return Convert.ToSingle(this.pointsScored) * 10 + Convert.ToSingle(this.playersCaptured) * 4 + Convert.ToSingle(this.playersFreed) * 4 - Convert.ToSingle(this.timesInJail) * 3;
+            return Convert.ToSingle(this.pointsScored) * 15 + Convert.ToSingle(this.playersCaptured) * 4 + Convert.ToSingle(this.playersFreed) * 6 - Convert.ToSingle(this.timesInJail) * 3;
         }
     }
 }
